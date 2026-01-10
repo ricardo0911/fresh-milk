@@ -1,0 +1,191 @@
+/* app.wxss - 全局样式 */
+
+/* 主题变量 */
+page {
+  --primary-color: #10b981;
+  --primary-light: #d1fae5;
+  --primary-dark: #059669;
+  --accent-color: #f59e0b;
+  --error-color: #ef4444;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-placeholder: #9ca3af;
+  --bg-color: #f5f5f5;
+  --bg-white: #ffffff;
+  --border-color: #e5e7eb;
+  
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 28rpx;
+  color: var(--text-primary);
+  background-color: var(--bg-color);
+  box-sizing: border-box;
+}
+
+/* 容器 */
+.container {
+  padding: 24rpx;
+}
+
+/* 卡片 */
+.card {
+  background: var(--bg-white);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+/* 按钮 */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 40rpx;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+}
+
+.btn-primary:active {
+  opacity: 0.9;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--primary-color);
+  border: 2rpx solid var(--primary-color);
+}
+
+.btn-lg {
+  padding: 32rpx 48rpx;
+  font-size: 32rpx;
+  border-radius: 16rpx;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+/* 徽标 */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32rpx;
+  height: 32rpx;
+  padding: 0 8rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--error-color);
+  border-radius: 16rpx;
+}
+
+/* 价格 */
+.price {
+  color: var(--error-color);
+  font-weight: 700;
+}
+
+.price::before {
+  content: '¥';
+  font-size: 24rpx;
+}
+
+.price-original {
+  color: var(--text-placeholder);
+  text-decoration: line-through;
+  font-size: 24rpx;
+  margin-left: 8rpx;
+}
+
+/* 标签 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  border-radius: 6rpx;
+}
+
+.tag-hot {
+  background: var(--error-color);
+  color: #ffffff;
+}
+
+.tag-new {
+  background: var(--primary-color);
+  color: #ffffff;
+}
+
+.tag-subscription {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 40rpx;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  color: var(--text-secondary);
+  font-size: 28rpx;
+}
+
+/* 工具类 */
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-20 {
+  margin-top: 20rpx;
+}
+
+.mb-20 {
+  margin-bottom: 20rpx;
+}
+
+.p-20 {
+  padding: 20rpx;
+}

@@ -1,0 +1,87 @@
+<!-- pages/address/address.wxml - 收货地址 -->
+<view class="page-address">
+  <!-- 地址列表 -->
+  <view class="address-list" wx:if="{{addresses.length > 0}}">
+    <view class="address-card {{item.is_default ? 'default' : ''}}" wx:for="{{addresses}}" wx:key="id">
+      <view class="address-main" bindtap="selectAddress" data-address="{{item}}">
+        <view class="address-header">
+          <text class="address-name">{{item.name}}</text>
+          <text class="address-phone">{{item.phone}}</text>
+          <text class="default-tag" wx:if="{{item.is_default}}">默认</text>
+        </view>
+        <text class="address-detail">{{item.province}}{{item.city}}{{item.district}}{{item.address}}</text>
+      </view>
+      <view class="address-actions">
+        <view class="action-item" catchtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.is_default}}">
+          <text class="action-icon">⭐</text>
+          <text>设为默认</text>
+        </view>
+        <view class="action-item" catchtap="editAddress" data-address="{{item}}">
+          <text class="action-icon">✏️</text>
+          <text>编辑</text>
+        </view>
+        <view class="action-item" catchtap="deleteAddress" data-id="{{item.id}}">
+          <text class="action-icon">🗑️</text>
+          <text>删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:else>
+    <text class="empty-icon">📍</text>
+    <text class="empty-text">暂无收货地址</text>
+  </view>
+
+  <!-- 添加地址按钮 -->
+  <view class="add-btn-wrapper">
+    <button class="add-btn" bindtap="showAddForm">+ 添加新地址</button>
+  </view>
+
+  <!-- 添加/编辑地址表单弹窗 -->
+  <view class="modal-mask" wx:if="{{showForm}}" bindtap="hideForm"></view>
+  <view class="modal-content" wx:if="{{showForm}}">
+    <view class="modal-header">
+      <text class="modal-title">{{editingAddress ? '编辑地址' : '添加地址'}}</text>
+      <text class="modal-close" bindtap="hideForm">×</text>
+    </view>
+    
+    <view class="form">
+      <view class="form-item">
+        <text class="form-label">收货人</text>
+        <input class="form-input" placeholder="请输入收货人姓名" value="{{form.name}}" bindinput="onInput" data-field="name" />
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">手机号</text>
+        <input class="form-input" type="number" placeholder="请输入手机号" value="{{form.phone}}" bindinput="onInput" data-field="phone" maxlength="11" />
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">所在地区</text>
+        <picker mode="region" value="{{region}}" bindchange="onRegionChange">
+          <view class="region-picker">
+            <text wx:if="{{region.length > 0}}">{{region[0]}} {{region[1]}} {{region[2]}}</text>
+            <text wx:else class="placeholder">请选择省市区</text>
+            <text class="picker-arrow">></text>
+          </view>
+        </picker>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">详细地址</text>
+        <textarea class="form-textarea" placeholder="请输入详细地址（街道、门牌号等）" value="{{form.address}}" bindinput="onInput" data-field="address" />
+      </view>
+      
+      <view class="form-item switch-item">
+        <text class="form-label">设为默认地址</text>
+        <switch checked="{{form.is_default}}" bindchange="onDefaultChange" color="#10b981" />
+      </view>
+    </view>
+
+    <view class="modal-footer">
+      <button class="btn btn-primary btn-block" bindtap="saveAddress">保存</button>
+    </view>
+  </view>
+</view>

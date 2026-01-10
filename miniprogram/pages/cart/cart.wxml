@@ -1,0 +1,79 @@
+<!-- pages/cart/cart.wxml - 购物车 -->
+<view class="page-cart">
+  <view wx:if="{{cartItems.length > 0}}">
+    <!-- 购物车列表 -->
+    <view class="cart-list">
+      <view class="cart-item" wx:for="{{cartItems}}" wx:key="index">
+        <checkbox class="cart-checkbox" checked="{{item.selected}}" bindtap="toggleSelect" data-index="{{index}}" />
+        <image class="cart-image" src="{{item.product.cover_image}}" mode="aspectFill" bindtap="goToProduct" data-id="{{item.product.id}}" />
+        <view class="cart-info">
+          <text class="cart-name">{{item.product.name}}</text>
+          <text class="cart-spec">{{item.product.specification}}</text>
+          <view class="cart-footer">
+            <text class="price">{{item.product.price}}</text>
+            <view class="quantity-selector">
+              <text class="qty-btn" bindtap="decreaseQty" data-index="{{index}}">−</text>
+              <text class="qty-value">{{item.quantity}}</text>
+              <text class="qty-btn" bindtap="increaseQty" data-index="{{index}}">+</text>
+            </view>
+          </view>
+        </view>
+        <text class="cart-delete" bindtap="removeItem" data-index="{{index}}">×</text>
+      </view>
+    </view>
+
+    <!-- 底部结算栏 -->
+    <view class="cart-bottom">
+      <view class="select-all" bindtap="toggleSelectAll">
+        <checkbox checked="{{allSelected}}" />
+        <text>全选</text>
+      </view>
+      <view class="cart-summary">
+        <text class="summary-text">合计: </text>
+        <text class="summary-price price">{{totalAmount}}</text>
+      </view>
+      <button class="checkout-btn {{selectedCount === 0 ? 'disabled' : ''}}" bindtap="checkout" disabled="{{selectedCount === 0}}">
+        去结算 ({{selectedCount}})
+      </button>
+    </view>
+  </view>
+
+  <!-- 空购物车 -->
+  <view class="empty-state" wx:else>
+    <text class="empty-icon">🛒</text>
+    <text class="empty-text">购物车还是空的</text>
+    <button class="btn btn-primary" bindtap="goShopping">去逛逛</button>
+  </view>
+
+  <!-- 猜你喜欢 -->
+  <view class="section guess-section">
+    <view class="section-header">
+      <view class="guess-title-wrap">
+        <text class="guess-icon">💙</text>
+        <text class="section-title">猜你喜欢</text>
+      </view>
+      <text class="section-more" bindtap="goToProducts">换一批</text>
+    </view>
+    <view class="guess-grid">
+      <view class="guess-card" wx:for="{{guessProducts}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
+        <view class="guess-image-wrap">
+          <image class="guess-image" src="{{item.cover_image}}" mode="aspectFill" />
+          <view class="guess-fresh-tag" wx:if="{{item.fresh_days}}">
+            <text class="fresh-days">{{item.fresh_days}}天起</text>
+            <text class="fresh-label">新鲜日期</text>
+          </view>
+        </view>
+        <view class="guess-info">
+          <text class="guess-name">{{item.name}}</text>
+          <text class="guess-spec">{{item.specification}}</text>
+          <view class="guess-footer">
+            <text class="guess-price">¥{{item.price}}</text>
+            <view class="guess-actions">
+              <view class="action-btn-text" catchtap="addToCart" data-product="{{item}}">立即购买</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

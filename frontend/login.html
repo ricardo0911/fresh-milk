@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 鲜奶直达</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .auth-left {
+            flex: 1;
+            background: var(--gradient-hero);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: var(--space-16);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 100%;
+            height: 150%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 50%);
+        }
+
+        .auth-brand {
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            color: var(--primary-700);
+            margin-bottom: var(--space-8);
+        }
+
+        .auth-logo-icon {
+            font-size: 3rem;
+        }
+
+        .auth-tagline {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: 1.3;
+            margin-bottom: var(--space-4);
+        }
+
+        .auth-desc {
+            font-size: var(--font-size-lg);
+            color: var(--gray-600);
+            max-width: 400px;
+        }
+
+        .auth-features {
+            margin-top: var(--space-12);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .auth-feature {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            color: var(--gray-700);
+        }
+
+        .auth-feature-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-100);
+            color: var(--primary-600);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+        }
+
+        .auth-right {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-8);
+            background: white;
+        }
+
+        .auth-form-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: var(--space-8);
+            margin-bottom: var(--space-8);
+        }
+
+        .auth-tab {
+            padding: var(--space-3) 0;
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--gray-400);
+            position: relative;
+            transition: color var(--transition-fast);
+        }
+
+        .auth-tab.active {
+            color: var(--gray-900);
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-500);
+            border-radius: var(--radius-full);
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: var(--space-2);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: var(--space-4) var(--space-5);
+            font-size: var(--font-size-base);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            outline: none;
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-400);
+        }
+
+        .form-row {
+            display: flex;
+            gap: var(--space-4);
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .code-btn {
+            padding: var(--space-4) var(--space-5);
+            background: var(--gray-100);
+            color: var(--gray-700);
+            font-weight: 500;
+            border-radius: var(--radius-xl);
+            white-space: nowrap;
+            transition: all var(--transition-fast);
+        }
+
+        .code-btn:hover {
+            background: var(--gray-200);
+        }
+
+        .code-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .form-remember {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .remember-check {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--gray-600);
+            font-size: var(--font-size-sm);
+        }
+
+        .remember-check input {
+            accent-color: var(--primary-500);
+        }
+
+        .forgot-link {
+            color: var(--primary-600);
+            font-size: var(--font-size-sm);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: var(--space-5);
+            background: var(--gradient-primary);
+            color: white;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            border-radius: var(--radius-xl);
+            transition: all var(--transition-base);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-primary);
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin: var(--space-8) 0;
+            color: var(--gray-400);
+            font-size: var(--font-size-sm);
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--gray-200);
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-4);
+        }
+
+        .social-btn {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+            font-size: 1.5rem;
+            transition: all var(--transition-fast);
+        }
+
+        .social-btn:hover {
+            background: var(--gray-200);
+            transform: translateY(-2px);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: var(--space-8);
+            font-size: var(--font-size-sm);
+            color: var(--gray-500);
+        }
+
+        .auth-footer a {
+            color: var(--primary-600);
+            font-weight: 500;
+        }
+
+        @media (max-width: 1024px) {
+            .auth-left {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-page">
+        <!-- 左侧品牌区 -->
+        <div class="auth-left">
+            <div class="auth-brand">
+                <a href="index.html" class="auth-logo">
+                    <span class="auth-logo-icon">🥛</span>
+                    <span>鲜奶直达</span>
+                </a>
+                <h1 class="auth-tagline">每日新鲜<br>直达您家</h1>
+                <p class="auth-desc">源自天然牧场的纯净鲜奶，全程冷链配送，让每一口都是新鲜的味道</p>
+
+                <div class="auth-features">
+                    <div class="auth-feature">
+                        <span class="auth-feature-icon">✓</span>
+                        <span>新用户首单立减10元</span>
+                    </div>
+                    <div class="auth-feature">
+                        <span class="auth-feature-icon">✓</span>
+                        <span>周期购享9折优惠</span>
+                    </div>
+                    <div class="auth-feature">
+                        <span class="auth-feature-icon">✓</span>
+                        <span>满88元免运费</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧表单区 -->
+        <div class="auth-right">
+            <div class="auth-form-container">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">登录</button>
+                    <button class="auth-tab" data-tab="register">注册</button>
+                </div>
+
+                <!-- 登录表单 -->
+                <form class="auth-form active" id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">手机号</label>
+                        <input type="tel" class="form-input" placeholder="请输入手机号" id="loginPhone" maxlength="11">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">密码</label>
+                        <input type="password" class="form-input" placeholder="请输入密码" id="loginPassword">
+                    </div>
+                    <div class="form-remember">
+                        <label class="remember-check">
+                            <input type="checkbox" checked>
+                            <span>记住我</span>
+                        </label>
+                        <a href="#" class="forgot-link">忘记密码?</a>
+                    </div>
+                    <button type="submit" class="submit-btn">登 录</button>
+                </form>
+
+                <!-- 注册表单 -->
+                <form class="auth-form" id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">手机号</label>
+                        <input type="tel" class="form-input" placeholder="请输入手机号" id="regPhone" maxlength="11">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">验证码</label>
+                            <input type="text" class="form-input" placeholder="请输入验证码" id="regCode" maxlength="6">
+                        </div>
+                        <button type="button" class="code-btn" id="sendCodeBtn">发送验证码</button>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">密码</label>
+                        <input type="password" class="form-input" placeholder="请设置密码 (6-20位)" id="regPassword">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">确认密码</label>
+                        <input type="password" class="form-input" placeholder="请再次输入密码" id="regConfirmPassword">
+                    </div>
+                    <button type="submit" class="submit-btn">注 册</button>
+                </form>
+
+                <div class="auth-divider">其他登录方式</div>
+
+                <div class="social-login">
+                    <button class="social-btn" title="微信登录">💬</button>
+                    <button class="social-btn" title="支付宝登录">💳</button>
+                </div>
+
+                <div class="auth-footer">
+                    登录/注册即表示同意 <a href="#">用户协议</a> 和 <a href="#">隐私政策</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initTabs();
+            initForms();
+        });
+
+        function initTabs() {
+            const tabs = document.querySelectorAll('.auth-tab');
+            const forms = document.querySelectorAll('.auth-form');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    forms.forEach(f => f.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    document.getElementById(`${tab.dataset.tab}Form`).classList.add('active');
+                });
+            });
+        }
+
+        function initForms() {
+            // 登录表单
+            document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const phone = document.getElementById('loginPhone').value;
+                const password = document.getElementById('loginPassword').value;
+
+                if (!phone || !password) {
+                    utils.showToast('请填写完整信息', 'warning');
+                    return;
+                }
+
+                try {
+                    // 模拟登录
+                    utils.showToast('登录成功', 'success');
+                    localStorage.setItem('access_token', 'demo_token');
+                    utils.setCurrentUser({ phone, username: phone });
+
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                } catch (error) {
+                    utils.showToast(error.message || '登录失败', 'error');
+                }
+            });
+
+            // 注册表单
+            document.getElementById('registerForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const phone = document.getElementById('regPhone').value;
+                const code = document.getElementById('regCode').value;
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+                if (!phone || !code || !password || !confirmPassword) {
+                    utils.showToast('请填写完整信息', 'warning');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    utils.showToast('两次密码不一致', 'warning');
+                    return;
+                }
+
+                try {
+                    // 模拟注册
+                    utils.showToast('注册成功，请登录', 'success');
+                    document.querySelector('[data-tab="login"]').click();
+                } catch (error) {
+                    utils.showToast(error.message || '注册失败', 'error');
+                }
+            });
+
+            // 发送验证码
+            let countdown = 0;
+            document.getElementById('sendCodeBtn').addEventListener('click', () => {
+                const phone = document.getElementById('regPhone').value;
+                if (!phone || phone.length !== 11) {
+                    utils.showToast('请输入正确的手机号', 'warning');
+                    return;
+                }
+
+                const btn = document.getElementById('sendCodeBtn');
+                btn.disabled = true;
+                countdown = 60;
+
+                const timer = setInterval(() => {
+                    countdown--;
+                    btn.textContent = `${countdown}s 后重发`;
+
+                    if (countdown <= 0) {
+                        clearInterval(timer);
+                        btn.disabled = false;
+                        btn.textContent = '发送验证码';
+                    }
+                }, 1000);
+
+                utils.showToast('验证码已发送', 'success');
+            });
+        }
+    </script>
+</body>
+
+</html>

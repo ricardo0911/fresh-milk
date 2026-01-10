@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="鲜牛奶订购系统 - 每日新鲜直达，品质生活从一杯好奶开始">
+    <meta name="keywords" content="鲜牛奶,牛奶订购,周期购,新鲜牛奶,有机牛奶">
+    <title>鲜牛奶订购 - 新鲜直达</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🥛</span>
+                <span class="logo-text">鲜奶直达</span>
+            </a>
+            
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link active">首页</a>
+                <a href="products.html" class="nav-link">全部产品</a>
+                <a href="#subscription" class="nav-link">周期购</a>
+                <a href="#about" class="nav-link">关于我们</a>
+            </nav>
+            
+            <div class="nav-actions">
+                <button class="search-btn" id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <a href="cart.html" class="cart-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </a>
+                <a href="login.html" class="user-btn" id="userBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- 搜索弹窗 -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="搜索产品..." id="searchInput">
+            <button class="search-close" id="searchClose">×</button>
+        </div>
+    </div>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <span class="hero-badge animate-fade-in">✨ 新用户首单立减10元</span>
+                <h1 class="hero-title animate-slide-up">
+                    每日新鲜<br>
+                    <span class="gradient-text">直达您家</span>
+                </h1>
+                <p class="hero-desc animate-slide-up delay-1">
+                    源自天然牧场的纯净鲜奶，全程冷链配送<br>
+                    让每一口都是新鲜的味道
+                </p>
+                <div class="hero-actions animate-slide-up delay-2">
+                    <a href="products.html" class="btn btn-primary btn-lg">
+                        立即选购
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="#subscription" class="btn btn-outline btn-lg">了解周期购</a>
+                </div>
+            </div>
+            <div class="hero-image animate-float">
+                <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=600&q=80" alt="新鲜牛奶">
+            </div>
+        </div>
+        <div class="hero-features">
+            <div class="feature-item">
+                <div class="feature-icon">🌿</div>
+                <div class="feature-text">
+                    <span class="feature-title">纯天然</span>
+                    <span class="feature-desc">无添加无防腐</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🚚</div>
+                <div class="feature-text">
+                    <span class="feature-title">冷链配送</span>
+                    <span class="feature-desc">全程4℃保鲜</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">⏰</div>
+                <div class="feature-text">
+                    <span class="feature-title">准时送达</span>
+                    <span class="feature-desc">早7点前送达</span>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-text">
+                    <span class="feature-title">品质保证</span>
+                    <span class="feature-desc">不满意退款</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 分类导航 -->
+    <section class="categories section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">产品分类</h2>
+                <p class="section-desc">多种选择，满足您的不同需求</p>
+            </div>
+            <div class="category-grid" id="categoryGrid">
+                <!-- 分类卡片将由JS动态加载 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 热门产品 -->
+    <section class="hot-products section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🔥 热门推荐</h2>
+                <a href="products.html" class="section-link">查看全部 →</a>
+            </div>
+            <div class="product-grid" id="hotProductGrid">
+                <!-- 产品卡片将由JS动态加载 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 新品上市 -->
+    <section class="new-products section bg-light">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">🌟 新品上市</h2>
+                <a href="products.html?filter=new" class="section-link">查看全部 →</a>
+            </div>
+            <div class="product-scroll" id="newProductScroll">
+                <!-- 新品将由JS动态加载 -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 周期购介绍 -->
+    <section class="subscription section" id="subscription">
+        <div class="container">
+            <div class="subscription-wrapper">
+                <div class="subscription-content">
+                    <span class="subscription-badge">周期购服务</span>
+                    <h2 class="subscription-title">订阅式鲜奶配送</h2>
+                    <p class="subscription-desc">
+                        选择周期购，享受更优惠的价格和更便捷的服务。<br>
+                        每天清晨，新鲜牛奶准时送达您家门口。
+                    </p>
+                    <ul class="subscription-benefits">
+                        <li><span class="benefit-icon">✓</span> 周期购享9折优惠</li>
+                        <li><span class="benefit-icon">✓</span> 灵活调整配送日期</li>
+                        <li><span class="benefit-icon">✓</span> 随时暂停或取消</li>
+                        <li><span class="benefit-icon">✓</span> 专属客服1对1服务</li>
+                    </ul>
+                    <a href="products.html?subscription=true" class="btn btn-primary btn-lg">开启周期购</a>
+                </div>
+                <div class="subscription-image">
+                    <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=600&q=80" alt="周期购服务">
+                    <div class="subscription-float-card">
+                        <div class="float-icon">📅</div>
+                        <div class="float-text">
+                            <span class="float-title">每周配送</span>
+                            <span class="float-desc">按需定制</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 用户评价 -->
+    <section class="testimonials section">
+        <div class="container">
+            <div class="section-header center">
+                <h2 class="section-title">用户好评</h2>
+                <p class="section-desc">听听他们怎么说</p>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://i.pravatar.cc/100?img=1" alt="用户头像" class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-name">王女士</div>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">"自从订了周期购，每天早上都能喝到新鲜牛奶，孩子特别喜欢！配送也很准时，服务态度很好。"</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://i.pravatar.cc/100?img=3" alt="用户头像" class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-name">李先生</div>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">"牛奶质量很好，口感醇厚，比超市的新鲜多了。包装也很用心，冷链配送保证了品质。"</p>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <img src="https://i.pravatar.cc/100?img=5" alt="用户头像" class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-name">张女士</div>
+                            <div class="testimonial-rating">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    <p class="testimonial-text">"作为一个妈妈，最关心的就是食品安全。这家的牛奶有权威认证，喝着放心！"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section class="about section bg-dark" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <span class="about-badge">关于我们</span>
+                    <h2 class="about-title">源自天然牧场的品质承诺</h2>
+                    <p class="about-desc">
+                        我们与多家优质牧场合作，精选健康奶牛，采用先进的巴氏杀菌工艺，
+                        全程冷链配送，确保每一瓶牛奶都保持最佳的新鲜度和营养价值。
+                    </p>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">50000+</span>
+                            <span class="stat-label">服务用户</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">99.8%</span>
+                            <span class="stat-label">好评率</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">365</span>
+                            <span class="stat-label">天准时配送</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1594761053405-bb4cabc78d33?w=600&q=80" alt="牧场">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <span class="logo-icon">🥛</span>
+                        <span class="logo-text">鲜奶直达</span>
+                    </a>
+                    <p class="footer-desc">每日新鲜直达，品质生活从一杯好奶开始</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link">微信</a>
+                        <a href="#" class="social-link">微博</a>
+                        <a href="#" class="social-link">抖音</a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4 class="footer-title">产品服务</h4>
+                    <a href="products.html">全部产品</a>
+                    <a href="products.html?filter=hot">热门推荐</a>
+                    <a href="products.html?filter=new">新品上市</a>
+                    <a href="#subscription">周期购</a>
+                </div>
+                <div class="footer-links">
+                    <h4 class="footer-title">帮助中心</h4>
+                    <a href="#">常见问题</a>
+                    <a href="#">配送说明</a>
+                    <a href="#">退换政策</a>
+                    <a href="#">联系我们</a>
+                </div>
+                <div class="footer-links">
+                    <h4 class="footer-title">联系方式</h4>
+                    <p>客服热线：400-888-8888</p>
+                    <p>服务时间：7:00 - 22:00</p>
+                    <p>邮箱：service@freshmilk.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 鲜奶直达. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

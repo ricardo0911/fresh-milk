@@ -1,0 +1,250 @@
+/* pages/coupon/coupon.wxss - 优惠券中心样式 */
+.page-coupon {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #e8f5e9 0%, #f5f5f5 200rpx);
+}
+
+/* 标签栏 */
+.tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 1rpx solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 28rpx 0;
+  font-size: 30rpx;
+  color: #666;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.tab.active {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60rpx;
+  height: 4rpx;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  border-radius: 2rpx;
+}
+
+/* 状态筛选 */
+.status-filter {
+  display: flex;
+  padding: 24rpx 20rpx;
+  gap: 20rpx;
+  background: transparent;
+}
+
+.filter-item {
+  padding: 14rpx 32rpx;
+  font-size: 26rpx;
+  color: #666;
+  background: #fff;
+  border-radius: 30rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+  transition: all 0.3s;
+}
+
+.filter-item.active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 4rpx 12rpx rgba(16, 185, 129, 0.3);
+}
+
+/* 优惠券列表 */
+.coupon-list {
+  padding: 20rpx;
+}
+
+/* 优惠券卡片 - 新布局 */
+.coupon-card {
+  display: flex;
+  align-items: stretch;
+  background: #fff;
+  border-radius: 20rpx;
+  margin-bottom: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.08);
+}
+
+.coupon-card.disabled {
+  opacity: 0.6;
+}
+
+/* 左侧金额区域 */
+.coupon-left {
+  width: 180rpx;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx 16rpx;
+  position: relative;
+}
+
+/* 锯齿边效果 */
+.coupon-left::after {
+  content: '';
+  position: absolute;
+  right: -10rpx;
+  top: 0;
+  bottom: 0;
+  width: 20rpx;
+  background: radial-gradient(circle at right, transparent 10rpx, #fff 10rpx);
+  background-size: 20rpx 24rpx;
+}
+
+.coupon-amount {
+  display: flex;
+  align-items: baseline;
+}
+
+.amount-symbol {
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.amount-value {
+  font-size: 64rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.coupon-condition {
+  font-size: 22rpx;
+  margin-top: 12rpx;
+  opacity: 0.9;
+  background: rgba(255,255,255,0.2);
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+}
+
+/* 中间信息区域 */
+.coupon-center {
+  flex: 1;
+  padding: 28rpx 24rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.coupon-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coupon-desc {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.coupon-expire {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 右侧操作区域 */
+.coupon-action {
+  width: 140rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 16rpx;
+  border-left: 2rpx dashed #eee;
+}
+
+.claim-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+  color: #fff;
+  font-size: 26rpx;
+  padding: 16rpx 0;
+  width: 100%;
+  border-radius: 30rpx;
+  border: none;
+  box-shadow: 0 4rpx 12rpx rgba(255, 107, 107, 0.3);
+  transition: transform 0.2s;
+}
+
+.claim-btn:active {
+  transform: scale(0.95);
+}
+
+.use-btn {
+  color: #10b981;
+  font-size: 26rpx;
+  font-weight: 500;
+}
+
+.coupon-status-tag {
+  font-size: 24rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 8rpx;
+}
+
+.status-used {
+  background: #f0f0f0;
+  color: #999;
+}
+
+.status-expired {
+  background: #fff0f0;
+  color: #ff6b6b;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 100rpx;
+  margin-bottom: 24rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+  margin-bottom: 32rpx;
+}
+
+.btn {
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  padding: 24rpx 56rpx;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 4rpx 16rpx rgba(16, 185, 129, 0.3);
+}

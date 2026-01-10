@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="鲜牛奶产品列表 - 多种优质牛奶产品供您选择">
+    <title>产品列表 - 鲜奶直达</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        .page-header {
+            padding-top: 120px;
+            padding-bottom: var(--space-8);
+            background: var(--gradient-hero);
+        }
+
+        .page-title {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-2);
+        }
+
+        .page-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--gray-500);
+            font-size: var(--font-size-sm);
+        }
+
+        .page-breadcrumb a {
+            color: var(--primary-600);
+        }
+
+        .products-section {
+            padding: var(--space-12) 0;
+        }
+
+        .products-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: var(--space-8);
+        }
+
+        .filter-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .filter-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--space-6);
+        }
+
+        .filter-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: var(--space-4);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .filter-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .filter-item:hover,
+        .filter-item.active {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+
+        .filter-item.active {
+            font-weight: 600;
+        }
+
+        .filter-icon {
+            font-size: 1.25rem;
+        }
+
+        .price-range {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .price-input {
+            flex: 1;
+            padding: var(--space-3);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            outline: none;
+        }
+
+        .price-input:focus {
+            border-color: var(--primary-500);
+        }
+
+        .products-main {
+            min-height: 50vh;
+        }
+
+        .products-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .products-count {
+            color: var(--gray-600);
+        }
+
+        .products-sort {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .sort-label {
+            color: var(--gray-500);
+            font-size: var(--font-size-sm);
+        }
+
+        .sort-options {
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .sort-btn {
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            transition: all var(--transition-fast);
+        }
+
+        .sort-btn:hover,
+        .sort-btn.active {
+            background: var(--primary-500);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-16);
+            color: var(--gray-500);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-4);
+        }
+
+        @media (max-width: 1024px) {
+            .products-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-sidebar {
+                position: static;
+                display: flex;
+                gap: var(--space-4);
+                overflow-x: auto;
+                padding-bottom: var(--space-4);
+            }
+
+            .filter-card {
+                flex: 0 0 auto;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <header class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🥛</span>
+                <span class="logo-text">鲜奶直达</span>
+            </a>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="products.html" class="nav-link active">全部产品</a>
+                <a href="index.html#subscription" class="nav-link">周期购</a>
+                <a href="index.html#about" class="nav-link">关于我们</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="search-btn" id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+                <a href="cart.html" class="cart-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="cart-badge" id="cartBadge">0</span>
+                </a>
+                <a href="login.html" class="user-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 页面头部 -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">全部产品</h1>
+            <div class="page-breadcrumb">
+                <a href="index.html">首页</a>
+                <span>/</span>
+                <span>产品列表</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品列表 -->
+    <section class="products-section">
+        <div class="container">
+            <div class="products-layout">
+                <!-- 侧边筛选 -->
+                <aside class="filter-sidebar">
+                    <div class="filter-card">
+                        <h3 class="filter-title">📂 产品分类</h3>
+                        <div class="filter-list" id="categoryFilter">
+                            <div class="filter-item active" data-category="all">
+                                <span class="filter-icon">🥛</span>
+                                <span>全部产品</span>
+                            </div>
+                            <div class="filter-item" data-category="1">
+                                <span class="filter-icon">🥛</span>
+                                <span>鲜牛奶</span>
+                            </div>
+                            <div class="filter-item" data-category="2">
+                                <span class="filter-icon">🍶</span>
+                                <span>酸奶</span>
+                            </div>
+                            <div class="filter-item" data-category="3">
+                                <span class="filter-icon">🧀</span>
+                                <span>奶酪</span>
+                            </div>
+                            <div class="filter-item" data-category="4">
+                                <span class="filter-icon">🌿</span>
+                                <span>有机奶</span>
+                            </div>
+                            <div class="filter-item" data-category="5">
+                                <span class="filter-icon">👶</span>
+                                <span>儿童奶</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-card">
+                        <h3 class="filter-title">🏷️ 筛选</h3>
+                        <div class="filter-list">
+                            <div class="filter-item" data-filter="hot">
+                                <span class="filter-icon">🔥</span>
+                                <span>热门推荐</span>
+                            </div>
+                            <div class="filter-item" data-filter="new">
+                                <span class="filter-icon">✨</span>
+                                <span>新品上市</span>
+                            </div>
+                            <div class="filter-item" data-filter="subscription">
+                                <span class="filter-icon">📅</span>
+                                <span>支持周期购</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-card">
+                        <h3 class="filter-title">💰 价格区间</h3>
+                        <div class="price-range">
+                            <input type="number" class="price-input" placeholder="最低" id="priceMin">
+                            <span>-</span>
+                            <input type="number" class="price-input" placeholder="最高" id="priceMax">
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- 产品列表 -->
+                <main class="products-main">
+                    <div class="products-toolbar">
+                        <span class="products-count" id="productsCount">共 0 件商品</span>
+                        <div class="products-sort">
+                            <span class="sort-label">排序:</span>
+                            <div class="sort-options">
+                                <button class="sort-btn active" data-sort="default">默认</button>
+                                <button class="sort-btn" data-sort="sales">销量</button>
+                                <button class="sort-btn" data-sort="price-asc">价格↑</button>
+                                <button class="sort-btn" data-sort="price-desc">价格↓</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-grid" id="productGrid">
+                        <!-- 产品卡片由JS动态加载 -->
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 鲜奶直达. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        // 模拟产品数据
+        const allProducts = [
+            { id: 1, name: '每日鲜牛奶', specification: '250ml × 10瓶', price: 39.90, original_price: 49.90, cover_image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&q=80', category: 1, is_hot: true, sales: 1520 },
+            { id: 2, name: '有机纯牛奶', specification: '1L × 6盒', price: 89.00, original_price: 108.00, cover_image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80', category: 4, is_hot: true, is_new: true, sales: 980 },
+            { id: 3, name: '低脂鲜牛奶', specification: '500ml × 8瓶', price: 56.80, original_price: 68.00, cover_image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=400&q=80', category: 1, is_hot: true, sales: 856 },
+            { id: 4, name: '儿童成长奶', specification: '200ml × 12瓶', price: 68.00, original_price: 79.00, cover_image: 'https://images.unsplash.com/photo-1572443490709-e57652c96a1b?w=400&q=80', category: 5, is_subscription: true, sales: 720 },
+            { id: 5, name: 'A2蛋白鲜牛奶', specification: '950ml × 2瓶', price: 45.00, original_price: 52.00, cover_image: 'https://images.unsplash.com/photo-1600788907416-456578634209?w=400&q=80', category: 1, is_new: true, sales: 450 },
+            { id: 6, name: '草莓味酸奶', specification: '100g × 12杯', price: 38.00, original_price: 45.00, cover_image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80', category: 2, is_new: true, sales: 620 },
+            { id: 7, name: '原味希腊酸奶', specification: '400g × 4盒', price: 59.00, original_price: 72.00, cover_image: 'https://images.unsplash.com/photo-1571212515416-fef01fc43637?w=400&q=80', category: 2, is_new: true, sales: 380 },
+            { id: 8, name: '高钙牛奶', specification: '250ml × 16盒', price: 65.00, original_price: 78.00, cover_image: 'https://images.unsplash.com/photo-1634141510639-d691d8092a14?w=400&q=80', category: 1, sales: 520 },
+            { id: 9, name: '马苏里拉奶酪', specification: '200g × 3袋', price: 48.00, original_price: 58.00, cover_image: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=400&q=80', category: 3, sales: 280 },
+            { id: 10, name: '有机婴儿奶粉', specification: '800g × 1罐', price: 298.00, original_price: 358.00, cover_image: 'https://images.unsplash.com/photo-1584949091598-c31daaaa4aa9?w=400&q=80', category: 5, is_subscription: true, sales: 150 },
+        ];
+
+        let currentFilters = {
+            category: 'all',
+            filter: null,
+            sort: 'default',
+            priceMin: null,
+            priceMax: null
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initFilters();
+            renderProducts();
+            utils.updateCartBadge();
+        });
+
+        function initFilters() {
+            // 分类筛选
+            document.querySelectorAll('#categoryFilter .filter-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('#categoryFilter .filter-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    currentFilters.category = item.dataset.category;
+                    renderProducts();
+                });
+            });
+
+            // 其他筛选
+            document.querySelectorAll('[data-filter]').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (item.classList.contains('active')) {
+                        item.classList.remove('active');
+                        currentFilters.filter = null;
+                    } else {
+                        document.querySelectorAll('[data-filter]').forEach(i => i.classList.remove('active'));
+                        item.classList.add('active');
+                        currentFilters.filter = item.dataset.filter;
+                    }
+                    renderProducts();
+                });
+            });
+
+            // 排序
+            document.querySelectorAll('.sort-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilters.sort = btn.dataset.sort;
+                    renderProducts();
+                });
+            });
+
+            // 价格筛选
+            const priceInputs = [document.getElementById('priceMin'), document.getElementById('priceMax')];
+            priceInputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    currentFilters.priceMin = document.getElementById('priceMin').value || null;
+                    currentFilters.priceMax = document.getElementById('priceMax').value || null;
+                    renderProducts();
+                });
+            });
+        }
+
+        function renderProducts() {
+            let products = [...allProducts];
+
+            // 分类筛选
+            if (currentFilters.category !== 'all') {
+                products = products.filter(p => p.category == currentFilters.category);
+            }
+
+            // 其他筛选
+            if (currentFilters.filter === 'hot') {
+                products = products.filter(p => p.is_hot);
+            } else if (currentFilters.filter === 'new') {
+                products = products.filter(p => p.is_new);
+            } else if (currentFilters.filter === 'subscription') {
+                products = products.filter(p => p.is_subscription);
+            }
+
+            // 价格筛选
+            if (currentFilters.priceMin) {
+                products = products.filter(p => p.price >= parseFloat(currentFilters.priceMin));
+            }
+            if (currentFilters.priceMax) {
+                products = products.filter(p => p.price <= parseFloat(currentFilters.priceMax));
+            }
+
+            // 排序
+            if (currentFilters.sort === 'sales') {
+                products.sort((a, b) => b.sales - a.sales);
+            } else if (currentFilters.sort === 'price-asc') {
+                products.sort((a, b) => a.price - b.price);
+            } else if (currentFilters.sort === 'price-desc') {
+                products.sort((a, b) => b.price - a.price);
+            }
+
+            // 更新数量
+            document.getElementById('productsCount').textContent = `共 ${products.length} 件商品`;
+
+            // 渲染
+            const grid = document.getElementById('productGrid');
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">📦</div>
+                        <p>暂无符合条件的商品</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = products.map(product => createProductCardHTML(product)).join('');
+        }
+
+        function createProductCardHTML(product) {
+            let tags = '';
+            if (product.is_hot) tags += '<span class="product-tag hot">热门</span>';
+            if (product.is_new) tags += '<span class="product-tag new">新品</span>';
+            if (product.is_subscription) tags += '<span class="product-tag subscription">周期购</span>';
+
+            return `
+                <div class="product-card" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                    <div class="product-image">
+                        <img src="${product.cover_image}" alt="${product.name}">
+                        <div class="product-tags">${tags}</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">${product.name}</h3>
+                        <p class="product-spec">${product.specification || ''}</p>
+                        <div class="product-footer">
+                            <div class="product-price">
+                                <span class="price-current">${utils.formatPrice(product.price)}</span>
+                                ${product.original_price ? `<span class="price-original">¥${utils.formatPrice(product.original_price)}</span>` : ''}
+                            </div>
+                            <button class="product-cart-btn" onclick="event.stopPropagation(); addToCart(${product.id})">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 5v14M5 12h14"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addToCart(productId) {
+            const product = allProducts.find(p => p.id === productId);
+            if (product) {
+                utils.localCart.addItem(product, 1);
+                utils.showToast('已加入购物车', 'success');
+            }
+        }
+    </script>
+</body>
+
+</html>

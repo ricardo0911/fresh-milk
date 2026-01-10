@@ -1,0 +1,94 @@
+<!-- pages/product/product.wxml - 产品详情 -->
+<view class="page-product">
+  <!-- 产品图片 -->
+  <swiper class="product-gallery" indicator-dots>
+    <swiper-item wx:for="{{images}}" wx:key="index">
+      <image class="gallery-image" src="{{item}}" mode="aspectFill" bindtap="previewImage" data-url="{{item}}" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 价格信息 -->
+  <view class="price-section">
+    <view class="price-row">
+      <text class="price-main price">{{product.price}}</text>
+      <text class="price-original" wx:if="{{product.original_price}}">¥{{product.original_price}}</text>
+      <text class="price-tag" wx:if="{{product.original_price}}">省 ¥{{savingAmount}}</text>
+    </view>
+    <view class="promo-row">
+      <text class="promo-item">✓ 新人首单立减5元</text>
+      <text class="promo-item">✓ 满88包邮</text>
+    </view>
+  </view>
+
+  <!-- 产品信息 -->
+  <view class="info-section card">
+    <view class="product-tags" wx:if="{{product.is_hot || product.is_new}}">
+      <text class="tag tag-hot" wx:if="{{product.is_hot}}">热门</text>
+      <text class="tag tag-new" wx:if="{{product.is_new}}">新品</text>
+    </view>
+    <text class="product-name">{{product.name}}</text>
+    <text class="product-desc">{{product.description || '源自天然牧场，每日新鲜直达'}}</text>
+  </view>
+
+  <!-- 规格信息 -->
+  <view class="specs-section card">
+    <view class="spec-row">
+      <text class="spec-label">规格</text>
+      <text class="spec-value">{{product.specification}}</text>
+    </view>
+    <view class="spec-row">
+      <text class="spec-label">产地</text>
+      <text class="spec-value">内蒙古呼伦贝尔</text>
+    </view>
+    <view class="spec-row">
+      <text class="spec-label">保质期</text>
+      <text class="spec-value">7天 (冷藏保存)</text>
+    </view>
+    <view class="spec-row">
+      <text class="spec-label">配送</text>
+      <text class="spec-value">冷链配送，每日7:00前送达</text>
+    </view>
+  </view>
+
+  <!-- 详情/评价标签 -->
+  <view class="tabs-section card">
+    <view class="tabs-header">
+      <text class="tab-btn {{currentTab === 'detail' ? 'active' : ''}}" bindtap="switchTab" data-tab="detail">商品详情</text>
+      <text class="tab-btn {{currentTab === 'reviews' ? 'active' : ''}}" bindtap="switchTab" data-tab="reviews">用户评价</text>
+    </view>
+    
+    <view class="tab-content" wx:if="{{currentTab === 'detail'}}">
+      <text class="detail-text">{{product.detail || '每日鲜牛奶精选优质奶源，来自内蒙古呼伦贝尔天然牧场。采用先进的巴氏杀菌工艺，最大程度保留牛奶的新鲜口感和营养成分。冷链全程4℃保鲜配送，确保您收到的每一瓶牛奶都是最新鲜的。'}}</text>
+    </view>
+    
+    <view class="tab-content" wx:if="{{currentTab === 'reviews'}}">
+      <view class="review-item" wx:for="{{reviews}}" wx:key="id">
+        <image class="review-avatar" src="{{item.avatar}}" />
+        <view class="review-content">
+          <text class="review-name">{{item.name}}</text>
+          <text class="review-rating">{{item.rating}}</text>
+          <text class="review-text">{{item.content}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="bottom-left">
+      <view class="bottom-btn" bindtap="goToHome">
+        <text class="bottom-icon">🏠</text>
+        <text class="bottom-text">首页</text>
+      </view>
+      <view class="bottom-btn" bindtap="goToCart">
+        <text class="bottom-icon">🛒</text>
+        <text class="bottom-text">购物车</text>
+        <text class="cart-badge" wx:if="{{cartCount > 0}}">{{cartCount > 99 ? '99+' : cartCount}}</text>
+      </view>
+    </view>
+    <view class="bottom-right">
+      <button class="action-btn btn-cart" bindtap="addToCart">加入购物车</button>
+      <button class="action-btn btn-buy" bindtap="buyNow">立即购买</button>
+    </view>
+  </view>
+</view>

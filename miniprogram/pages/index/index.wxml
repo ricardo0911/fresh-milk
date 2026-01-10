@@ -1,0 +1,109 @@
+<!-- pages/index/index.wxml - 首页 -->
+<view class="page-index">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input" bindtap="goToSearch">
+      <text class="search-icon">🔍</text>
+      <text class="search-placeholder">搜索鲜奶产品</text>
+    </view>
+  </view>
+
+  <!-- 轮播图 -->
+  <swiper class="banner" indicator-dots autoplay circular interval="4000">
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <image class="banner-image" src="{{item.image}}" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 周期购入口 -->
+  <view class="subscription-banner" bindtap="goToSubscription">
+    <view class="subscription-content">
+      <text class="subscription-badge">周期购</text>
+      <text class="subscription-title">订阅鲜奶，每日直达</text>
+      <text class="subscription-desc">周期购享9折优惠</text>
+    </view>
+    <text class="subscription-arrow">></text>
+  </view>
+
+  <!-- 猜你喜欢 -->
+  <view class="section guess-section">
+    <view class="section-header guess-header">
+      <view class="guess-title-wrap">
+        <text class="guess-icon">💙</text>
+        <text class="section-title">猜你喜欢</text>
+      </view>
+      <text class="section-more" bindtap="goToProducts" data-filter="recommend">换一批</text>
+    </view>
+    <view class="guess-grid">
+      <view class="guess-card" wx:for="{{guessProducts}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
+        <view class="guess-image-wrap">
+          <image class="guess-image" src="{{item.cover_image}}" mode="aspectFill" />
+          <view class="guess-fresh-tag" wx:if="{{item.fresh_days}}">
+            <text class="fresh-days">{{item.fresh_days}}天起</text>
+            <text class="fresh-label">新鲜日期</text>
+          </view>
+        </view>
+        <view class="guess-info">
+          <text class="guess-name">{{item.name}}</text>
+          <text class="guess-spec">{{item.specification}}</text>
+          <view class="guess-footer">
+            <text class="guess-price">¥{{item.price}}</text>
+            <view class="guess-cart-btn" catchtap="addToCart" data-product="{{item}}">🛒</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门推荐 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🔥 热门推荐</text>
+      <text class="section-more" bindtap="goToProducts" data-filter="hot">更多 ></text>
+    </view>
+    <scroll-view class="product-scroll" scroll-x>
+      <view class="product-card" wx:for="{{hotProducts}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
+        <image class="product-image" src="{{item.cover_image}}" mode="aspectFill" />
+        <view class="product-tags" wx:if="{{item.is_hot || item.is_new}}">
+          <text class="tag tag-hot" wx:if="{{item.is_hot}}">热门</text>
+          <text class="tag tag-new" wx:if="{{item.is_new}}">新品</text>
+        </view>
+        <view class="product-info">
+          <text class="product-name">{{item.name}}</text>
+          <text class="product-spec">{{item.specification}}</text>
+          <view class="product-footer">
+            <text class="price">{{item.price}}</text>
+            <view class="add-cart-btn" catchtap="addToCart" data-product="{{item}}">+</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 新品上市 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🌟 新品上市</text>
+      <text class="section-more" bindtap="goToProducts" data-filter="new">更多 ></text>
+    </view>
+    <view class="product-grid">
+      <view class="product-card-grid" wx:for="{{newProducts}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
+        <image class="product-image-grid" src="{{item.cover_image}}" mode="aspectFill" />
+        <view class="product-tags" wx:if="{{item.is_new}}">
+          <text class="tag tag-new">新品</text>
+        </view>
+        <view class="product-info">
+          <text class="product-name">{{item.name}}</text>
+          <text class="product-spec">{{item.specification}}</text>
+          <view class="product-footer">
+            <view>
+              <text class="price">{{item.price}}</text>
+              <text class="price-original" wx:if="{{item.original_price}}">¥{{item.original_price}}</text>
+            </view>
+            <view class="add-cart-btn" catchtap="addToCart" data-product="{{item}}">+</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

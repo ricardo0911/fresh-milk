@@ -1,0 +1,64 @@
+{
+    "pages": [
+        "pages/index/index",
+        "pages/category/category",
+        "pages/cart/cart",
+        "pages/user/user",
+        "pages/member/member",
+        "pages/product/product",
+        "pages/order/order",
+        "pages/orders/orders",
+        "pages/subscription/subscription",
+        "pages/coupon/coupon",
+        "pages/address/address",
+        "pages/order-result/order-result",
+        "pages/login/login"
+    ],
+    "window": {
+        "navigationBarBackgroundColor": "#10b981",
+        "navigationBarTitleText": "鲜奶直达",
+        "navigationBarTextStyle": "white",
+        "backgroundColor": "#f5f5f5",
+        "backgroundTextStyle": "dark"
+    },
+    "tabBar": {
+        "color": "#999999",
+        "selectedColor": "#1a2a5e",
+        "backgroundColor": "#ffffff",
+        "borderStyle": "black",
+        "list": [
+            {
+                "pagePath": "pages/index/index",
+                "text": "首页",
+                "iconPath": "assets/icons/home.png",
+                "selectedIconPath": "assets/icons/home-active.png"
+            },
+            {
+                "pagePath": "pages/category/category",
+                "text": "商品",
+                "iconPath": "assets/icons/category.png",
+                "selectedIconPath": "assets/icons/category-active.png"
+            },
+            {
+                "pagePath": "pages/member/member",
+                "text": "会员",
+                "iconPath": "assets/icons/member.png",
+                "selectedIconPath": "assets/icons/member-active.png"
+            },
+            {
+                "pagePath": "pages/cart/cart",
+                "text": "购物车",
+                "iconPath": "assets/icons/cart.png",
+                "selectedIconPath": "assets/icons/cart-active.png"
+            },
+            {
+                "pagePath": "pages/user/user",
+                "text": "个人中心",
+                "iconPath": "assets/icons/user.png",
+                "selectedIconPath": "assets/icons/user-active.png"
+            }
+        ]
+    },
+    "style": "v2",
+    "sitemapLocation": "sitemap.json"
+}

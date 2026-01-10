@@ -1,0 +1,161 @@
+<!-- pages/subscription/subscription.wxml - 周期购 -->
+<view class="page-subscription">
+  <!-- 顶部标签 -->
+  <view class="tabs">
+    <view class="tab {{currentTab === 'products' ? 'active' : ''}}" bindtap="switchTab" data-tab="products">
+      周期购产品
+    </view>
+    <view class="tab {{currentTab === 'my' ? 'active' : ''}}" bindtap="switchTab" data-tab="my">
+      我的订阅
+    </view>
+  </view>
+
+  <!-- 周期购产品列表 -->
+  <view class="product-list" wx:if="{{currentTab === 'products'}}">
+    <view class="product-card" wx:for="{{products}}" wx:key="id" bindtap="selectProduct" data-product="{{item}}">
+      <image class="product-image" src="{{item.cover_image}}" mode="aspectFill" />
+      <view class="product-info">
+        <view class="product-header">
+          <text class="product-name">{{item.name}}</text>
+          <text class="subscription-badge">周期购</text>
+        </view>
+        <text class="product-spec">{{item.specification}}</text>
+        <view class="product-prices">
+          <text class="price">{{item.subscription_price || item.price}}</text>
+          <text class="original-price" wx:if="{{item.original_price}}">¥{{item.original_price}}</text>
+        </view>
+        <text class="discount-hint">周期购享9折优惠</text>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{products.length === 0}}">
+      <text class="empty-icon">📦</text>
+      <text class="empty-text">暂无周期购产品</text>
+    </view>
+  </view>
+
+  <!-- 我的订阅 -->
+  <view class="subscription-list" wx:if="{{currentTab === 'my'}}">
+    <view class="subscription-card" wx:for="{{subscriptions}}" wx:key="id">
+      <view class="subscription-header">
+        <text class="subscription-status status-{{item.status}}">{{item.status_display}}</text>
+        <text class="subscription-no">订阅号: {{item.subscription_no}}</text>
+      </view>
+      <view class="subscription-body">
+        <image class="subscription-image" src="{{item.product.cover_image}}" mode="aspectFill" />
+        <view class="subscription-info">
+          <text class="subscription-name">{{item.product.name}}</text>
+          <view class="subscription-detail">
+            <text>配送周期: {{item.frequency_display}}</text>
+            <text>共{{item.total_periods}}期</text>
+          </view>
+          <view class="subscription-detail">
+            <text>已配送: {{item.delivered_count}}期</text>
+            <text>下次配送: {{item.next_delivery_date}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="subscription-footer">
+        <text class="subscription-price">¥{{item.period_price}}/期</text>
+        <button class="btn-cancel" wx:if="{{item.status === 'active'}}" catchtap="cancelSubscription" data-id="{{item.id}}">
+          暂停订阅
+        </button>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{subscriptions.length === 0}}">
+      <text class="empty-icon">📅</text>
+      <text class="empty-text">暂无订阅</text>
+      <button class="btn btn-primary" bindtap="switchToProducts">去订阅</button>
+    </view>
+  </view>
+
+  <!-- 订阅配置弹窗 -->
+  <view class="modal-mask" wx:if="{{showModal}}" bindtap="closeModal"></view>
+  <view class="modal-content" wx:if="{{showModal}}">
+    <view class="modal-header">
+      <text class="modal-title">配置周期购</text>
+      <text class="modal-close" bindtap="closeModal">×</text>
+    </view>
+    
+    <view class="modal-body">
+      <!-- 产品信息 -->
+      <view class="selected-product">
+        <image class="selected-image" src="{{selectedProduct.cover_image}}" mode="aspectFill" />
+        <view class="selected-info">
+          <text class="selected-name">{{selectedProduct.name}}</text>
+          <text class="selected-spec">{{selectedProduct.specification}}</text>
+        </view>
+      </view>
+
+      <!-- 配送频率 -->
+      <view class="config-section">
+        <text class="config-label">配送频率</text>
+        <view class="config-options">
+          <view class="config-option {{frequency === 'daily' ? 'active' : ''}}" bindtap="setFrequency" data-value="daily">
+            每日
+          </view>
+          <view class="config-option {{frequency === 'weekly' ? 'active' : ''}}" bindtap="setFrequency" data-value="weekly">
+            每周一次
+          </view>
+          <view class="config-option {{frequency === 'biweekly' ? 'active' : ''}}" bindtap="setFrequency" data-value="biweekly">
+            每两周
+          </view>
+        </view>
+      </view>
+
+      <!-- 配送期数 -->
+      <view class="config-section">
+        <text class="config-label">配送期数</text>
+        <view class="config-options">
+          <view class="config-option {{periods === 4 ? 'active' : ''}}" bindtap="setPeriods" data-value="4">
+            4期
+          </view>
+          <view class="config-option {{periods === 8 ? 'active' : ''}}" bindtap="setPeriods" data-value="8">
+            8期
+          </view>
+          <view class="config-option {{periods === 12 ? 'active' : ''}}" bindtap="setPeriods" data-value="12">
+            12期起订
+          </view>
+        </view>
+      </view>
+
+      <!-- 每期数量 -->
+      <view class="config-section">
+        <text class="config-label">每期数量</text>
+        <view class="quantity-selector">
+          <text class="qty-btn" bindtap="decreaseQty">−</text>
+          <text class="qty-value">{{quantity}}</text>
+          <text class="qty-btn" bindtap="increaseQty">+</text>
+        </view>
+      </view>
+
+      <!-- 开始日期 -->
+      <view class="config-section">
+        <text class="config-label">最早配送</text>
+        <picker mode="date" value="{{startDate}}" start="{{minDate}}" bindchange="setStartDate">
+          <view class="date-picker">
+            <text>{{startDate}}</text>
+            <text class="picker-arrow">></text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 价格汇总 -->
+      <view class="price-summary">
+        <view class="summary-row">
+          <text>单期价格</text>
+          <text class="price">{{periodPrice}}</text>
+        </view>
+        <view class="summary-row total">
+          <text>总计 ({{periods}}期)</text>
+          <text class="price total-price">{{totalPrice}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="modal-footer">
+      <button class="btn btn-primary btn-block" bindtap="confirmSubscription">确认订阅</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,103 @@
+<!-- pages/member/member.wxml - 会员社区 -->
+<view class="page-member">
+  <!-- 顶部导航标签 -->
+  <view class="top-tabs">
+    <view class="tab-item {{currentTab === index ? 'active' : ''}}" 
+          wx:for="{{tabs}}" wx:key="index"
+          bindtap="switchTab" data-index="{{index}}">
+      <text>{{item}}</text>
+    </view>
+  </view>
+
+  <scroll-view class="main-scroll" scroll-y>
+    <!-- 活动Banner -->
+    <view class="promo-banner">
+      <view class="banner-overlay"></view>
+      <view class="banner-content">
+        <text class="banner-title">818会员日大馈赠</text>
+        <text class="banner-subtitle">共赴沙漠有机之旅</text>
+        <view class="banner-btn">更好瞬间回顾</view>
+      </view>
+      <text class="banner-tag">会员漫谈会</text>
+    </view>
+
+    <!-- 热门话题 -->
+    <view class="section">
+      <view class="section-header">
+        <view class="section-title-wrap">
+          <text class="section-icon">🔥</text>
+          <text class="section-title">热门话题</text>
+        </view>
+        <text class="section-more" bindtap="viewAllTopics">全部话题 ></text>
+      </view>
+      <scroll-view class="topic-scroll" scroll-x>
+        <view class="topic-card" wx:for="{{topics}}" wx:key="id" bindtap="viewTopic" data-id="{{item.id}}">
+          <image class="topic-image" src="{{item.image}}" mode="aspectFill" />
+          <view class="topic-overlay"></view>
+          <text class="topic-name"># {{item.name}}</text>
+        </view>
+      </scroll-view>
+      <view class="topic-dots">
+        <view class="dot {{index < 3 ? 'active' : ''}}" wx:for="{{topics}}" wx:key="index"></view>
+      </view>
+    </view>
+
+    <!-- 热门内容 -->
+    <view class="section">
+      <view class="section-header">
+        <view class="section-title-wrap">
+          <text class="section-icon">📰</text>
+          <text class="section-title">热门内容</text>
+        </view>
+      </view>
+      <view class="filter-tabs">
+        <view class="filter-tab {{contentFilter === 'all' ? 'active' : ''}}" bindtap="setFilter" data-filter="all">全部</view>
+        <view class="filter-tab {{contentFilter === 'image' ? 'active' : ''}}" bindtap="setFilter" data-filter="image">图文</view>
+        <view class="filter-tab {{contentFilter === 'video' ? 'active' : ''}}" bindtap="setFilter" data-filter="video">视频</view>
+      </view>
+    </view>
+
+    <!-- 瀑布流内容 -->
+    <view class="waterfall">
+      <view class="waterfall-column">
+        <view class="post-card" wx:for="{{leftPosts}}" wx:key="id" bindtap="viewPost" data-id="{{item.id}}">
+          <image class="post-image" src="{{item.image}}" mode="widthFix" />
+          <view class="post-info">
+            <view class="user-row">
+              <image class="user-avatar" src="{{item.avatar}}" />
+              <text class="user-name">{{item.username}}</text>
+              <view class="like-wrap">
+                <text class="like-icon">❤️</text>
+                <text class="like-count">{{item.likes}}</text>
+              </view>
+            </view>
+            <text class="post-content">{{item.content}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="waterfall-column">
+        <view class="post-card" wx:for="{{rightPosts}}" wx:key="id" bindtap="viewPost" data-id="{{item.id}}">
+          <image class="post-image" src="{{item.image}}" mode="widthFix" />
+          <view class="post-info">
+            <view class="user-row">
+              <image class="user-avatar" src="{{item.avatar}}" />
+              <text class="user-name">{{item.username}}</text>
+              <view class="like-wrap">
+                <text class="like-icon">❤️</text>
+                <text class="like-count">{{item.likes}}</text>
+              </view>
+            </view>
+            <text class="post-content">{{item.content}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="footer-space"></view>
+  </scroll-view>
+
+  <!-- 发布按钮 -->
+  <view class="publish-btn" bindtap="publishPost">
+    <text class="publish-icon">+</text>
+  </view>
+</view>

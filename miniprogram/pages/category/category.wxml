@@ -1,0 +1,56 @@
+<!-- pages/category/category.wxml - 分类页 -->
+<view class="page-category">
+  <!-- 分类侧边栏 -->
+  <scroll-view class="category-sidebar" scroll-y>
+    <view 
+      class="category-item {{currentCategory === item.id ? 'active' : ''}}" 
+      wx:for="{{categories}}" 
+      wx:key="id"
+      bindtap="selectCategory"
+      data-id="{{item.id}}"
+    >
+      <text class="category-icon">{{item.icon}}</text>
+      <text class="category-name">{{item.name}}</text>
+    </view>
+  </scroll-view>
+
+  <!-- 产品列表 -->
+  <scroll-view class="product-list" scroll-y>
+    <view class="product-header">
+      <text class="product-count">共 {{products.length}} 件商品</text>
+      <view class="sort-options">
+        <text class="sort-btn {{sortBy === 'default' ? 'active' : ''}}" bindtap="setSort" data-sort="default">默认</text>
+        <text class="sort-btn {{sortBy === 'sales' ? 'active' : ''}}" bindtap="setSort" data-sort="sales">销量</text>
+        <text class="sort-btn {{sortBy === 'price' ? 'active' : ''}}" bindtap="setSort" data-sort="price">价格</text>
+      </view>
+    </view>
+
+    <view class="product-grid">
+      <view class="product-card" wx:for="{{products}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
+        <view class="product-image-wrapper">
+          <image class="product-image" src="{{item.cover_image}}" mode="aspectFill" />
+          <view class="product-tags" wx:if="{{item.is_hot || item.is_new}}">
+            <text class="tag tag-hot" wx:if="{{item.is_hot}}">热门</text>
+            <text class="tag tag-new" wx:if="{{item.is_new}}">新品</text>
+          </view>
+        </view>
+        <view class="product-info">
+          <text class="product-name">{{item.name}}</text>
+          <text class="product-spec">{{item.specification}}</text>
+          <view class="product-footer">
+            <view>
+              <text class="price">{{item.price}}</text>
+              <text class="price-original" wx:if="{{item.original_price}}">¥{{item.original_price}}</text>
+            </view>
+            <view class="add-cart-btn" catchtap="addToCart" data-product="{{item}}">+</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{products.length === 0}}">
+      <text class="empty-icon">📦</text>
+      <text class="empty-text">该分类暂无商品</text>
+    </view>
+  </scroll-view>
+</view>

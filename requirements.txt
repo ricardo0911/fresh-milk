@@ -1,0 +1,9 @@
+# 鲜牛奶订购管理系统 - 依赖列表
+Django>=4.2
+djangorestframework>=3.14
+django-cors-headers>=4.0
+djangorestframework-simplejwt>=5.3
+Pillow>=10.0
+PyMySQL>=1.1
+mysqlclient>=2.2
+redis>=5.0

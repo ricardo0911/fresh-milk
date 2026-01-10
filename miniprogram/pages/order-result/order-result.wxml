@@ -1,0 +1,35 @@
+<!-- pages/order-result/order-result.wxml - 支付结果页 -->
+<view class="page-result">
+  <!-- 成功状态 -->
+  <view class="result-card" wx:if="{{status === 'success'}}">
+    <view class="result-icon success">✓</view>
+    <text class="result-title">支付成功</text>
+    <text class="result-amount">¥{{amount}}</text>
+    <text class="result-desc">订单号：{{orderId}}</text>
+  </view>
+
+  <!-- 失败状态 -->
+  <view class="result-card" wx:if="{{status === 'fail'}}">
+    <view class="result-icon fail">×</view>
+    <text class="result-title">支付失败</text>
+    <text class="result-desc">{{message || '请重新尝试支付'}}</text>
+  </view>
+
+  <!-- 按钮组 -->
+  <view class="action-buttons">
+    <button class="btn btn-outline" bindtap="viewOrder">查看订单</button>
+    <button class="btn btn-primary" bindtap="goHome">返回首页</button>
+  </view>
+
+  <!-- 推荐商品 -->
+  <view class="recommend-section" wx:if="{{status === 'success'}}">
+    <text class="section-title">猜你喜欢</text>
+    <scroll-view class="product-scroll" scroll-x>
+      <view class="product-card" wx:for="{{recommendProducts}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
+        <image class="product-image" src="{{item.cover_image}}" mode="aspectFill" />
+        <text class="product-name">{{item.name}}</text>
+        <text class="product-price">¥{{item.price}}</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

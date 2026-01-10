@@ -1,0 +1,76 @@
+<!-- pages/order/order.wxml - 确认订单 -->
+<view class="page-order">
+  <!-- 收货地址 -->
+  <view class="address-section card" bindtap="selectAddress">
+    <view wx:if="{{address}}">
+      <view class="address-info">
+        <text class="address-name">{{address.name}}</text>
+        <text class="address-phone">{{address.phone}}</text>
+      </view>
+      <text class="address-detail">{{address.province}}{{address.city}}{{address.district}}{{address.address}}</text>
+    </view>
+    <view wx:else class="address-empty">
+      <text class="address-icon">📍</text>
+      <text class="address-text">请选择收货地址</text>
+    </view>
+    <text class="address-arrow">></text>
+  </view>
+
+  <!-- 商品列表 -->
+  <view class="goods-section card">
+    <view class="section-title">商品信息</view>
+    <view class="goods-item" wx:for="{{orderItems}}" wx:key="index">
+      <image class="goods-image" src="{{item.product.cover_image}}" mode="aspectFill" />
+      <view class="goods-info">
+        <text class="goods-name">{{item.product.name}}</text>
+        <text class="goods-spec">{{item.product.specification}}</text>
+        <view class="goods-footer">
+          <text class="price">{{item.product.price}}</text>
+          <text class="goods-qty">×{{item.quantity}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 优惠券 -->
+  <view class="coupon-section card" bindtap="selectCoupon">
+    <text class="coupon-label">优惠券</text>
+    <view class="coupon-value" wx:if="{{selectedCoupon}}">
+      <text class="coupon-name">{{selectedCoupon.name}}</text>
+      <text class="coupon-discount">-¥{{selectedCoupon.discount}}</text>
+    </view>
+    <text class="coupon-value" wx:else>{{couponsCount > 0 ? couponsCount + '张可用' : '暂无可用'}}</text>
+    <text class="coupon-arrow">></text>
+  </view>
+
+  <!-- 备注 -->
+  <view class="remark-section card">
+    <text class="remark-label">订单备注</text>
+    <input class="remark-input" placeholder="选填：如有特殊需求请备注" bindinput="onRemarkInput" />
+  </view>
+
+  <!-- 价格明细 -->
+  <view class="price-section card">
+    <view class="price-row">
+      <text class="price-label">商品金额</text>
+      <text class="price-value">¥{{goodsAmount}}</text>
+    </view>
+    <view class="price-row">
+      <text class="price-label">运费</text>
+      <text class="price-value">{{shipping > 0 ? '¥' + shipping : '免运费'}}</text>
+    </view>
+    <view class="price-row" wx:if="{{discountAmount > 0}}">
+      <text class="price-label">优惠</text>
+      <text class="price-value discount">-¥{{discountAmount}}</text>
+    </view>
+  </view>
+
+  <!-- 底部结算 -->
+  <view class="bottom-bar">
+    <view class="total-section">
+      <text class="total-label">合计：</text>
+      <text class="total-price price">{{totalAmount}}</text>
+    </view>
+    <button class="submit-btn" bindtap="submitOrder">提交订单</button>
+  </view>
+</view>
