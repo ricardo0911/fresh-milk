@@ -36,7 +36,7 @@
 
   <!-- 我的订阅 -->
   <view class="subscription-list" wx:if="{{currentTab === 'my'}}">
-    <view class="subscription-card" wx:for="{{subscriptions}}" wx:key="id">
+    <view class="subscription-card" wx:for="{{subscriptions}}" wx:key="id" bindtap="goToSubscriptionDetail" data-id="{{item.subscription_no}}">
       <view class="subscription-header">
         <text class="subscription-status status-{{item.status}}">{{item.status_display}}</text>
         <text class="subscription-no">订阅号: {{item.subscription_no}}</text>
@@ -47,19 +47,30 @@
           <text class="subscription-name">{{item.product.name}}</text>
           <view class="subscription-detail">
             <text>配送周期: {{item.frequency_display}}</text>
-            <text>共{{item.total_periods}}期</text>
+          </view>
+          <!-- 配送进度 -->
+          <view class="delivery-progress">
+            <view class="progress-bar">
+              <view class="progress-fill" style="width: {{item.delivered_count / item.total_periods * 100}}%"></view>
+            </view>
+            <text class="progress-text">{{item.delivered_count}}/{{item.total_periods}}期</text>
           </view>
           <view class="subscription-detail">
-            <text>已配送: {{item.delivered_count}}期</text>
-            <text>下次配送: {{item.next_delivery_date}}</text>
+            <text class="next-delivery">📅 下次配送: {{item.next_delivery_date}}</text>
           </view>
         </view>
       </view>
       <view class="subscription-footer">
-        <text class="subscription-price">¥{{item.period_price}}/期</text>
-        <button class="btn-cancel" wx:if="{{item.status === 'active'}}" catchtap="cancelSubscription" data-id="{{item.id}}">
-          暂停订阅
-        </button>
+        <view class="footer-left">
+          <text class="subscription-price">¥{{item.period_price}}/期</text>
+          <text class="remaining-count">剩余 {{item.total_periods - item.delivered_count}} 期</text>
+        </view>
+        <view class="footer-actions">
+          <button class="btn-detail" catchtap="goToSubscriptionDetail" data-id="{{item.subscription_no}}">查看详情</button>
+          <button class="btn-cancel" wx:if="{{item.status === 'active'}}" catchtap="cancelSubscription" data-id="{{item.id}}">
+            暂停
+          </button>
+        </view>
       </view>
     </view>
 

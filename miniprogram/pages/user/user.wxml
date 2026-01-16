@@ -18,16 +18,17 @@
       <view class="user-info-row">
         <view class="avatar-container">
           <image class="avatar" src="{{userInfo.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"></image>
-          <image class="vip-crown" wx:if="{{userInfo}}" src="/assets/icons/crown.png" mode="widthFix"></image> <!-- 假设有这个图标，或者用css画 -->
+          <view class="vip-crown" wx:if="{{userInfo}}">👑</view>
         </view>
         <view class="info-content">
           <view class="name-box">
             <text class="nickname">{{userInfo.username || userInfo.phone || '点击登录/注册'}}</text>
-            <view class="member-tag" wx:if="{{userInfo}}">
-              <text class="tag-text">名仕会员</text>
+            <view class="member-tag {{memberLevel}}" wx:if="{{userInfo}}">
+              <text class="tag-text">{{memberLevelName}}</text>
             </view>
           </view>
-          <text class="subtitle">{{userInfo ? '尊享会员权益正在生效中' : '登录开启尊享鲜奶之旅'}}</text>
+          <text class="subtitle" wx:if="{{userInfo}}">尊享全场{{discountRate}}优惠</text>
+          <text class="subtitle" wx:else>登录开启尊享鲜奶之旅</text>
         </view>
         <view class="arrow-icon">
           <text class="icon-text">></text>

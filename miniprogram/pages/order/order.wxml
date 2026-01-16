@@ -37,7 +37,7 @@
     <text class="coupon-label">优惠券</text>
     <view class="coupon-value" wx:if="{{selectedCoupon}}">
       <text class="coupon-name">{{selectedCoupon.name}}</text>
-      <text class="coupon-discount">-¥{{selectedCoupon.discount}}</text>
+      <text class="coupon-discount">-¥{{selectedCoupon.amount}}</text>
     </view>
     <text class="coupon-value" wx:else>{{couponsCount > 0 ? couponsCount + '张可用' : '暂无可用'}}</text>
     <text class="coupon-arrow">></text>
@@ -59,9 +59,13 @@
       <text class="price-label">运费</text>
       <text class="price-value">{{shipping > 0 ? '¥' + shipping : '免运费'}}</text>
     </view>
-    <view class="price-row" wx:if="{{discountAmount > 0}}">
-      <text class="price-label">优惠</text>
-      <text class="price-value discount">-¥{{discountAmount}}</text>
+    <view class="price-row" wx:if="{{memberDiscount > 0}}">
+      <text class="price-label">会员折扣</text>
+      <text class="price-value discount">-¥{{memberDiscount}}</text>
+    </view>
+    <view class="price-row" wx:if="{{couponDiscount > 0}}">
+      <text class="price-label">优惠券</text>
+      <text class="price-value discount">-¥{{couponDiscount}}</text>
     </view>
   </view>
 

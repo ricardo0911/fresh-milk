@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>售后管理 - Fresh Milk 管理后台</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><span class="logo-icon">🥛</span><span class="logo-text">Fresh Milk</span></div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span
+                        class="nav-label">数据概览</span></a>
+                <a href="orders.html" class="nav-item"><span class="nav-icon">📦</span><span
+                        class="nav-label">订单管理</span></a>
+                <a href="products.html" class="nav-item"><span class="nav-icon">🛒</span><span
+                        class="nav-label">商品管理</span></a>
+                <a href="users.html" class="nav-item"><span class="nav-icon">👥</span><span
+                        class="nav-label">用户管理</span></a>
+                <a href="subscriptions.html" class="nav-item"><span class="nav-icon">🔄</span><span
+                        class="nav-label">周期购管理</span></a>
+                <a href="delivery.html" class="nav-item"><span class="nav-icon">🚚</span><span
+                        class="nav-label">配送管理</span></a>
+                <a href="reviews.html" class="nav-item"><span class="nav-icon">⭐</span><span
+                        class="nav-label">评价管理</span></a>
+                <a href="aftersales.html" class="nav-item active"><span class="nav-icon">🔧</span><span
+                        class="nav-label">售后管理</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="page-info">
+                    <h1 class="page-title">售后管理</h1>
+                    <p class="page-subtitle">处理退款、退货和换货申请</p>
+                </div>
+            </header>
+
+            <!-- 售后统计 -->
+            <section class="stats-grid small">
+                <div class="stat-card orange">
+                    <div class="stat-icon">🔧</div>
+                    <div class="stat-content">
+                        <span class="stat-label">待处理</span>
+                        <span class="stat-value">2</span>
+                    </div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-content">
+                        <span class="stat-label">处理中</span>
+                        <span class="stat-value">5</span>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <span class="stat-label">已完成</span>
+                        <span class="stat-value">128</span>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <span class="stat-label">本月退款</span>
+                        <span class="stat-value">¥860</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 筛选 -->
+            <section class="filter-section">
+                <div class="filter-tabs">
+                    <button class="filter-tab active">全部 <span class="count">135</span></button>
+                    <button class="filter-tab">待处理 <span class="count warning">2</span></button>
+                    <button class="filter-tab">处理中 <span class="count">5</span></button>
+                    <button class="filter-tab">已完成 <span class="count">128</span></button>
+                </div>
+                <div class="filter-bar">
+                    <select class="select-input">
+                        <option value="">售后类型</option>
+                        <option value="refund">仅退款</option>
+                        <option value="return">退货退款</option>
+                        <option value="exchange">换货</option>
+                        <option value="repair">补发</option>
+                    </select>
+                    <input type="text" class="search-input" placeholder="搜索订单号/用户名">
+                    <button class="btn btn-primary">🔍 搜索</button>
+                </div>
+            </section>
+
+            <!-- 售后列表 -->
+            <section class="aftersales-list">
+                <div class="aftersale-card pending">
+                    <div class="aftersale-header">
+                        <div class="aftersale-info">
+                            <span class="aftersale-no">AS202401160001</span>
+                            <span class="aftersale-type refund">仅退款</span>
+                            <span class="aftersale-status pending">待处理</span>
+                        </div>
+                        <span class="aftersale-time">2024-01-16 11:30</span>
+                    </div>
+                    <div class="aftersale-body">
+                        <div class="order-info">
+                            <span class="label">关联订单：</span>
+                            <span class="value">FM20240115025</span>
+                        </div>
+                        <div class="user-info">
+                            <img class="user-avatar" src="https://i.pravatar.cc/40?img=8" alt="">
+                            <span class="user-name">张三</span>
+                            <span class="user-phone">138****8888</span>
+                        </div>
+                        <div class="product-info">
+                            <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=60&q=80" alt="">
+                            <div>
+                                <span class="product-name">每日鲜牛奶 250ml×10瓶</span>
+                                <span class="product-price">¥39.90 ×2</span>
+                            </div>
+                        </div>
+                        <div class="reason-info">
+                            <span class="label">申请原因：</span>
+                            <span class="value">未按约定时间送达</span>
+                        </div>
+                        <div class="desc-info">
+                            <span class="label">问题描述：</span>
+                            <p>订单显示今天配送，但是一直没有收到，联系配送员也联系不上。</p>
+                        </div>
+                        <div class="refund-amount">
+                            <span class="label">退款金额：</span>
+                            <span class="amount">¥79.80</span>
+                        </div>
+                    </div>
+                    <div class="aftersale-actions">
+                        <button class="btn btn-outline" onclick="rejectAftersale('AS202401160001')">拒绝</button>
+                        <button class="btn btn-primary" onclick="approveAftersale('AS202401160001')">同意退款</button>
+                    </div>
+                </div>
+
+                <div class="aftersale-card pending">
+                    <div class="aftersale-header">
+                        <div class="aftersale-info">
+                            <span class="aftersale-no">AS202401160002</span>
+                            <span class="aftersale-type exchange">换货</span>
+                            <span class="aftersale-status pending">待处理</span>
+                        </div>
+                        <span class="aftersale-time">2024-01-16 09:45</span>
+                    </div>
+                    <div class="aftersale-body">
+                        <div class="order-info">
+                            <span class="label">关联订单：</span>
+                            <span class="value">FM20240114018</span>
+                        </div>
+                        <div class="user-info">
+                            <img class="user-avatar" src="https://i.pravatar.cc/40?img=9" alt="">
+                            <span class="user-name">李四</span>
+                            <span class="user-phone">139****9999</span>
+                        </div>
+                        <div class="product-info">
+                            <img src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=60&q=80" alt="">
+                            <div>
+                                <span class="product-name">有机纯牛奶 200ml×12盒</span>
+                                <span class="product-price">¥71.90 ×1</span>
+                            </div>
+                        </div>
+                        <div class="reason-info">
+                            <span class="label">申请原因：</span>
+                            <span class="value">商品破损/变质</span>
+                        </div>
+                        <div class="desc-info">
+                            <span class="label">问题描述：</span>
+                            <p>收到的牛奶有2盒破损漏奶了，希望能换货。</p>
+                        </div>
+                        <div class="evidence-images">
+                            <span class="label">凭证图片：</span>
+                            <div class="images">
+                                <img src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=80&q=80"
+                                    alt="">
+                                <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=80&q=80" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aftersale-actions">
+                        <button class="btn btn-outline" onclick="rejectAftersale('AS202401160002')">拒绝</button>
+                        <button class="btn btn-primary" onclick="approveExchange('AS202401160002')">同意换货</button>
+                    </div>
+                </div>
+
+                <div class="aftersale-card">
+                    <div class="aftersale-header">
+                        <div class="aftersale-info">
+                            <span class="aftersale-no">AS202401150003</span>
+                            <span class="aftersale-type refund">仅退款</span>
+                            <span class="aftersale-status completed">已完成</span>
+                        </div>
+                        <span class="aftersale-time">2024-01-15 14:20</span>
+                    </div>
+                    <div class="aftersale-body">
+                        <div class="order-info">
+                            <span class="label">关联订单：</span>
+                            <span class="value">FM20240113012</span>
+                        </div>
+                        <div class="user-info">
+                            <img class="user-avatar" src="https://i.pravatar.cc/40?img=10" alt="">
+                            <span class="user-name">王五</span>
+                            <span class="user-phone">137****7777</span>
+                        </div>
+                        <div class="refund-amount">
+                            <span class="label">退款金额：</span>
+                            <span class="amount">¥54.00</span>
+                            <span class="refund-status">已退款</span>
+                        </div>
+                    </div>
+                    <div class="aftersale-actions">
+                        <button class="btn-action" onclick="viewAftersale('AS202401150003')">查看详情</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function approveAftersale(id) {
+            if (confirm('确认同意退款吗？')) {
+                alert('退款申请已通过，款项将在1-3个工作日内退回用户账户');
+            }
+        }
+
+        function approveExchange(id) {
+            if (confirm('确认同意换货吗？')) {
+                alert('换货申请已通过，请安排重新发货');
+            }
+        }
+
+        function rejectAftersale(id) {
+            const reason = prompt('请输入拒绝原因：');
+            if (reason) {
+                alert('已拒绝该申请');
+            }
+        }
+
+        function viewAftersale(id) {
+            alert('查看售后详情：' + id);
+        }
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优惠券管理 - Fresh Milk 管理后台</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><span class="logo-icon">🥛</span><span class="logo-text">Fresh Milk</span></div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span
+                        class="nav-label">数据概览</span></a>
+                <a href="orders.html" class="nav-item"><span class="nav-icon">📦</span><span
+                        class="nav-label">订单管理</span></a>
+                <a href="products.html" class="nav-item"><span class="nav-icon">🛒</span><span
+                        class="nav-label">商品管理</span></a>
+                <a href="coupons.html" class="nav-item active"><span class="nav-icon">🎫</span><span
+                        class="nav-label">优惠券管理</span></a>
+                <a href="promotions.html" class="nav-item"><span class="nav-icon">🎉</span><span
+                        class="nav-label">促销活动</span></a>
+                <a href="members.html" class="nav-item"><span class="nav-icon">👑</span><span
+                        class="nav-label">会员等级</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="page-info">
+                    <h1 class="page-title">优惠券管理</h1>
+                    <p class="page-subtitle">创建和管理优惠券</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="showAddCoupon()">➕ 创建优惠券</button>
+                </div>
+            </header>
+
+            <!-- 优惠券统计 -->
+            <section class="stats-grid small">
+                <div class="stat-card blue">
+                    <div class="stat-icon">🎫</div>
+                    <div class="stat-content">
+                        <span class="stat-label">全部优惠券</span>
+                        <span class="stat-value">15</span>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <span class="stat-label">已发放</span>
+                        <span class="stat-value">2,456</span>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-content">
+                        <span class="stat-label">已使用</span>
+                        <span class="stat-value">1,892</span>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <span class="stat-label">优惠总额</span>
+                        <span class="stat-value">¥18.5k</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 筛选 -->
+            <section class="filter-section">
+                <div class="filter-tabs">
+                    <button class="filter-tab active">全部</button>
+                    <button class="filter-tab">进行中</button>
+                    <button class="filter-tab">未开始</button>
+                    <button class="filter-tab">已结束</button>
+                </div>
+            </section>
+
+            <!-- 优惠券列表 -->
+            <section class="coupons-grid">
+                <div class="coupon-card active">
+                    <div class="coupon-left">
+                        <div class="coupon-value">
+                            <span class="value">20</span>
+                            <span class="unit">元</span>
+                        </div>
+                        <div class="coupon-condition">满100元可用</div>
+                    </div>
+                    <div class="coupon-right">
+                        <div class="coupon-info">
+                            <h4 class="coupon-name">新人专享券</h4>
+                            <p class="coupon-desc">新用户首单立减</p>
+                            <div class="coupon-time">2024.01.01 - 2024.12.31</div>
+                        </div>
+                        <div class="coupon-stats">
+                            <span>已发放: 500张</span>
+                            <span>已使用: 328张</span>
+                        </div>
+                        <div class="coupon-actions">
+                            <button class="btn-sm" onclick="editCoupon(1)">编辑</button>
+                            <button class="btn-sm danger" onclick="stopCoupon(1)">停用</button>
+                        </div>
+                    </div>
+                    <span class="coupon-status active">进行中</span>
+                </div>
+
+                <div class="coupon-card active">
+                    <div class="coupon-left discount">
+                        <div class="coupon-value">
+                            <span class="value">9</span>
+                            <span class="unit">折</span>
+                        </div>
+                        <div class="coupon-condition">无门槛</div>
+                    </div>
+                    <div class="coupon-right">
+                        <div class="coupon-info">
+                            <h4 class="coupon-name">周期购专享折扣</h4>
+                            <p class="coupon-desc">订阅周期购专享</p>
+                            <div class="coupon-time">长期有效</div>
+                        </div>
+                        <div class="coupon-stats">
+                            <span>已发放: 156张</span>
+                            <span>已使用: 156张</span>
+                        </div>
+                        <div class="coupon-actions">
+                            <button class="btn-sm" onclick="editCoupon(2)">编辑</button>
+                        </div>
+                    </div>
+                    <span class="coupon-status active">进行中</span>
+                </div>
+
+                <div class="coupon-card active">
+                    <div class="coupon-left">
+                        <div class="coupon-value">
+                            <span class="value">50</span>
+                            <span class="unit">元</span>
+                        </div>
+                        <div class="coupon-condition">满200元可用</div>
+                    </div>
+                    <div class="coupon-right">
+                        <div class="coupon-info">
+                            <h4 class="coupon-name">新年大礼包</h4>
+                            <p class="coupon-desc">新年限定优惠</p>
+                            <div class="coupon-time">2024.01.01 - 2024.01.31</div>
+                        </div>
+                        <div class="coupon-stats">
+                            <span>已发放: 200张</span>
+                            <span>已使用: 145张</span>
+                        </div>
+                        <div class="coupon-actions">
+                            <button class="btn-sm" onclick="editCoupon(3)">编辑</button>
+                            <button class="btn-sm danger" onclick="stopCoupon(3)">停用</button>
+                        </div>
+                    </div>
+                    <span class="coupon-status active">进行中</span>
+                </div>
+
+                <div class="coupon-card expired">
+                    <div class="coupon-left">
+                        <div class="coupon-value">
+                            <span class="value">10</span>
+                            <span class="unit">元</span>
+                        </div>
+                        <div class="coupon-condition">满50元可用</div>
+                    </div>
+                    <div class="coupon-right">
+                        <div class="coupon-info">
+                            <h4 class="coupon-name">圣诞优惠券</h4>
+                            <p class="coupon-desc">圣诞节限定</p>
+                            <div class="coupon-time">2023.12.20 - 2023.12.26</div>
+                        </div>
+                        <div class="coupon-stats">
+                            <span>已发放: 300张</span>
+                            <span>已使用: 256张</span>
+                        </div>
+                        <div class="coupon-actions">
+                            <button class="btn-sm" onclick="viewCoupon(4)">查看</button>
+                        </div>
+                    </div>
+                    <span class="coupon-status expired">已结束</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <style>
+        .coupons-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .coupon-card {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .coupon-left {
+            width: 160px;
+            padding: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coupon-left.discount {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .coupon-value {
+            display: flex;
+            align-items: baseline;
+        }
+
+        .coupon-value .value {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .coupon-value .unit {
+            font-size: 18px;
+            margin-left: 4px;
+        }
+
+        .coupon-condition {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        .coupon-right {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .coupon-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .coupon-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .coupon-time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .coupon-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .coupon-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .coupon-status {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .coupon-status.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+        }
+
+        .coupon-status.expired {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+        }
+
+        .coupon-card.expired .coupon-left {
+            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+        }
+    </style>
+
+    <script>
+        function showAddCoupon() {
+            alert('创建优惠券');
+        }
+
+        function editCoupon(id) {
+            alert('编辑优惠券：' + id);
+        }
+
+        function stopCoupon(id) {
+            if (confirm('确定停用该优惠券吗？')) {
+                alert('优惠券已停用');
+            }
+        }
+
+        function viewCoupon(id) {
+            alert('查看优惠券详情：' + id);
+        }
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

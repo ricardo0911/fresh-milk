@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresh Milk 管理后台</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+
+<body>
+    <div class="admin-container">
+        <!-- 侧边导航 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🥛</span>
+                    <span class="logo-text">Fresh Milk</span>
+                </div>
+                <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">数据概览</span>
+                </a>
+                <a href="orders.html" class="nav-item" data-page="orders">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-label">订单管理</span>
+                    <span class="nav-badge" id="pendingOrdersBadge">5</span>
+                </a>
+                <a href="products.html" class="nav-item" data-page="products">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-label">商品管理</span>
+                </a>
+                <a href="users.html" class="nav-item" data-page="users">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-label">用户管理</span>
+                </a>
+                <a href="subscriptions.html" class="nav-item" data-page="subscriptions">
+                    <span class="nav-icon">🔄</span>
+                    <span class="nav-label">周期购管理</span>
+                </a>
+                <a href="delivery.html" class="nav-item" data-page="delivery">
+                    <span class="nav-icon">🚚</span>
+                    <span class="nav-label">配送管理</span>
+                </a>
+                <a href="reviews.html" class="nav-item" data-page="reviews">
+                    <span class="nav-icon">⭐</span>
+                    <span class="nav-label">评价管理</span>
+                </a>
+                <a href="aftersales.html" class="nav-item" data-page="aftersales">
+                    <span class="nav-icon">🔧</span>
+                    <span class="nav-label">售后管理</span>
+                    <span class="nav-badge warning" id="pendingAftersalesBadge">2</span>
+                </a>
+                <a href="coupons.html" class="nav-item" data-page="coupons">
+                    <span class="nav-icon">🎫</span>
+                    <span class="nav-label">优惠券管理</span>
+                </a>
+                <a href="promotions.html" class="nav-item" data-page="promotions">
+                    <span class="nav-icon">🎉</span>
+                    <span class="nav-label">促销活动</span>
+                </a>
+                <a href="members.html" class="nav-item" data-page="members">
+                    <span class="nav-icon">👑</span>
+                    <span class="nav-label">会员等级</span>
+                </a>
+                <a href="settings.html" class="nav-item" data-page="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">系统设置</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="admin-profile">
+                    <div class="avatar">👤</div>
+                    <div class="info">
+                        <span class="name">管理员</span>
+                        <span class="role">超级管理员</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="top-header">
+                <div class="page-info">
+                    <h1 class="page-title">数据概览</h1>
+                    <p class="page-subtitle">欢迎回来，这是今天的运营数据</p>
+                </div>
+                <div class="header-actions">
+                    <div class="date-filter">
+                        <button class="filter-btn active" data-range="7">近7天</button>
+                        <button class="filter-btn" data-range="30">近30天</button>
+                        <button class="filter-btn" data-range="90">近3个月</button>
+                    </div>
+                    <button class="refresh-btn" onclick="refreshData()">
+                        <span>🔄</span> 刷新
+                    </button>
+                </div>
+            </header>
+
+            <!-- 统计卡片 -->
+            <section class="stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-content">
+                        <span class="stat-label">今日订单</span>
+                        <span class="stat-value" id="todayOrders">28</span>
+                        <span class="stat-change up">↑ 12.5%</span>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <span class="stat-label">今日销售额</span>
+                        <span class="stat-value" id="todayRevenue">¥2,680</span>
+                        <span class="stat-change up">↑ 8.3%</span>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <span class="stat-label">新增用户</span>
+                        <span class="stat-value" id="newUsers">15</span>
+                        <span class="stat-change up">↑ 15.2%</span>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">🔄</div>
+                    <div class="stat-content">
+                        <span class="stat-label">活跃订阅</span>
+                        <span class="stat-value" id="activeSubscriptions">156</span>
+                        <span class="stat-change up">↑ 5.8%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 待办事项 -->
+            <section class="pending-section">
+                <h2 class="section-title">⚡ 待处理事项</h2>
+                <div class="pending-grid">
+                    <div class="pending-card" onclick="location.href='orders.html?status=paid'">
+                        <div class="pending-icon orange">📦</div>
+                        <div class="pending-info">
+                            <span class="pending-count">5</span>
+                            <span class="pending-label">待发货订单</span>
+                        </div>
+                    </div>
+                    <div class="pending-card" onclick="location.href='aftersales.html'">
+                        <div class="pending-icon red">🔧</div>
+                        <div class="pending-info">
+                            <span class="pending-count">2</span>
+                            <span class="pending-label">待处理售后</span>
+                        </div>
+                    </div>
+                    <div class="pending-card" onclick="location.href='reviews.html?pending=1'">
+                        <div class="pending-icon blue">💬</div>
+                        <div class="pending-info">
+                            <span class="pending-count">8</span>
+                            <span class="pending-label">待回复评价</span>
+                        </div>
+                    </div>
+                    <div class="pending-card" onclick="location.href='products.html?lowstock=1'">
+                        <div class="pending-icon yellow">⚠️</div>
+                        <div class="pending-info">
+                            <span class="pending-count">3</span>
+                            <span class="pending-label">库存预警</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 图表区域 -->
+            <section class="charts-section">
+                <div class="chart-row">
+                    <div class="chart-card large">
+                        <div class="chart-header">
+                            <h3>销售趋势</h3>
+                            <div class="chart-legend">
+                                <span><i class="dot blue"></i>销售额</span>
+                                <span><i class="dot green"></i>订单量</span>
+                            </div>
+                        </div>
+                        <div class="chart-body" id="salesChart"></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>商品分类占比</h3>
+                        </div>
+                        <div class="chart-body" id="categoryChart"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 数据表格 -->
+            <section class="tables-section">
+                <div class="table-row">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>🔥 热销商品 TOP5</h3>
+                            <a href="products.html" class="view-all">查看全部 →</a>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>商品名称</th>
+                                    <th>销量</th>
+                                    <th>销售额</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hotProductsTable">
+                                <tr>
+                                    <td><span class="rank gold">1</span></td>
+                                    <td>每日鲜牛奶 250ml×10</td>
+                                    <td>128</td>
+                                    <td>¥5,112</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank silver">2</span></td>
+                                    <td>A2蛋白鲜牛奶 260ml×8</td>
+                                    <td>95</td>
+                                    <td>¥6,072</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank bronze">3</span></td>
+                                    <td>有机纯牛奶 200ml×12</td>
+                                    <td>82</td>
+                                    <td>¥5,895</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank">4</span></td>
+                                    <td>低脂鲜牛奶 500ml×6</td>
+                                    <td>76</td>
+                                    <td>¥4,104</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="rank">5</span></td>
+                                    <td>儿童成长奶 200ml×12</td>
+                                    <td>68</td>
+                                    <td>¥4,624</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>📋 最新订单</h3>
+                            <a href="orders.html" class="view-all">查看全部 →</a>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>订单号</th>
+                                    <th>用户</th>
+                                    <th>金额</th>
+                                    <th>状态</th>
+                                </tr>
+                            </thead>
+                            <tbody id="latestOrdersTable">
+                                <tr>
+                                    <td>FM20240116028</td>
+                                    <td>张三</td>
+                                    <td>¥89.80</td>
+                                    <td><span class="status paid">待发货</span></td>
+                                </tr>
+                                <tr>
+                                    <td>FM20240116027</td>
+                                    <td>李四</td>
+                                    <td>¥156.00</td>
+                                    <td><span class="status shipped">配送中</span></td>
+                                </tr>
+                                <tr>
+                                    <td>FM20240116026</td>
+                                    <td>王五</td>
+                                    <td>¥68.50</td>
+                                    <td><span class="status completed">已完成</span></td>
+                                </tr>
+                                <tr>
+                                    <td>FM20240116025</td>
+                                    <td>赵六</td>
+                                    <td>¥245.00</td>
+                                    <td><span class="status pending">待付款</span></td>
+                                </tr>
+                                <tr>
+                                    <td>FM20240116024</td>
+                                    <td>陈七</td>
+                                    <td>¥112.30</td>
+                                    <td><span class="status completed">已完成</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 周期购统计 -->
+            <section class="subscription-section">
+                <div class="chart-row">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>🔄 周期购统计</h3>
+                        </div>
+                        <div class="subscription-stats">
+                            <div class="sub-stat">
+                                <span class="sub-value">156</span>
+                                <span class="sub-label">活跃订阅</span>
+                            </div>
+                            <div class="sub-stat">
+                                <span class="sub-value">78%</span>
+                                <span class="sub-label">续订率</span>
+                            </div>
+                            <div class="sub-stat">
+                                <span class="sub-value">8.5</span>
+                                <span class="sub-label">平均期数</span>
+                            </div>
+                            <div class="sub-stat">
+                                <span class="sub-value">12</span>
+                                <span class="sub-label">即将到期</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>用户增长趋势</h3>
+                        </div>
+                        <div class="chart-body" id="userGrowthChart"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

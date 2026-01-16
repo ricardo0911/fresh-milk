@@ -38,9 +38,8 @@
       <view class="guess-card" wx:for="{{guessProducts}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
         <view class="guess-image-wrap">
           <image class="guess-image" src="{{item.cover_image}}" mode="aspectFill" />
-          <view class="guess-fresh-tag" wx:if="{{item.fresh_days}}">
-            <text class="fresh-days">{{item.fresh_days}}天起</text>
-            <text class="fresh-label">新鲜日期</text>
+          <view class="product-tags" wx:if="{{item.original_price}}">
+            <text class="tag tag-promo">活动促销</text>
           </view>
         </view>
         <view class="guess-info">
@@ -64,15 +63,19 @@
     <scroll-view class="product-scroll" scroll-x>
       <view class="product-card" wx:for="{{hotProducts}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
         <image class="product-image" src="{{item.cover_image}}" mode="aspectFill" />
-        <view class="product-tags" wx:if="{{item.is_hot || item.is_new}}">
+        <view class="product-tags" wx:if="{{item.is_hot || item.is_new || item.original_price}}">
           <text class="tag tag-hot" wx:if="{{item.is_hot}}">热门</text>
           <text class="tag tag-new" wx:if="{{item.is_new}}">新品</text>
+          <text class="tag tag-promo" wx:if="{{item.original_price}}">活动促销</text>
         </view>
         <view class="product-info">
           <text class="product-name">{{item.name}}</text>
           <text class="product-spec">{{item.specification}}</text>
           <view class="product-footer">
-            <text class="price">{{item.price}}</text>
+            <view>
+              <text class="price">{{item.price}}</text>
+              <text class="price-original" wx:if="{{item.original_price}}">¥{{item.original_price}}</text>
+            </view>
             <view class="add-cart-btn" catchtap="addToCart" data-product="{{item}}">+</view>
           </view>
         </view>
@@ -89,8 +92,10 @@
     <view class="product-grid">
       <view class="product-card-grid" wx:for="{{newProducts}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
         <image class="product-image-grid" src="{{item.cover_image}}" mode="aspectFill" />
-        <view class="product-tags" wx:if="{{item.is_new}}">
-          <text class="tag tag-new">新品</text>
+        <view class="product-tags" wx:if="{{item.is_hot || item.is_new || item.original_price}}">
+          <text class="tag tag-hot" wx:if="{{item.is_hot}}">热门</text>
+          <text class="tag tag-new" wx:if="{{item.is_new}}">新品</text>
+          <text class="tag tag-promo" wx:if="{{item.original_price}}">活动促销</text>
         </view>
         <view class="product-info">
           <text class="product-name">{{item.name}}</text>

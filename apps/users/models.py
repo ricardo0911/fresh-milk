@@ -7,9 +7,17 @@ from django.db import models
 
 class User(AbstractUser):
     """自定义用户模型"""
+    MEMBER_LEVEL_CHOICES = [
+        ('regular', '普通会员'),
+        ('silver', '银卡会员'),
+        ('gold', '金卡会员'),
+        ('platinum', '铂金会员'),
+    ]
+    
     phone = models.CharField('手机号', max_length=11, blank=True, null=True, unique=True)
     avatar = models.ImageField('头像', upload_to='avatars/', blank=True, null=True)
     address = models.TextField('收货地址', blank=True, null=True)
+    member_level = models.CharField('会员等级', max_length=20, choices=MEMBER_LEVEL_CHOICES, default='regular')
     is_admin = models.BooleanField('是否管理员', default=False)
     created_at = models.DateTimeField('创建时间', auto_now_add=True)
     updated_at = models.DateTimeField('更新时间', auto_now=True)
@@ -22,6 +30,16 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def get_discount_rate(self):
+        """获取会员折扣率"""
+        rates = {
+            'regular': 1.0,
+            'silver': 0.95,
+            'gold': 0.90,
+            'platinum': 0.85,
+        }
+        return rates.get(self.member_level, 1.0)
 
 
 class UserAddress(models.Model):

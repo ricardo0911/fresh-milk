@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - Fresh Milk 鲜奶直达</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <!-- ECharts 图表库 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <span class="logo-icon">🥛</span>
+                <span class="logo-text">Fresh Milk</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">数据概览</span>
+                </a>
+                <a href="#" class="nav-item" data-page="orders">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">订单管理</span>
+                </a>
+                <a href="#" class="nav-item" data-page="products">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">商品管理</span>
+                </a>
+                <a href="#" class="nav-item" data-page="users">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">用户管理</span>
+                </a>
+                <a href="#" class="nav-item" data-page="subscriptions">
+                    <span class="nav-icon">🔄</span>
+                    <span class="nav-text">周期购管理</span>
+                </a>
+                <a href="#" class="nav-item" data-page="delivery">
+                    <span class="nav-icon">🚚</span>
+                    <span class="nav-text">配送管理</span>
+                </a>
+                <a href="#" class="nav-item" data-page="reviews">
+                    <span class="nav-icon">⭐</span>
+                    <span class="nav-text">评价管理</span>
+                </a>
+                <a href="#" class="nav-item" data-page="coupons">
+                    <span class="nav-icon">🎫</span>
+                    <span class="nav-text">优惠券管理</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="admin-info">
+                    <div class="admin-avatar">👤</div>
+                    <div class="admin-detail">
+                        <span class="admin-name">管理员</span>
+                        <span class="admin-role">超级管理员</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部栏 -->
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1>数据概览</h1>
+                    <p class="page-subtitle">欢迎回来，这是今天的运营数据</p>
+                </div>
+                <div class="top-actions">
+                    <div class="date-range">
+                        <button class="date-btn active" data-days="7">近7天</button>
+                        <button class="date-btn" data-days="30">近30天</button>
+                        <button class="date-btn" data-days="90">近3个月</button>
+                    </div>
+                    <button class="refresh-btn" onclick="refreshData()">
+                        <span>🔄</span> 刷新
+                    </button>
+                </div>
+            </header>
+
+            <!-- 数据概览卡片 -->
+            <section class="stats-cards">
+                <div class="stat-card blue">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <span class="stat-label">今日订单</span>
+                        <span class="stat-value" id="todayOrders">0</span>
+                        <span class="stat-trend up" id="ordersTrend">+12.5%</span>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <span class="stat-label">今日销售额</span>
+                        <span class="stat-value" id="todayRevenue">¥0</span>
+                        <span class="stat-trend up" id="revenueTrend">+8.3%</span>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-info">
+                        <span class="stat-label">新增用户</span>
+                        <span class="stat-value" id="newUsers">0</span>
+                        <span class="stat-trend up" id="usersTrend">+15.2%</span>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">🔄</div>
+                    <div class="stat-info">
+                        <span class="stat-label">活跃订阅</span>
+                        <span class="stat-value" id="activeSubscriptions">0</span>
+                        <span class="stat-trend up" id="subTrend">+5.8%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 待办事项 -->
+            <section class="pending-section">
+                <h2 class="section-title">⚡ 待处理事项</h2>
+                <div class="pending-cards">
+                    <div class="pending-card" onclick="navigateTo('orders?status=paid')">
+                        <div class="pending-icon orange">📦</div>
+                        <div class="pending-info">
+                            <span class="pending-count" id="pendingOrders">5</span>
+                            <span class="pending-label">待发货订单</span>
+                        </div>
+                    </div>
+                    <div class="pending-card" onclick="navigateTo('aftersales')">
+                        <div class="pending-icon red">🔧</div>
+                        <div class="pending-info">
+                            <span class="pending-count" id="pendingAftersales">2</span>
+                            <span class="pending-label">待处理售后</span>
+                        </div>
+                    </div>
+                    <div class="pending-card" onclick="navigateTo('reviews')">
+                        <div class="pending-icon blue">💬</div>
+                        <div class="pending-info">
+                            <span class="pending-count" id="pendingReviews">8</span>
+                            <span class="pending-label">待回复评价</span>
+                        </div>
+                    </div>
+                    <div class="pending-card" onclick="navigateTo('products?lowstock=1')">
+                        <div class="pending-icon yellow">⚠️</div>
+                        <div class="pending-info">
+                            <span class="pending-count" id="lowStock">3</span>
+                            <span class="pending-label">库存预警</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 图表区域 -->
+            <section class="charts-section">
+                <div class="chart-row">
+                    <div class="chart-card large">
+                        <div class="chart-header">
+                            <h3>销售趋势</h3>
+                            <div class="chart-legend">
+                                <span class="legend-item"><span class="dot blue"></span>销售额</span>
+                                <span class="legend-item"><span class="dot green"></span>订单量</span>
+                            </div>
+                        </div>
+                        <div class="chart-body" id="salesTrendChart"></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>商品分类销售占比</h3>
+                        </div>
+                        <div class="chart-body" id="categorySalesChart"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 数据表格区 -->
+            <section class="tables-section">
+                <div class="table-row">
+                    <!-- 热销商品 -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>🔥 热销商品 TOP10</h3>
+                            <a href="#" class="view-all">查看全部</a>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>商品名称</th>
+                                    <th>销量</th>
+                                    <th>销售额</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hotProductsTable">
+                                <!-- 动态填充 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 最新订单 -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>📋 最新订单</h3>
+                            <a href="#" class="view-all">查看全部</a>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>订单号</th>
+                                    <th>用户</th>
+                                    <th>金额</th>
+                                    <th>状态</th>
+                                </tr>
+                            </thead>
+                            <tbody id="latestOrdersTable">
+                                <!-- 动态填充 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 周期购统计 -->
+            <section class="subscription-stats">
+                <div class="chart-row">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <h3>🔄 周期购统计</h3>
+                        </div>
+                        <div class="subscription-overview">
+                            <div class="sub-stat">
+                                <span class="sub-value" id="totalSubscriptions">156</span>
+                                <span class="sub-label">活跃订阅</span>
+                            </div>
+                            <div class="sub-stat">
+                                <span class="sub-value" id="renewalRate">78%</span>
+                                <span class="sub-label">续订率</span>
+                            </div>
+                            <div class="sub-stat">
+                                <span class="sub-value" id="avgPeriods">8.5</span>
+                                <span class="sub-label">平均期数</span>
+                            </div>
+                            <div class="sub-stat">
+                                <span class="sub-value" id="expiringSubscriptions">12</span>
+                                <span class="sub-label">即将到期</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>用户增长趋势</h3>
+                        </div>
+                        <div class="chart-body" id="userGrowthChart"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>

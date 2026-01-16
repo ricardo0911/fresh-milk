@@ -3,15 +3,20 @@ App({
     globalData: {
         userInfo: null,
         token: null,
-        baseUrl: 'http://localhost:8000/api/v1',
+        baseUrl: 'http://127.0.0.1:8000/api/v1',
         cartCount: 0
     },
 
     onLaunch() {
         // 检查登录状态
         const token = wx.getStorageSync('token');
+        const userInfo = wx.getStorageSync('userInfo');
+
         if (token) {
             this.globalData.token = token;
+            if (userInfo) {
+                this.globalData.userInfo = userInfo;
+            }
             this.getUserInfo();
         }
 
@@ -31,6 +36,9 @@ App({
                 if (res.statusCode === 200) {
                     that.globalData.userInfo = res.data;
                 }
+            },
+            fail(err) {
+                console.error('获取用户信息失败:', err);
             }
         });
     },
@@ -41,13 +49,14 @@ App({
         const count = cart.reduce((sum, item) => sum + item.quantity, 0);
         this.globalData.cartCount = count;
 
+        const TAB_BAR_CART_INDEX = 3; // 首页:0, 分类:1, 会员:2, 购物车:3, 个人:4
         if (count > 0) {
             wx.setTabBarBadge({
-                index: 2,
+                index: TAB_BAR_CART_INDEX,
                 text: count > 99 ? '99+' : String(count)
             });
         } else {
-            wx.removeTabBarBadge({ index: 2 });
+            wx.removeTabBarBadge({ index: TAB_BAR_CART_INDEX }).catch(() => { });
         }
     },
 
@@ -74,7 +83,7 @@ App({
                     } else if (res.statusCode >= 200 && res.statusCode < 300) {
                         resolve(res.data);
                     } else {
-                        reject(new Error(res.data.detail || '请求失败'));
+                        reject(new Error((res.data && res.data.detail) || '请求失败'));
                     }
                 },
                 fail(err) {

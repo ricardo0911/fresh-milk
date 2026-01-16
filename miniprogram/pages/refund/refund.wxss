@@ -1,0 +1,177 @@
+/* pages/refund/refund.wxss */
+
+.refund-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+    padding-bottom: 40rpx;
+}
+
+/* 顶部提示 */
+.page-tip {
+    display: flex;
+    align-items: center;
+    padding: 20rpx 24rpx;
+    background: #fff8e1;
+    gap: 12rpx;
+}
+
+.tip-icon {
+    font-size: 28rpx;
+}
+
+.tip-text {
+    font-size: 24rpx;
+    color: #f59e0b;
+}
+
+/* 加载中 */
+.loading-box {
+    display: flex;
+    justify-content: center;
+    padding: 100rpx 0;
+}
+
+.loading-text {
+    font-size: 28rpx;
+    color: #999;
+}
+
+/* 空状态 */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 120rpx 40rpx;
+}
+
+.empty-icon {
+    font-size: 80rpx;
+    margin-bottom: 24rpx;
+}
+
+.empty-title {
+    font-size: 32rpx;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12rpx;
+}
+
+.empty-desc {
+    font-size: 26rpx;
+    color: #999;
+}
+
+/* 列表 */
+.refund-list {
+    padding: 20rpx 24rpx;
+}
+
+.refund-card {
+    background: #fff;
+    border-radius: 16rpx;
+    margin-bottom: 20rpx;
+    overflow: hidden;
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20rpx 24rpx;
+    border-bottom: 1rpx solid #f0f0f0;
+}
+
+.type-badge {
+    font-size: 22rpx;
+    padding: 6rpx 16rpx;
+    border-radius: 20rpx;
+}
+
+.type-badge.processing {
+    background: #fff7e6;
+    color: #fa8c16;
+}
+
+.type-badge.completed {
+    background: #f6ffed;
+    color: #52c41a;
+}
+
+.type-label {
+    font-size: 26rpx;
+    color: #333;
+    font-weight: 500;
+}
+
+.card-body {
+    display: flex;
+    padding: 24rpx;
+    gap: 20rpx;
+}
+
+.product-img {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 12rpx;
+    flex-shrink: 0;
+}
+
+.product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8rpx;
+    min-width: 0;
+}
+
+.product-name {
+    font-size: 28rpx;
+    font-weight: 500;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.order-no,
+.reason {
+    font-size: 24rpx;
+    color: #999;
+}
+
+.amount-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    flex-shrink: 0;
+}
+
+.amount-label {
+    font-size: 22rpx;
+    color: #999;
+}
+
+.amount-value {
+    font-size: 32rpx;
+    font-weight: 700;
+    color: #e53935;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16rpx 24rpx;
+    background: #fafafa;
+}
+
+.time {
+    font-size: 24rpx;
+    color: #999;
+}
+
+.action-btn {
+    font-size: 24rpx;
+    color: #10b981;
+}

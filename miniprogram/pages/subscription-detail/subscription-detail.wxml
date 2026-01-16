@@ -1,0 +1,178 @@
+<!--pages/subscription-detail/subscription-detail.wxml - 周期购详情页面-->
+<view class="subscription-detail-page">
+    <block wx:if="{{subscription}}">
+        <!-- 状态卡片 -->
+        <view class="status-card status-{{subscription.status}}">
+            <view class="status-header">
+                <view class="status-info">
+                    <text class="status-icon">🔄</text>
+                    <view class="status-text">
+                        <text class="status-title">{{subscription.status_display}}</text>
+                        <text class="status-desc">下次配送：{{subscription.next_delivery_date}}</text>
+                    </view>
+                </view>
+                <view class="subscription-no">{{subscription.subscription_no}}</view>
+            </view>
+            
+            <!-- 配送进度 -->
+            <view class="progress-section">
+                <view class="progress-info">
+                    <text class="progress-label">配送进度</text>
+                    <text class="progress-value">{{subscription.delivered_count}}/{{subscription.total_periods}}期</text>
+                </view>
+                <view class="progress-bar-wrap">
+                    <view class="progress-bar">
+                        <view class="progress-fill" style="width: {{subscription.delivered_count / subscription.total_periods * 100}}%"></view>
+                    </view>
+                </view>
+                <view class="progress-detail">
+                    <text class="detail-item">已配送 {{subscription.delivered_count}} 期</text>
+                    <text class="detail-item">剩余 {{subscription.remaining_count}} 期</text>
+                </view>
+            </view>
+        </view>
+
+        <!-- 商品信息 -->
+        <view class="product-card">
+            <view class="card-header">
+                <text class="card-title">订阅商品</text>
+            </view>
+            <view class="product-info">
+                <image class="product-image" src="{{subscription.product.cover_image}}" mode="aspectFill"/>
+                <view class="product-detail">
+                    <text class="product-name">{{subscription.product.name}}</text>
+                    <text class="product-spec">{{subscription.product.specification}} × {{subscription.quantity}}</text>
+                    <view class="product-price">
+                        <text class="current-price">¥{{subscription.period_price}}/期</text>
+                        <text class="original-price">¥{{subscription.product.price}}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <!-- 配送计划 -->
+        <view class="plan-card">
+            <view class="card-header">
+                <text class="card-title">配送计划</text>
+                <text class="card-action" bindtap="changeDeliveryTime">修改</text>
+            </view>
+            <view class="plan-info">
+                <view class="plan-row">
+                    <text class="plan-label">配送频率</text>
+                    <text class="plan-value">{{subscription.frequency_display}}</text>
+                </view>
+                <view class="plan-row">
+                    <text class="plan-label">配送时间</text>
+                    <text class="plan-value">{{subscription.delivery_day}} {{subscription.delivery_time}}</text>
+                </view>
+                <view class="plan-row">
+                    <text class="plan-label">开始日期</text>
+                    <text class="plan-value">{{subscription.start_date}}</text>
+                </view>
+                <view class="plan-row">
+                    <text class="plan-label">预计结束</text>
+                    <text class="plan-value">{{subscription.end_date}}</text>
+                </view>
+            </view>
+        </view>
+
+        <!-- 收货地址 -->
+        <view class="address-card" bindtap="changeAddress">
+            <view class="address-icon">📍</view>
+            <view class="address-info">
+                <view class="address-header">
+                    <text class="receiver-name">{{subscription.receiver_name}}</text>
+                    <text class="receiver-phone">{{subscription.receiver_phone}}</text>
+                </view>
+                <text class="address-detail">{{subscription.receiver_address}}</text>
+            </view>
+            <view class="address-arrow">›</view>
+        </view>
+
+        <!-- 配送记录 -->
+        <view class="records-card">
+            <view class="card-header">
+                <text class="card-title">配送记录</text>
+            </view>
+            <view class="records-list">
+                <view 
+                    wx:for="{{deliveryRecords}}" 
+                    wx:key="id"
+                    class="record-item status-{{item.status}}"
+                >
+                    <view class="record-period">
+                        <text class="period-num">第{{item.period}}期</text>
+                        <text class="period-status {{item.status}}">{{item.status_display}}</text>
+                    </view>
+                    <view class="record-info">
+                        <text class="record-date">{{item.delivery_date}}</text>
+                        <text class="record-time" wx:if="{{item.delivery_time}}">{{item.delivery_time}}</text>
+                    </view>
+                    
+                    <!-- 已送达的显示配送员信息 -->
+                    <block wx:if="{{item.status === 'delivered' && item.delivery_person}}">
+                        <view class="delivery-info">
+                            <image class="delivery-avatar" src="{{item.delivery_person.avatar}}" mode="aspectFill"/>
+                            <view class="delivery-detail">
+                                <text class="delivery-name">{{item.delivery_person.name}}</text>
+                                <text class="sign-info">{{item.signed_by}}</text>
+                            </view>
+                            <view class="delivery-actions">
+                                <view 
+                                    class="action-btn call"
+                                    data-phone="{{item.delivery_person.phone}}"
+                                    catchtap="callDelivery"
+                                >📞</view>
+                                <view 
+                                    wx:if="{{!item.is_rated}}"
+                                    class="action-btn rate"
+                                    data-id="{{item.id}}"
+                                    catchtap="rateDelivery"
+                                >评价</view>
+                                <view 
+                                    wx:else
+                                    class="rating-display"
+                                >
+                                    <text class="star">★</text>
+                                    <text class="rating-value">{{item.rating}}</text>
+                                </view>
+                            </view>
+                        </view>
+                    </block>
+                </view>
+            </view>
+        </view>
+
+        <!-- 费用明细 -->
+        <view class="fee-card">
+            <view class="card-header">
+                <text class="card-title">费用明细</text>
+            </view>
+            <view class="fee-info">
+                <view class="fee-row">
+                    <text class="fee-label">单期价格</text>
+                    <text class="fee-value">¥{{subscription.period_price}} × {{subscription.total_periods}}期</text>
+                </view>
+                <view class="fee-row">
+                    <text class="fee-label">订阅总额</text>
+                    <text class="fee-value">¥{{subscription.total_price}}</text>
+                </view>
+                <view class="fee-row">
+                    <text class="fee-label">已付金额</text>
+                    <text class="fee-value highlight">¥{{subscription.paid_amount}}</text>
+                </view>
+            </view>
+        </view>
+
+        <!-- 底部操作栏 -->
+        <view class="action-bar">
+            <button class="action-btn secondary" bindtap="cancelSubscription">取消订阅</button>
+            <button class="action-btn secondary" bindtap="pauseSubscription">暂停配送</button>
+        </view>
+    </block>
+
+    <!-- 加载中 -->
+    <view class="loading-state" wx:else>
+        <text>加载中...</text>
+    </view>
+</view>

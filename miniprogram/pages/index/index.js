@@ -27,8 +27,13 @@ Page({
     },
 
     onLoad() {
-        this.loadProducts();
-        this.loadGuessProducts();
+        console.log('首页 onLoad 触发');
+        try {
+            this.loadProducts();
+            this.loadGuessProducts();
+        } catch (err) {
+            console.error('首页加载数据失败:', err);
+        }
     },
 
     onShow() {
@@ -71,6 +76,7 @@ Page({
                 name: '特仑苏有机纯牛奶',
                 specification: '250ml×10瓶',
                 price: '78',
+                original_price: '88',
                 cover_image: '/assets/products/organic_milk.jpg',
                 fresh_days: 6
             },
@@ -87,6 +93,7 @@ Page({
                 name: '有机甄选限定上市',
                 specification: '250ml×12盒',
                 price: '66',
+                original_price: '86',
                 cover_image: '/assets/products/organic_milk.jpg',
                 fresh_days: 8
             },
@@ -100,7 +107,17 @@ Page({
             }
         ];
 
-        this.setData({ guessProducts });
+        // 随机打乱数组顺序
+        const shuffled = guessProducts.sort(() => Math.random() - 0.5);
+
+        // 为某些项增加随机前缀，增强变化感
+        const labels = ['热销', '推荐', '精选', '限时'];
+        const changed = shuffled.map(p => ({
+            ...p,
+            name: (Math.random() > 0.5 ? `[${labels[Math.floor(Math.random() * labels.length)]}] ` : '') + p.name.replace(/\[.*\]\s/, '')
+        }));
+
+        this.setData({ guessProducts: changed });
     },
 
     // 添加到购物车
@@ -143,7 +160,13 @@ Page({
     // 跳转到产品列表
     goToProducts(e) {
         const filter = e.currentTarget.dataset.filter;
-        wx.navigateTo({ url: `/pages/products/products?filter=${filter}` });
+        if (filter === 'recommend') {
+            // 模拟“换一批”效果
+            this.loadGuessProducts();
+            wx.showToast({ title: '已更新推荐', icon: 'none' });
+            return;
+        }
+        wx.switchTab({ url: '/pages/category/category' });
     },
 
     // 跳转到产品详情
@@ -180,5 +203,23 @@ Page({
         wx.showToast({ title: '会员功能开发中', icon: 'none' });
         // TODO: 跳转到会员页面
         // wx.navigateTo({ url: '/pages/member/member' });
+    },
+
+    // 加入购物车
+    addToCart(e) {
+        const product = e.currentTarget.dataset.product;
+        let cart = wx.getStorageSync('cart') || [];
+
+        const existingIndex = cart.findIndex(item => item.product.id === product.id);
+        if (existingIndex > -1) {
+            cart[existingIndex].quantity += 1;
+        } else {
+            cart.push({ product, quantity: 1, selected: true });
+        }
+
+        wx.setStorageSync('cart', cart);
+        app.updateCartBadge();
+
+        wx.showToast({ title: '已加入购物车', icon: 'success' });
     }
 });

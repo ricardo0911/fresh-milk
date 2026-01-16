@@ -8,10 +8,15 @@
         "pages/product/product",
         "pages/order/order",
         "pages/orders/orders",
+        "pages/order-detail/order-detail",
         "pages/subscription/subscription",
+        "pages/subscription-detail/subscription-detail",
         "pages/coupon/coupon",
         "pages/address/address",
         "pages/order-result/order-result",
+        "pages/review/review",
+        "pages/aftersale/aftersale",
+        "pages/refund/refund",
         "pages/login/login"
     ],
     "window": {

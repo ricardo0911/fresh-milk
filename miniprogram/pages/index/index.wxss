@@ -141,6 +141,7 @@
   overflow: hidden;
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
   vertical-align: top;
+  position: relative;
 }
 
 .product-image {
@@ -155,6 +156,11 @@
   left: 12rpx;
   display: flex;
   gap: 8rpx;
+}
+
+.tag-promo {
+  background: var(--error-color);
+  color: #fff;
 }
 
 .product-info {
@@ -211,6 +217,7 @@
   border-radius: 16rpx;
   overflow: hidden;
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.06);
+  position: relative;
 }
 
 .product-image-grid {
@@ -371,6 +378,13 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.guess-image-wrap .product-tags {
+  position: absolute;
+  top: 10rpx;
+  left: 10rpx;
+  z-index: 1;
 }
 
 /* 新鲜日期标签 */

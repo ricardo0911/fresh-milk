@@ -87,7 +87,7 @@ Page({
 
     goToOrderDetail(e) {
         const id = e.currentTarget.dataset.id;
-        wx.navigateTo({ url: `/pages/order/order?id=${id}` });
+        wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${id}` });
     },
 
     async cancelOrder(e) {

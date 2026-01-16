@@ -32,6 +32,39 @@
 .price-main {
   font-size: 56rpx;
   font-weight: 800;
+  color: var(--text-primary);
+}
+
+.price-symbol {
+  font-size: 32rpx;
+  margin-right: 4rpx;
+  font-weight: 700;
+}
+
+.member-price-tag {
+  display: flex;
+  align-items: center;
+  background: #1e3a5f;
+  color: #fbbf24;
+  font-size: 20rpx;
+  border-radius: 8rpx;
+  overflow: hidden;
+  height: 36rpx;
+}
+
+.member-label {
+  background: #fbbf24;
+  color: #1e3a5f;
+  padding: 0 8rpx;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+
+.member-price {
+  padding: 0 10rpx;
+  font-weight: 700;
 }
 
 .price-original {

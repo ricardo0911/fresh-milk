@@ -224,5 +224,13 @@ Page({
                 }
             }
         });
+    },
+
+    // 跳转到订阅详情页
+    goToSubscriptionDetail(e) {
+        const id = e.currentTarget.dataset.id;
+        wx.navigateTo({
+            url: `/pages/subscription-detail/subscription-detail?id=${id}`
+        });
     }
 });

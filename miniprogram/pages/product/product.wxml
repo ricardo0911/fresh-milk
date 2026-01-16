@@ -10,9 +10,15 @@
   <!-- 价格信息 -->
   <view class="price-section">
     <view class="price-row">
-      <text class="price-main price">{{product.price}}</text>
+      <view class="price-main-wrap">
+        <text class="price-symbol">¥</text>
+        <text class="price-main">{{product.price}}</text>
+      </view>
+      <view class="member-price-tag" wx:if="{{memberDiscountLabel}}">
+        <text class="member-label">{{memberDiscountLabel}}价</text>
+        <text class="member-price">¥{{memberPrice}}</text>
+      </view>
       <text class="price-original" wx:if="{{product.original_price}}">¥{{product.original_price}}</text>
-      <text class="price-tag" wx:if="{{product.original_price}}">省 ¥{{savingAmount}}</text>
     </view>
     <view class="promo-row">
       <text class="promo-item">✓ 新人首单立减5元</text>

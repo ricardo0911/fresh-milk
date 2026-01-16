@@ -1,0 +1,209 @@
+<!--pages/order-detail/order-detail.wxml - 订单详情页面-->
+<view class="order-detail-page">
+    <block wx:if="{{order}}">
+        <!-- 订单状态卡片 -->
+        <view class="status-card status-{{order.status}}">
+            <view class="status-info">
+                <text class="status-icon">
+                    {{order.status === 'pending' ? '💰' : 
+                      order.status === 'paid' ? '📦' : 
+                      order.status === 'shipped' ? '🚚' : 
+                      order.status === 'delivered' ? '📬' : 
+                      order.status === 'completed' ? '✅' : '📋'}}
+                </text>
+                <view class="status-text">
+                    <text class="status-title">{{order.status_display}}</text>
+                    <text class="status-desc" wx:if="{{order.status === 'shipped'}}">
+                        预计 {{order.expected_delivery}} 送达
+                    </text>
+                </view>
+            </view>
+            <!-- 周期购标识 -->
+            <view class="subscription-badge" wx:if="{{order.is_subscription}}">
+                <text class="badge-icon">🔄</text>
+                <text class="badge-text">第{{order.current_period}}/{{order.subscription_periods}}期</text>
+            </view>
+        </view>
+
+        <!-- 配送进度 -->
+        <view class="progress-card">
+            <view class="card-header">
+                <text class="card-title">配送进度</text>
+            </view>
+            <view class="progress-timeline">
+                <view 
+                    wx:for="{{progressSteps}}" 
+                    wx:key="title"
+                    class="timeline-item {{item.completed ? 'completed' : ''}} {{item.current ? 'current' : ''}} {{item.pending ? 'pending' : ''}}"
+                >
+                    <view class="timeline-icon">{{item.icon}}</view>
+                    <view class="timeline-line" wx:if="{{index < progressSteps.length - 1}}"></view>
+                    <view class="timeline-content">
+                        <text class="timeline-title">{{item.title}}</text>
+                        <text class="timeline-time">{{item.time}}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <!-- 配送员信息 -->
+        <view class="delivery-card" wx:if="{{deliveryPerson && (order.status === 'shipped' || order.status === 'delivered')}}">
+            <view class="card-header">
+                <text class="card-title">配送员</text>
+            </view>
+            <view class="delivery-info">
+                <image class="delivery-avatar" src="{{deliveryPerson.avatar}}" mode="aspectFill"/>
+                <view class="delivery-detail">
+                    <text class="delivery-name">{{deliveryPerson.name}}</text>
+                    <view class="delivery-stats">
+                        <text class="stat-item">⭐ {{deliveryPerson.rating}}</text>
+                        <text class="stat-item">📦 {{deliveryPerson.total_deliveries}}单</text>
+                    </view>
+                </view>
+                <view class="call-btn" bindtap="callDelivery">
+                    <text class="call-icon">📞</text>
+                    <text class="call-text">联系</text>
+                </view>
+            </view>
+        </view>
+
+        <!-- 收货地址 -->
+        <view class="address-card">
+            <view class="address-icon">📍</view>
+            <view class="address-info">
+                <view class="address-header">
+                    <text class="receiver-name">{{order.receiver_name}}</text>
+                    <text class="receiver-phone">{{order.receiver_phone}}</text>
+                </view>
+                <text class="address-detail">{{order.receiver_address}}</text>
+            </view>
+        </view>
+
+        <!-- 商品列表 -->
+        <view class="products-card">
+            <view class="card-header">
+                <text class="card-title">商品信息</text>
+            </view>
+            <view class="product-list">
+                <view class="product-item" wx:for="{{order.items}}" wx:key="id">
+                    <image class="product-image" src="{{item.cover_image}}" mode="aspectFill"/>
+                    <view class="product-info">
+                        <text class="product-name">{{item.name}}</text>
+                        <text class="product-spec">{{item.specification}}</text>
+                        <view class="product-price-row">
+                            <text class="product-price">¥{{item.price}}</text>
+                            <text class="product-qty">×{{item.quantity}}</text>
+                        </view>
+                    </view>
+                    <text class="product-total">¥{{item.total_price}}</text>
+                </view>
+            </view>
+            <!-- 价格明细 -->
+            <view class="price-detail">
+                <view class="price-row">
+                    <text class="price-label">商品总额</text>
+                    <text class="price-value">¥{{order.total_amount}}</text>
+                </view>
+                <view class="price-row">
+                    <text class="price-label">配送费</text>
+                    <text class="price-value">¥{{order.delivery_fee}}</text>
+                </view>
+                <view class="price-row" wx:if="{{order.discount_amount > 0}}">
+                    <text class="price-label">优惠</text>
+                    <text class="price-value discount">-¥{{order.discount_amount}}</text>
+                </view>
+                <view class="price-row total">
+                    <text class="price-label">实付款</text>
+                    <text class="price-value">¥{{order.pay_amount}}</text>
+                </view>
+            </view>
+        </view>
+
+        <!-- 周期购信息 -->
+        <view class="subscription-card" wx:if="{{order.is_subscription}}" bindtap="viewSubscription">
+            <view class="card-header">
+                <text class="card-title">周期购信息</text>
+                <text class="card-arrow">›</text>
+            </view>
+            <view class="subscription-info">
+                <view class="sub-row">
+                    <text class="sub-label">订阅编号</text>
+                    <text class="sub-value">{{order.subscription_no}}</text>
+                </view>
+                <view class="sub-row">
+                    <text class="sub-label">配送频率</text>
+                    <text class="sub-value">{{order.subscription_frequency}}</text>
+                </view>
+                <view class="sub-row">
+                    <text class="sub-label">配送进度</text>
+                    <view class="sub-progress">
+                        <view class="progress-bar">
+                            <view class="progress-fill" style="width: {{order.current_period / order.subscription_periods * 100}}%"></view>
+                        </view>
+                        <text class="progress-text">{{order.current_period}}/{{order.subscription_periods}}期</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <!-- 订单信息 -->
+        <view class="order-info-card">
+            <view class="card-header">
+                <text class="card-title">订单信息</text>
+            </view>
+            <view class="info-list">
+                <view class="info-row">
+                    <text class="info-label">订单编号</text>
+                    <view class="info-value-wrap">
+                        <text class="info-value">{{order.order_no}}</text>
+                        <text class="copy-btn" bindtap="copyOrderNo">复制</text>
+                    </view>
+                </view>
+                <view class="info-row">
+                    <text class="info-label">下单时间</text>
+                    <text class="info-value">{{order.created_at}}</text>
+                </view>
+                <view class="info-row" wx:if="{{order.paid_at}}">
+                    <text class="info-label">支付时间</text>
+                    <text class="info-value">{{order.paid_at}}</text>
+                </view>
+                <view class="info-row" wx:if="{{order.remark}}">
+                    <text class="info-label">订单备注</text>
+                    <text class="info-value">{{order.remark}}</text>
+                </view>
+            </view>
+        </view>
+
+        <!-- 底部操作栏 -->
+        <view class="action-bar">
+            <!-- 待付款 -->
+            <block wx:if="{{order.status === 'pending'}}">
+                <button class="action-btn secondary" bindtap="cancelOrder">取消订单</button>
+                <button class="action-btn primary">立即支付</button>
+            </block>
+            
+            <!-- 待发货 -->
+            <block wx:elif="{{order.status === 'paid'}}">
+                <button class="action-btn secondary" bindtap="applyAfterSale">申请退款</button>
+            </block>
+            
+            <!-- 配送中 -->
+            <block wx:elif="{{order.status === 'shipped'}}">
+                <button class="action-btn secondary" bindtap="applyAfterSale">申请售后</button>
+                <button class="action-btn primary" bindtap="confirmReceive">确认收货</button>
+            </block>
+            
+            <!-- 已送达/已完成 -->
+            <block wx:elif="{{order.status === 'delivered' || order.status === 'completed'}}">
+                <button class="action-btn secondary" bindtap="buyAgain">再次购买</button>
+                <button class="action-btn secondary" bindtap="applyAfterSale">申请售后</button>
+                <button class="action-btn primary" wx:if="{{!order.is_reviewed}}" bindtap="goToReview">去评价</button>
+            </block>
+        </view>
+    </block>
+
+    <!-- 加载中 -->
+    <view class="loading-state" wx:else>
+        <text>加载中...</text>
+    </view>
+</view>

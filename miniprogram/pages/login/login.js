@@ -47,7 +47,8 @@ Page({
                 id: 1,
                 phone,
                 username: '用户' + phone.slice(-4),
-                avatar: 'https://i.pravatar.cc/200?u=' + phone
+                avatar: 'https://i.pravatar.cc/200?u=' + phone,
+                member_level: 'gold'
             };
 
             this.handleLoginSuccess(token, userInfo);
@@ -60,52 +61,63 @@ Page({
     },
 
     // 微信一键登录（获取微信用户信息）
-    async wxLogin() {
+    // 注意: wx.getUserProfile 在开发者工具中必须由用户点击直接触发，无法在 async 中调用
+    // 因此在开发环境下直接使用模拟数据
+    wxLogin() {
         this.setData({ isLoading: true });
         wx.showLoading({ title: '微信登录中...' });
 
-        try {
-            // 1. 获取微信登录code
-            const loginRes = await this.wxLoginPromise();
-            const code = loginRes.code;
-            console.log('微信登录code:', code);
+        // 1. 获取微信登录code
+        wx.login({
+            success: (loginRes) => {
+                console.log('微信登录code:', loginRes.code);
 
-            // 2. 获取用户信息（需要用户授权）
-            const userProfile = await this.getUserProfilePromise();
-            console.log('用户信息:', userProfile);
+                // 2. 在开发环境下，getUserProfile 会失败，直接使用模拟数据
+                // 真机环境下可以正常调用 getUserProfile
+                wx.getUserProfile({
+                    desc: '用于完善用户资料',
+                    success: (profileRes) => {
+                        console.log('用户信息:', profileRes);
+                        this.completeWxLogin(profileRes.userInfo);
+                    },
+                    fail: (err) => {
+                        console.log('getUserProfile 失败，使用模拟数据:', err.errMsg);
+                        // 开发环境模拟用户信息
+                        const mockUserInfo = {
+                            nickName: '微信用户',
+                            avatarUrl: 'https://i.pravatar.cc/200?u=wx'
+                        };
+                        this.completeWxLogin(mockUserInfo);
+                    }
+                });
+            },
+            fail: (err) => {
+                wx.hideLoading();
+                this.setData({ isLoading: false });
+                wx.showToast({ title: '微信登录失败', icon: 'none' });
+                console.error('wx.login 失败:', err);
+            }
+        });
+    },
 
-            // 3. 发送到后端验证并获取token
-            // TODO: 调用真实后端API
-            // const res = await api.wxLogin({
-            //   code,
-            //   userInfo: userProfile.userInfo,
-            //   encryptedData: userProfile.encryptedData,
-            //   iv: userProfile.iv
-            // });
-
-            // 模拟后端返回
-            await this.simulateDelay(800);
+    // 完成微信登录流程
+    completeWxLogin(wxUserInfo) {
+        // 模拟后端返回
+        setTimeout(() => {
+            wx.hideLoading();
 
             const token = 'wx_token_' + Date.now();
             const userInfo = {
                 id: 1,
-                username: userProfile.userInfo.nickName,
-                avatar: userProfile.userInfo.avatarUrl,
-                phone: ''
+                username: wxUserInfo.nickName,
+                avatar: wxUserInfo.avatarUrl,
+                phone: '',
+                member_level: 'gold'
             };
 
             this.handleLoginSuccess(token, userInfo);
-        } catch (error) {
-            console.error('微信登录失败:', error);
-            if (error.errMsg && error.errMsg.includes('cancel')) {
-                wx.showToast({ title: '已取消授权', icon: 'none' });
-            } else {
-                wx.showToast({ title: error.message || '微信登录失败', icon: 'none' });
-            }
-        } finally {
-            wx.hideLoading();
             this.setData({ isLoading: false });
-        }
+        }, 800);
     },
 
     // 手机号快捷登录（真机才能使用）
@@ -143,7 +155,8 @@ Page({
                 id: 1,
                 phone: '138****8888',
                 username: '用户8888',
-                avatar: 'https://i.pravatar.cc/200'
+                avatar: 'https://i.pravatar.cc/200',
+                member_level: 'gold'
             };
 
             this.handleLoginSuccess(token, userInfo);

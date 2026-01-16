@@ -222,10 +222,72 @@
 
 .btn-cancel {
   font-size: 24rpx;
-  padding: 12rpx 32rpx;
+  padding: 12rpx 24rpx;
   background: #fff;
   color: #666;
   border: 1rpx solid #ddd;
+  border-radius: 30rpx;
+  margin-left: 12rpx;
+}
+
+/* 配送进度条 */
+.delivery-progress {
+  display: flex;
+  align-items: center;
+  margin-top: 16rpx;
+  gap: 16rpx;
+}
+
+.delivery-progress .progress-bar {
+  flex: 1;
+  height: 12rpx;
+  background: #e0e0e0;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.delivery-progress .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 6rpx;
+  transition: width 0.3s ease;
+}
+
+.delivery-progress .progress-text {
+  font-size: 24rpx;
+  color: #10b981;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.next-delivery {
+  color: #ff9800;
+  font-weight: 500;
+}
+
+/* 订阅卡片底部增强 */
+.footer-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.remaining-count {
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.footer-actions {
+  display: flex;
+  align-items: center;
+}
+
+.btn-detail {
+  font-size: 24rpx;
+  padding: 12rpx 24rpx;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border: none;
   border-radius: 30rpx;
 }
 

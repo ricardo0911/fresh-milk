@@ -11,7 +11,7 @@
 
   <scroll-view class="main-scroll" scroll-y>
     <!-- 活动Banner -->
-    <view class="promo-banner">
+    <view class="promo-banner" bindtap="viewPromoDetails">
       <view class="banner-overlay"></view>
       <view class="banner-content">
         <text class="banner-title">818会员日大馈赠</text>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>促销活动 - Fresh Milk 管理后台</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><span class="logo-icon">🥛</span><span class="logo-text">Fresh Milk</span></div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span
+                        class="nav-label">数据概览</span></a>
+                <a href="orders.html" class="nav-item"><span class="nav-icon">📦</span><span
+                        class="nav-label">订单管理</span></a>
+                <a href="products.html" class="nav-item"><span class="nav-icon">🛒</span><span
+                        class="nav-label">商品管理</span></a>
+                <a href="coupons.html" class="nav-item"><span class="nav-icon">🎫</span><span
+                        class="nav-label">优惠券管理</span></a>
+                <a href="promotions.html" class="nav-item active"><span class="nav-icon">🎉</span><span
+                        class="nav-label">促销活动</span></a>
+                <a href="members.html" class="nav-item"><span class="nav-icon">👑</span><span
+                        class="nav-label">会员等级</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="page-info">
+                    <h1 class="page-title">促销活动</h1>
+                    <p class="page-subtitle">管理促销活动和营销计划</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="showAddPromotion()">➕ 创建活动</button>
+                </div>
+            </header>
+
+            <!-- 活动统计 -->
+            <section class="stats-grid small">
+                <div class="stat-card green">
+                    <div class="stat-icon">🎉</div>
+                    <div class="stat-content">
+                        <span class="stat-label">进行中活动</span>
+                        <span class="stat-value">3</span>
+                    </div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <span class="stat-label">即将开始</span>
+                        <span class="stat-value">2</span>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <span class="stat-label">本月促销额</span>
+                        <span class="stat-value">¥12.8k</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 活动列表 -->
+            <section class="promotions-section">
+                <h2 class="section-title">活动列表</h2>
+
+                <div class="promotion-card active">
+                    <div class="promotion-banner"
+                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <span class="promotion-badge">进行中</span>
+                        <h3>新年大促</h3>
+                        <p>全场满100减20，满200减50</p>
+                    </div>
+                    <div class="promotion-info">
+                        <div class="info-row">
+                            <span class="label">活动时间：</span>
+                            <span class="value">2024-01-01 ~ 2024-01-31</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">活动类型：</span>
+                            <span class="value">满减活动</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">参与商品：</span>
+                            <span class="value">全部商品</span>
+                        </div>
+                        <div class="promotion-stats">
+                            <div class="stat">
+                                <span class="stat-value">256</span>
+                                <span class="stat-label">参与人次</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">¥5,680</span>
+                                <span class="stat-label">促销销售额</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">¥1,280</span>
+                                <span class="stat-label">优惠总金额</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="promotion-actions">
+                        <button class="btn-action" onclick="editPromotion(1)">编辑</button>
+                        <button class="btn-action danger" onclick="endPromotion(1)">结束活动</button>
+                    </div>
+                </div>
+
+                <div class="promotion-card active">
+                    <div class="promotion-banner"
+                        style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                        <span class="promotion-badge">进行中</span>
+                        <h3>周期购专享</h3>
+                        <p>订阅周期购享9折优惠</p>
+                    </div>
+                    <div class="promotion-info">
+                        <div class="info-row">
+                            <span class="label">活动时间：</span>
+                            <span class="value">长期有效</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">活动类型：</span>
+                            <span class="value">折扣活动</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">参与商品：</span>
+                            <span class="value">支持周期购的商品</span>
+                        </div>
+                        <div class="promotion-stats">
+                            <div class="stat">
+                                <span class="stat-value">156</span>
+                                <span class="stat-label">活跃订阅</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">¥8,920</span>
+                                <span class="stat-label">累计销售额</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="promotion-actions">
+                        <button class="btn-action" onclick="editPromotion(2)">编辑</button>
+                    </div>
+                </div>
+
+                <div class="promotion-card upcoming">
+                    <div class="promotion-banner"
+                        style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <span class="promotion-badge upcoming">即将开始</span>
+                        <h3>春节特惠</h3>
+                        <p>指定商品买二送一</p>
+                    </div>
+                    <div class="promotion-info">
+                        <div class="info-row">
+                            <span class="label">活动时间：</span>
+                            <span class="value">2024-02-01 ~ 2024-02-15</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">活动类型：</span>
+                            <span class="value">买赠活动</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">参与商品：</span>
+                            <span class="value">3款指定商品</span>
+                        </div>
+                    </div>
+                    <div class="promotion-actions">
+                        <button class="btn-action" onclick="editPromotion(3)">编辑</button>
+                        <button class="btn-action danger" onclick="deletePromotion(3)">删除</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function showAddPromotion() {
+            alert('创建新活动');
+        }
+
+        function editPromotion(id) {
+            alert('编辑活动：' + id);
+        }
+
+        function endPromotion(id) {
+            if (confirm('确定结束该活动吗？')) {
+                alert('活动已结束');
+            }
+        }
+
+        function deletePromotion(id) {
+            if (confirm('确定删除该活动吗？')) {
+                alert('活动已删除');
+            }
+        }
+    </script>
+</body>
+
+</html>

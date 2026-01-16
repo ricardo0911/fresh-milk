@@ -107,6 +107,10 @@ page {
   right: -6rpx;
   width: 40rpx;
   height: 40rpx;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .info-content {
@@ -136,6 +140,19 @@ page {
   border-radius: 20rpx;
   display: flex;
   align-items: center;
+}
+
+/* 会员等级颜色 */
+.member-tag.silver {
+  background: linear-gradient(90deg, #c0c0c0 0%, #a8a8a8 100%);
+}
+
+.member-tag.gold {
+  background: linear-gradient(90deg, #ffd700 0%, #ffb800 100%);
+}
+
+.member-tag.platinum {
+  background: linear-gradient(90deg, #e5e4e2 0%, #b4b4b4 100%);
 }
 
 .tag-text {

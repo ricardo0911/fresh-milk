@@ -9,11 +9,14 @@ from .models import User, UserAddress, UserLog
 
 class UserSerializer(serializers.ModelSerializer):
     """用户序列化器"""
+    member_level_display = serializers.CharField(source='get_member_level_display', read_only=True)
+
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'phone', 'avatar', 'address', 
-                  'is_admin', 'date_joined', 'created_at']
-        read_only_fields = ['id', 'is_admin', 'date_joined', 'created_at']
+                  'member_level', 'member_level_display', 'is_admin', 
+                  'date_joined', 'created_at']
+        read_only_fields = ['id', 'is_admin', 'member_level_display', 'date_joined', 'created_at']
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):

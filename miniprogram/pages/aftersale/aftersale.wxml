@@ -1,0 +1,119 @@
+<!--pages/aftersale/aftersale.wxml - 售后申请页面-->
+<view class="aftersale-page">
+    <!-- 订单信息 -->
+    <view class="order-card" wx:if="{{order}}">
+        <view class="order-header">
+            <text class="order-no">订单号：{{order.order_no}}</text>
+        </view>
+        <view class="order-items">
+            <view class="item" wx:for="{{order.items}}" wx:key="id">
+                <image class="item-image" src="{{item.cover_image}}" mode="aspectFill"/>
+                <view class="item-info">
+                    <text class="item-name">{{item.name}}</text>
+                    <text class="item-spec">{{item.specification}}</text>
+                </view>
+                <text class="item-qty">×{{item.quantity}}</text>
+            </view>
+        </view>
+    </view>
+
+    <!-- 售后类型 -->
+    <view class="section">
+        <view class="section-title">售后类型</view>
+        <view class="type-list">
+            <view 
+                wx:for="{{typeOptions}}" 
+                wx:key="value"
+                class="type-item {{selectedType === item.value ? 'active' : ''}}"
+                data-type="{{item.value}}"
+                bindtap="selectType"
+            >
+                <view class="type-icon">{{item.icon}}</view>
+                <view class="type-content">
+                    <text class="type-label">{{item.label}}</text>
+                    <text class="type-desc">{{item.desc}}</text>
+                </view>
+                <view class="type-check" wx:if="{{selectedType === item.value}}">✓</view>
+            </view>
+        </view>
+    </view>
+
+    <!-- 退款原因 -->
+    <view class="section">
+        <view class="section-title">退款原因</view>
+        <picker mode="selector" range="{{reasonOptions}}" bindchange="selectReason">
+            <view class="picker-box">
+                <text class="picker-value {{selectedReasonIndex >= 0 ? '' : 'placeholder'}}">
+                    {{selectedReasonIndex >= 0 ? reasonOptions[selectedReasonIndex] : '请选择原因'}}
+                </text>
+                <text class="picker-arrow">›</text>
+            </view>
+        </picker>
+    </view>
+
+    <!-- 问题描述 -->
+    <view class="section">
+        <view class="section-title">问题描述（选填）</view>
+        <textarea 
+            class="desc-textarea"
+            placeholder="请详细描述您遇到的问题，以便我们更好地为您处理"
+            maxlength="500"
+            bindinput="inputDescription"
+            value="{{description}}"
+        />
+        <text class="char-count">{{description.length}}/500</text>
+    </view>
+
+    <!-- 上传凭证 -->
+    <view class="section">
+        <view class="section-title">上传凭证（选填）</view>
+        <view class="image-list">
+            <view 
+                wx:for="{{images}}" 
+                wx:key="index"
+                class="image-item"
+            >
+                <image 
+                    src="{{item}}" 
+                    mode="aspectFill"
+                    data-index="{{index}}"
+                    bindtap="previewImage"
+                />
+                <view 
+                    class="delete-btn"
+                    data-index="{{index}}"
+                    bindtap="deleteImage"
+                >×</view>
+            </view>
+            <view 
+                wx:if="{{images.length < 9}}"
+                class="upload-btn"
+                bindtap="chooseImage"
+            >
+                <text class="upload-icon">📷</text>
+                <text class="upload-text">添加图片</text>
+            </view>
+        </view>
+        <text class="image-tip">最多可上传9张图片，支持jpg、png格式</text>
+    </view>
+
+    <!-- 退款金额 -->
+    <view class="refund-section" wx:if="{{selectedType === 'refund' || selectedType === 'return'}}">
+        <view class="refund-row">
+            <text class="refund-label">退款金额</text>
+            <text class="refund-amount">¥{{refundAmount}}</text>
+        </view>
+        <text class="refund-tip">退款将在审核通过后1-3个工作日内原路退回</text>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-section">
+        <button 
+            class="submit-btn {{submitting ? 'disabled' : ''}}"
+            bindtap="submitApplication"
+            disabled="{{submitting}}"
+        >
+            {{submitting ? '提交中...' : '提交申请'}}
+        </button>
+    </view>
+</view>

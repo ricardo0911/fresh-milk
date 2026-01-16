@@ -62,7 +62,7 @@
         <text class="coupon-status-tag status-{{item.status}}">{{item.status === 'used' ? '已使用' : '已过期'}}</text>
       </view>
       <view class="coupon-action" wx:else>
-        <text class="use-btn">去使用</text>
+        <text class="use-btn" catchtap="useCoupon" data-coupon="{{item}}">{{selectMode ? '使用' : '去使用'}}</text>
       </view>
     </view>
 

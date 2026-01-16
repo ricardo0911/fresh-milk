@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理 - Fresh Milk 管理后台</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <!-- 侧边导航 -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🥛</span>
+                    <span class="logo-text">Fresh Milk</span>
+                </div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span
+                        class="nav-label">数据概览</span></a>
+                <a href="orders.html" class="nav-item active"><span class="nav-icon">📦</span><span
+                        class="nav-label">订单管理</span></a>
+                <a href="products.html" class="nav-item"><span class="nav-icon">🛒</span><span
+                        class="nav-label">商品管理</span></a>
+                <a href="users.html" class="nav-item"><span class="nav-icon">👥</span><span
+                        class="nav-label">用户管理</span></a>
+                <a href="subscriptions.html" class="nav-item"><span class="nav-icon">🔄</span><span
+                        class="nav-label">周期购管理</span></a>
+                <a href="delivery.html" class="nav-item"><span class="nav-icon">🚚</span><span
+                        class="nav-label">配送管理</span></a>
+                <a href="reviews.html" class="nav-item"><span class="nav-icon">⭐</span><span
+                        class="nav-label">评价管理</span></a>
+                <a href="aftersales.html" class="nav-item"><span class="nav-icon">🔧</span><span
+                        class="nav-label">售后管理</span></a>
+                <a href="coupons.html" class="nav-item"><span class="nav-icon">🎫</span><span
+                        class="nav-label">优惠券管理</span></a>
+                <a href="promotions.html" class="nav-item"><span class="nav-icon">🎉</span><span
+                        class="nav-label">促销活动</span></a>
+                <a href="members.html" class="nav-item"><span class="nav-icon">👑</span><span
+                        class="nav-label">会员等级</span></a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="page-info">
+                    <h1 class="page-title">订单管理</h1>
+                    <p class="page-subtitle">管理所有订单，处理发货和售后</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="exportOrders()">📥 导出订单</button>
+                </div>
+            </header>
+
+            <!-- 订单筛选 -->
+            <section class="filter-section">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-status="all">全部 <span class="count">156</span></button>
+                    <button class="filter-tab" data-status="pending">待付款 <span class="count">8</span></button>
+                    <button class="filter-tab" data-status="paid">待发货 <span class="count">5</span></button>
+                    <button class="filter-tab" data-status="shipped">配送中 <span class="count">12</span></button>
+                    <button class="filter-tab" data-status="delivered">已送达 <span class="count">23</span></button>
+                    <button class="filter-tab" data-status="completed">已完成 <span class="count">108</span></button>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" class="search-input" placeholder="搜索订单号/用户名/手机号">
+                    <input type="date" class="date-input" id="startDate">
+                    <span>至</span>
+                    <input type="date" class="date-input" id="endDate">
+                    <button class="btn btn-primary">🔍 搜索</button>
+                </div>
+            </section>
+
+            <!-- 订单列表 -->
+            <section class="table-section">
+                <table class="data-table full-width">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
+                            <th>订单号</th>
+                            <th>用户信息</th>
+                            <th>商品信息</th>
+                            <th>订单金额</th>
+                            <th>订单状态</th>
+                            <th>下单时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTable">
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td class="order-no">FM20240116028</td>
+                            <td class="user-info">
+                                <span class="user-name">张三</span>
+                                <span class="user-phone">138****8888</span>
+                            </td>
+                            <td class="product-info">
+                                <div class="product-item">
+                                    <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=50&q=80"
+                                        alt="">
+                                    <span>每日鲜牛奶 250ml×10 ×2</span>
+                                </div>
+                            </td>
+                            <td class="order-amount">¥89.80</td>
+                            <td><span class="status paid">待发货</span></td>
+                            <td class="order-time">2024-01-16 10:30</td>
+                            <td class="actions">
+                                <button class="btn-action" onclick="viewOrder('FM20240116028')">查看</button>
+                                <button class="btn-action primary" onclick="shipOrder('FM20240116028')">发货</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td class="order-no">FM20240116027</td>
+                            <td class="user-info">
+                                <span class="user-name">李四</span>
+                                <span class="user-phone">139****9999</span>
+                            </td>
+                            <td class="product-info">
+                                <div class="product-item">
+                                    <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=50&q=80"
+                                        alt="">
+                                    <span>A2蛋白鲜牛奶 260ml×8 ×1</span>
+                                </div>
+                            </td>
+                            <td class="order-amount">¥156.00</td>
+                            <td><span class="status shipped">配送中</span></td>
+                            <td class="order-time">2024-01-16 09:15</td>
+                            <td class="actions">
+                                <button class="btn-action" onclick="viewOrder('FM20240116027')">查看</button>
+                                <button class="btn-action" onclick="trackDelivery('FM20240116027')">追踪</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td class="order-no">FM20240116026</td>
+                            <td class="user-info">
+                                <span class="user-name">王五</span>
+                                <span class="user-phone">137****7777</span>
+                            </td>
+                            <td class="product-info">
+                                <div class="product-item">
+                                    <img src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=50&q=80"
+                                        alt="">
+                                    <span>有机纯牛奶 200ml×12 ×1</span>
+                                </div>
+                            </td>
+                            <td class="order-amount">¥68.50</td>
+                            <td><span class="status completed">已完成</span></td>
+                            <td class="order-time">2024-01-15 16:20</td>
+                            <td class="actions">
+                                <button class="btn-action" onclick="viewOrder('FM20240116026')">查看</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox"></td>
+                            <td class="order-no">FM20240116025</td>
+                            <td class="user-info">
+                                <span class="user-name">赵六</span>
+                                <span class="user-phone">136****6666</span>
+                            </td>
+                            <td class="product-info">
+                                <div class="product-item">
+                                    <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=50&q=80"
+                                        alt="">
+                                    <span>低脂鲜牛奶 500ml×6 ×2</span>
+                                </div>
+                            </td>
+                            <td class="order-amount">¥245.00</td>
+                            <td><span class="status pending">待付款</span></td>
+                            <td class="order-time">2024-01-16 08:45</td>
+                            <td class="actions">
+                                <button class="btn-action" onclick="viewOrder('FM20240116025')">查看</button>
+                                <button class="btn-action danger" onclick="cancelOrder('FM20240116025')">取消</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- 分页 -->
+                <div class="pagination">
+                    <span class="page-info">共 156 条记录，第 1/16 页</span>
+                    <div class="page-btns">
+                        <button class="page-btn" disabled>上一页</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <span>...</span>
+                        <button class="page-btn">16</button>
+                        <button class="page-btn">下一页</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 订单详情弹窗 -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>订单详情</h3>
+                <button class="modal-close" onclick="closeModal('orderModal')">×</button>
+            </div>
+            <div class="modal-body" id="orderDetailContent">
+                <!-- 动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script>
+        // 模拟订单数据
+        const ordersData = {
+            'FM20240116028': {
+                orderId: 'FM20240116028',
+                status: '待发货',
+                statusClass: 'paid',
+                user: { name: '张三', phone: '13888888888', avatar: 'https://i.pravatar.cc/40?img=1' },
+                address: '浙江省杭州市西湖区文三路999号 文三大厦 A座 1808室',
+                products: [
+                    { name: '每日鲜牛奶', spec: '250ml×10瓶', price: 39.90, qty: 2, image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=80&q=80' }
+                ],
+                subtotal: 79.80,
+                shipping: 10.00,
+                discount: 0,
+                total: 89.80,
+                payMethod: '微信支付',
+                createTime: '2024-01-16 10:30:00',
+                payTime: '2024-01-16 10:31:25',
+                remark: '请放门口，谢谢'
+            },
+            'FM20240116027': {
+                orderId: 'FM20240116027',
+                status: '配送中',
+                statusClass: 'shipped',
+                user: { name: '李四', phone: '13999999999', avatar: 'https://i.pravatar.cc/40?img=2' },
+                address: '浙江省杭州市滨江区江南大道888号 海创基地 B栋 502',
+                products: [
+                    { name: 'A2蛋白鲜牛奶', spec: '260ml×8瓶', price: 156.00, qty: 1, image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=80&q=80' }
+                ],
+                subtotal: 156.00,
+                shipping: 0,
+                discount: 0,
+                total: 156.00,
+                payMethod: '支付宝',
+                createTime: '2024-01-16 09:15:00',
+                payTime: '2024-01-16 09:16:42',
+                deliveryMan: { name: '张师傅', phone: '15800001111' },
+                remark: ''
+            },
+            'FM20240116026': {
+                orderId: 'FM20240116026',
+                status: '已完成',
+                statusClass: 'completed',
+                user: { name: '王五', phone: '13777777777', avatar: 'https://i.pravatar.cc/40?img=3' },
+                address: '浙江省杭州市余杭区未来科技城 海创园 3号楼 1201',
+                products: [
+                    { name: '有机纯牛奶', spec: '200ml×12盒', price: 68.50, qty: 1, image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=80&q=80' }
+                ],
+                subtotal: 68.50,
+                shipping: 0,
+                discount: 0,
+                total: 68.50,
+                payMethod: '微信支付',
+                createTime: '2024-01-15 16:20:00',
+                payTime: '2024-01-15 16:21:15',
+                completeTime: '2024-01-16 08:30:00',
+                remark: ''
+            },
+            'FM20240116025': {
+                orderId: 'FM20240116025',
+                status: '待付款',
+                statusClass: 'pending',
+                user: { name: '赵六', phone: '13666666666', avatar: 'https://i.pravatar.cc/40?img=4' },
+                address: '浙江省杭州市拱墅区丰潭路388号 城西银泰 B座 2205',
+                products: [
+                    { name: '低脂鲜牛奶', spec: '500ml×6瓶', price: 122.50, qty: 2, image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=80&q=80' }
+                ],
+                subtotal: 245.00,
+                shipping: 0,
+                discount: 0,
+                total: 245.00,
+                payMethod: '-',
+                createTime: '2024-01-16 08:45:00',
+                remark: '周末配送'
+            }
+        };
+
+        // 订单管理逻辑
+        function viewOrder(orderId) {
+            const order = ordersData[orderId];
+            if (!order) {
+                alert('订单不存在');
+                return;
+            }
+
+            let productsHtml = order.products.map(p => `
+                <div class="detail-product-item">
+                    <img src="${p.image}" alt="${p.name}">
+                    <div class="product-detail">
+                        <span class="name">${p.name}</span>
+                        <span class="spec">${p.spec}</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="price">¥${p.price.toFixed(2)}</span>
+                        <span class="qty">×${p.qty}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            let deliveryHtml = order.deliveryMan ? `
+                <div class="detail-section">
+                    <h4>🚚 配送信息</h4>
+                    <div class="detail-row">
+                        <span class="label">配送员：</span>
+                        <span class="value">${order.deliveryMan.name}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">联系电话：</span>
+                        <span class="value">${order.deliveryMan.phone}</span>
+                    </div>
+                </div>
+            ` : '';
+
+            const html = `
+                <div class="order-detail-view">
+                    <div class="detail-header">
+                        <span class="detail-order-no">订单号：${order.orderId}</span>
+                        <span class="status ${order.statusClass}">${order.status}</span>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4>👤 用户信息</h4>
+                        <div class="detail-user">
+                            <img src="${order.user.avatar}" class="user-avatar">
+                            <div>
+                                <span class="user-name">${order.user.name}</span>
+                                <span class="user-phone">${order.user.phone}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4>📍 收货地址</h4>
+                        <p class="address-text">${order.address}</p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4>🛒 商品信息</h4>
+                        <div class="detail-products">${productsHtml}</div>
+                    </div>
+                    
+                    ${deliveryHtml}
+                    
+                    <div class="detail-section">
+                        <h4>💰 费用明细</h4>
+                        <div class="detail-row"><span class="label">商品金额：</span><span class="value">¥${order.subtotal.toFixed(2)}</span></div>
+                        <div class="detail-row"><span class="label">运费：</span><span class="value">¥${order.shipping.toFixed(2)}</span></div>
+                        ${order.discount > 0 ? `<div class="detail-row"><span class="label">优惠：</span><span class="value discount">-¥${order.discount.toFixed(2)}</span></div>` : ''}
+                        <div class="detail-row total"><span class="label">实付金额：</span><span class="value">¥${order.total.toFixed(2)}</span></div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h4>📋 订单信息</h4>
+                        <div class="detail-row"><span class="label">下单时间：</span><span class="value">${order.createTime}</span></div>
+                        ${order.payTime ? `<div class="detail-row"><span class="label">支付时间：</span><span class="value">${order.payTime}</span></div>` : ''}
+                        ${order.completeTime ? `<div class="detail-row"><span class="label">完成时间：</span><span class="value">${order.completeTime}</span></div>` : ''}
+                        <div class="detail-row"><span class="label">支付方式：</span><span class="value">${order.payMethod}</span></div>
+                        ${order.remark ? `<div class="detail-row"><span class="label">买家备注：</span><span class="value remark">${order.remark}</span></div>` : ''}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('orderDetailContent').innerHTML = html;
+            document.getElementById('orderModal').classList.add('show');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        function shipOrder(orderId) {
+            if (confirm('确认发货订单 ' + orderId + '？')) {
+                alert('发货成功！');
+                location.reload();
+            }
+        }
+
+        function cancelOrder(orderId) {
+            if (confirm('确认取消订单 ' + orderId + '？')) {
+                alert('订单已取消');
+                location.reload();
+            }
+        }
+
+        function trackDelivery(orderId) {
+            alert('查看配送追踪：' + orderId);
+        }
+
+        function exportOrders() {
+            alert('正在导出订单数据...');
+        }
+
+        // 筛选标签切换
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

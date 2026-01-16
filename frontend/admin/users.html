@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户管理 - Fresh Milk 管理后台</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><span class="logo-icon">🥛</span><span class="logo-text">Fresh Milk</span></div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span
+                        class="nav-label">数据概览</span></a>
+                <a href="orders.html" class="nav-item"><span class="nav-icon">📦</span><span
+                        class="nav-label">订单管理</span></a>
+                <a href="products.html" class="nav-item"><span class="nav-icon">🛒</span><span
+                        class="nav-label">商品管理</span></a>
+                <a href="users.html" class="nav-item active"><span class="nav-icon">👥</span><span
+                        class="nav-label">用户管理</span></a>
+                <a href="subscriptions.html" class="nav-item"><span class="nav-icon">🔄</span><span
+                        class="nav-label">周期购管理</span></a>
+                <a href="delivery.html" class="nav-item"><span class="nav-icon">🚚</span><span
+                        class="nav-label">配送管理</span></a>
+                <a href="reviews.html" class="nav-item"><span class="nav-icon">⭐</span><span
+                        class="nav-label">评价管理</span></a>
+                <a href="aftersales.html" class="nav-item"><span class="nav-icon">🔧</span><span
+                        class="nav-label">售后管理</span></a>
+                <a href="members.html" class="nav-item"><span class="nav-icon">👑</span><span
+                        class="nav-label">会员等级</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="page-info">
+                    <h1 class="page-title">用户管理</h1>
+                    <p class="page-subtitle">管理用户信息和会员等级</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-outline" onclick="exportUsers()">📥 导出用户</button>
+                </div>
+            </header>
+
+            <!-- 用户统计 -->
+            <section class="stats-grid small">
+                <div class="stat-card blue">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <span class="stat-label">总用户数</span>
+                        <span class="stat-value">1,256</span>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">👑</div>
+                    <div class="stat-content">
+                        <span class="stat-label">会员用户</span>
+                        <span class="stat-value">486</span>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-content">
+                        <span class="stat-label">今日新增</span>
+                        <span class="stat-value">15</span>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">🔄</div>
+                    <div class="stat-content">
+                        <span class="stat-label">活跃订阅</span>
+                        <span class="stat-value">156</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 筛选 -->
+            <section class="filter-section">
+                <div class="filter-tabs">
+                    <button class="filter-tab active">全部用户</button>
+                    <button class="filter-tab">普通用户</button>
+                    <button class="filter-tab">银卡会员</button>
+                    <button class="filter-tab">金卡会员</button>
+                    <button class="filter-tab">钻石会员</button>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" class="search-input" placeholder="搜索用户名/手机号">
+                    <button class="btn btn-primary">🔍 搜索</button>
+                </div>
+            </section>
+
+            <!-- 用户列表 -->
+            <section class="table-section">
+                <table class="data-table full-width">
+                    <thead>
+                        <tr>
+                            <th>用户ID</th>
+                            <th>用户信息</th>
+                            <th>会员等级</th>
+                            <th>累计消费</th>
+                            <th>订单数</th>
+                            <th>积分</th>
+                            <th>注册时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1001</td>
+                            <td class="user-info">
+                                <img class="user-avatar" src="https://i.pravatar.cc/40?img=1" alt="">
+                                <div>
+                                    <span class="user-name">张三</span>
+                                    <span class="user-phone">138****8888</span>
+                                </div>
+                            </td>
+                            <td><span class="member-badge gold">金卡会员</span></td>
+                            <td>¥3,680.00</td>
+                            <td>28</td>
+                            <td>1,840</td>
+                            <td>2023-06-15</td>
+                            <td class="actions">
+                                <button class="btn-action" onclick="viewUser(1001)">查看</button>
+                                <button class="btn-action" onclick="editUser(1001)">编辑</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1002</td>
+                            <td class="user-info">
+                                <img class="user-avatar" src="https://i.pravatar.cc/40?img=2" alt="">
+                                <div>
+                                    <span class="user-name">李四</span>
+                                    <span class="user-phone">139****9999</span>
+                                </div>
+                            </td>
+                            <td><span class="member-badge diamond">钻石会员</span></td>
+                            <td>¥8,560.00</td>
+                            <td>56</td>
+                            <td>4,280</td>
+                            <td>2023-03-20</td>
+                            <td class="actions">
+                                <button class="btn-action" onclick="viewUser(1002)">查看</button>
+                                <button class="btn-action" onclick="editUser(1002)">编辑</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1003</td>
+                            <td class="user-info">
+                                <img class="user-avatar" src="https://i.pravatar.cc/40?img=3" alt="">
+                                <div>
+                                    <span class="user-name">王五</span>
+                                    <span class="user-phone">137****7777</span>
+                                </div>
+                            </td>
+                            <td><span class="member-badge silver">银卡会员</span></td>
+                            <td>¥1,280.00</td>
+                            <td>12</td>
+                            <td>640</td>
+                            <td>2023-09-10</td>
+                            <td class="actions">
+                                <button class="btn-action" onclick="viewUser(1003)">查看</button>
+                                <button class="btn-action" onclick="editUser(1003)">编辑</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1004</td>
+                            <td class="user-info">
+                                <img class="user-avatar" src="https://i.pravatar.cc/40?img=4" alt="">
+                                <div>
+                                    <span class="user-name">赵六</span>
+                                    <span class="user-phone">136****6666</span>
+                                </div>
+                            </td>
+                            <td><span class="member-badge normal">普通用户</span></td>
+                            <td>¥380.00</td>
+                            <td>4</td>
+                            <td>190</td>
+                            <td>2024-01-05</td>
+                            <td class="actions">
+                                <button class="btn-action" onclick="viewUser(1004)">查看</button>
+                                <button class="btn-action" onclick="editUser(1004)">编辑</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    <span class="page-info">共 1,256 条记录，第 1/126 页</span>
+                    <div class="page-btns">
+                        <button class="page-btn" disabled>上一页</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <span>...</span>
+                        <button class="page-btn">126</button>
+                        <button class="page-btn">下一页</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function viewUser(id) {
+            alert('查看用户：' + id);
+        }
+
+        function editUser(id) {
+            alert('编辑用户：' + id);
+        }
+
+        function exportUsers() {
+            alert('正在导出用户数据...');
+        }
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -8,6 +8,10 @@ Page({
         points: 0,
         couponCount: 0,
         balance: '0.00',
+        // 会员等级信息
+        memberLevel: '',
+        memberLevelName: '',
+        discountRate: '',
         // 订单角标数据
         pendingCount: 0,
         paidCount: 0,
@@ -23,7 +27,24 @@ Page({
 
     loadUserInfo() {
         const userInfo = app.globalData.userInfo || wx.getStorageSync('userInfo');
-        this.setData({ userInfo });
+
+        // 计算会员等级显示
+        const levelMap = {
+            'regular': { name: '普通会员', discount: '100%' },
+            'silver': { name: '银卡会员', discount: '95折' },
+            'gold': { name: '金卡会员', discount: '9折' },
+            'platinum': { name: '铂金会员', discount: '85折' }
+        };
+
+        const level = userInfo?.member_level || 'regular';
+        const levelInfo = levelMap[level] || levelMap['regular'];
+
+        this.setData({
+            userInfo,
+            memberLevel: level,
+            memberLevelName: levelInfo.name,
+            discountRate: levelInfo.discount
+        });
     },
 
     loadUserStats() {
@@ -61,8 +82,7 @@ Page({
     },
 
     goToRefund() {
-        // 售后页 (暂未实现)
-        wx.showToast({ title: '售后/退款功能开发中', icon: 'none' });
+        wx.navigateTo({ url: '/pages/refund/refund' });
     },
 
     goToSubscription() {

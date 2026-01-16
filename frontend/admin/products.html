@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品管理 - Fresh Milk 管理后台</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><span class="logo-icon">🥛</span><span class="logo-text">Fresh Milk</span></div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span
+                        class="nav-label">数据概览</span></a>
+                <a href="orders.html" class="nav-item"><span class="nav-icon">📦</span><span
+                        class="nav-label">订单管理</span></a>
+                <a href="products.html" class="nav-item active"><span class="nav-icon">🛒</span><span
+                        class="nav-label">商品管理</span></a>
+                <a href="users.html" class="nav-item"><span class="nav-icon">👥</span><span
+                        class="nav-label">用户管理</span></a>
+                <a href="subscriptions.html" class="nav-item"><span class="nav-icon">🔄</span><span
+                        class="nav-label">周期购管理</span></a>
+                <a href="delivery.html" class="nav-item"><span class="nav-icon">🚚</span><span
+                        class="nav-label">配送管理</span></a>
+                <a href="reviews.html" class="nav-item"><span class="nav-icon">⭐</span><span
+                        class="nav-label">评价管理</span></a>
+                <a href="aftersales.html" class="nav-item"><span class="nav-icon">🔧</span><span
+                        class="nav-label">售后管理</span></a>
+                <a href="coupons.html" class="nav-item"><span class="nav-icon">🎫</span><span
+                        class="nav-label">优惠券管理</span></a>
+                <a href="promotions.html" class="nav-item"><span class="nav-icon">🎉</span><span
+                        class="nav-label">促销活动</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="page-info">
+                    <h1 class="page-title">商品管理</h1>
+                    <p class="page-subtitle">管理商品信息、库存和价格</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="showAddProduct()">➕ 添加商品</button>
+                </div>
+            </header>
+
+            <!-- 商品分类标签 -->
+            <section class="filter-section">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-category="all">全部商品 <span class="count">48</span></button>
+                    <button class="filter-tab" data-category="fresh">鲜牛奶 <span class="count">15</span></button>
+                    <button class="filter-tab" data-category="yogurt">酸奶 <span class="count">12</span></button>
+                    <button class="filter-tab" data-category="lowfat">低脂奶 <span class="count">8</span></button>
+                    <button class="filter-tab" data-category="kids">儿童奶 <span class="count">8</span></button>
+                    <button class="filter-tab" data-category="organic">有机奶 <span class="count">5</span></button>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" class="search-input" placeholder="搜索商品名称">
+                    <select class="select-input">
+                        <option value="">库存状态</option>
+                        <option value="normal">库存正常</option>
+                        <option value="low">库存预警</option>
+                        <option value="out">已售罄</option>
+                    </select>
+                    <button class="btn btn-primary">🔍 搜索</button>
+                </div>
+            </section>
+
+            <!-- 商品列表 -->
+            <section class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=300&q=80" alt="每日鲜牛奶">
+                        <span class="product-badge hot">热销</span>
+                    </div>
+                    <div class="product-info">
+                        <h4 class="product-name">每日鲜牛奶</h4>
+                        <p class="product-spec">250ml×10瓶</p>
+                        <div class="product-prices">
+                            <span class="price">¥39.90</span>
+                            <span class="original-price">¥49.90</span>
+                        </div>
+                        <div class="product-stock">
+                            <span class="stock-label">库存：</span>
+                            <span class="stock-value normal">256</span>
+                        </div>
+                        <div class="product-sales">月销：128件</div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-sm" onclick="editProduct(1)">编辑</button>
+                        <button class="btn-sm" onclick="manageStock(1)">库存</button>
+                        <button class="btn-sm danger" onclick="deleteProduct(1)">下架</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=300&q=80" alt="A2蛋白鲜牛奶">
+                        <span class="product-badge new">新品</span>
+                    </div>
+                    <div class="product-info">
+                        <h4 class="product-name">A2蛋白鲜牛奶</h4>
+                        <p class="product-spec">260ml×8瓶</p>
+                        <div class="product-prices">
+                            <span class="price">¥63.90</span>
+                        </div>
+                        <div class="product-stock">
+                            <span class="stock-label">库存：</span>
+                            <span class="stock-value normal">189</span>
+                        </div>
+                        <div class="product-sales">月销：95件</div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-sm" onclick="editProduct(2)">编辑</button>
+                        <button class="btn-sm" onclick="manageStock(2)">库存</button>
+                        <button class="btn-sm danger" onclick="deleteProduct(2)">下架</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=300&q=80" alt="有机纯牛奶">
+                    </div>
+                    <div class="product-info">
+                        <h4 class="product-name">有机纯牛奶</h4>
+                        <p class="product-spec">200ml×12盒</p>
+                        <div class="product-prices">
+                            <span class="price">¥71.90</span>
+                        </div>
+                        <div class="product-stock">
+                            <span class="stock-label">库存：</span>
+                            <span class="stock-value low">15</span>
+                            <span class="stock-warning">⚠️ 库存预警</span>
+                        </div>
+                        <div class="product-sales">月销：82件</div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-sm" onclick="editProduct(3)">编辑</button>
+                        <button class="btn-sm primary" onclick="manageStock(3)">补货</button>
+                        <button class="btn-sm danger" onclick="deleteProduct(3)">下架</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=300&q=80" alt="低脂鲜牛奶">
+                    </div>
+                    <div class="product-info">
+                        <h4 class="product-name">低脂鲜牛奶</h4>
+                        <p class="product-spec">500ml×6瓶</p>
+                        <div class="product-prices">
+                            <span class="price">¥54.00</span>
+                        </div>
+                        <div class="product-stock">
+                            <span class="stock-label">库存：</span>
+                            <span class="stock-value normal">98</span>
+                        </div>
+                        <div class="product-sales">月销：76件</div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-sm" onclick="editProduct(4)">编辑</button>
+                        <button class="btn-sm" onclick="manageStock(4)">库存</button>
+                        <button class="btn-sm danger" onclick="deleteProduct(4)">下架</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=300&q=80" alt="儿童成长奶">
+                        <span class="product-badge subscription">周期购</span>
+                    </div>
+                    <div class="product-info">
+                        <h4 class="product-name">儿童成长奶</h4>
+                        <p class="product-spec">200ml×12盒</p>
+                        <div class="product-prices">
+                            <span class="price">¥68.00</span>
+                            <span class="sub-price">周期购 ¥61.20</span>
+                        </div>
+                        <div class="product-stock">
+                            <span class="stock-label">库存：</span>
+                            <span class="stock-value normal">156</span>
+                        </div>
+                        <div class="product-sales">月销：68件</div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-sm" onclick="editProduct(5)">编辑</button>
+                        <button class="btn-sm" onclick="manageStock(5)">库存</button>
+                        <button class="btn-sm danger" onclick="deleteProduct(5)">下架</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=300&q=80" alt="原味酸奶">
+                    </div>
+                    <div class="product-info">
+                        <h4 class="product-name">原味酸奶</h4>
+                        <p class="product-spec">100g×12杯</p>
+                        <div class="product-prices">
+                            <span class="price">¥36.00</span>
+                        </div>
+                        <div class="product-stock">
+                            <span class="stock-label">库存：</span>
+                            <span class="stock-value out">0</span>
+                            <span class="stock-warning danger">已售罄</span>
+                        </div>
+                        <div class="product-sales">月销：45件</div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-sm" onclick="editProduct(6)">编辑</button>
+                        <button class="btn-sm primary" onclick="manageStock(6)">补货</button>
+                        <button class="btn-sm danger" onclick="deleteProduct(6)">下架</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 添加/编辑商品弹窗 -->
+    <div class="modal" id="productModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>添加商品</h3>
+                <button class="modal-close" onclick="closeModal('productModal')">×</button>
+            </div>
+            <div class="modal-body">
+                <form class="form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>商品名称</label>
+                            <input type="text" class="form-input" placeholder="请输入商品名称">
+                        </div>
+                        <div class="form-group">
+                            <label>商品分类</label>
+                            <select class="form-input">
+                                <option value="">请选择分类</option>
+                                <option value="fresh">鲜牛奶</option>
+                                <option value="yogurt">酸奶</option>
+                                <option value="lowfat">低脂奶</option>
+                                <option value="kids">儿童奶</option>
+                                <option value="organic">有机奶</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>商品规格</label>
+                            <input type="text" class="form-input" placeholder="如：250ml×10瓶">
+                        </div>
+                        <div class="form-group">
+                            <label>商品价格</label>
+                            <input type="number" class="form-input" placeholder="请输入价格">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>原价（划线价）</label>
+                            <input type="number" class="form-input" placeholder="可选">
+                        </div>
+                        <div class="form-group">
+                            <label>库存数量</label>
+                            <input type="number" class="form-input" placeholder="请输入库存">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>商品图片</label>
+                        <div class="image-upload">
+                            <div class="upload-box">
+                                <span>+</span>
+                                <p>上传图片</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>商品描述</label>
+                        <textarea class="form-input" rows="4" placeholder="请输入商品描述"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox"> 支持周期购（享9折优惠）
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('productModal')">取消</button>
+                <button class="btn btn-primary" onclick="saveProduct()">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAddProduct() {
+            document.getElementById('productModal').classList.add('show');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+
+        function editProduct(id) {
+            document.getElementById('productModal').classList.add('show');
+        }
+
+        function manageStock(id) {
+            const stock = prompt('请输入新的库存数量：');
+            if (stock) {
+                alert('库存已更新为：' + stock);
+            }
+        }
+
+        function deleteProduct(id) {
+            if (confirm('确定下架该商品吗？')) {
+                alert('商品已下架');
+            }
+        }
+
+        function saveProduct() {
+            alert('商品保存成功！');
+            closeModal('productModal');
+        }
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

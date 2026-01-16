@@ -169,7 +169,9 @@ class OrderViewSet(viewsets.ModelViewSet):
         
         # 更新订单金额
         order.total_amount = total_amount
-        order.pay_amount = total_amount  # 暂不考虑优惠
+        # 应用会员折扣
+        discount_rate = request.user.get_discount_rate()
+        order.pay_amount = total_amount * Decimal(str(discount_rate))
         order.save()
         
         # 清空购物车中已下单的商品

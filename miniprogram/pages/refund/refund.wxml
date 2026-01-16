@@ -1,0 +1,54 @@
+<!--pages/refund/refund.wxml - 售后列表页-->
+<view class="refund-page">
+    <!-- 顶部提示 -->
+    <view class="page-tip">
+        <text class="tip-icon">💡</text>
+        <text class="tip-text">如需申请售后，请前往订单详情页操作</text>
+    </view>
+
+    <!-- 加载中 -->
+    <view class="loading-box" wx:if="{{loading}}">
+        <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{refundList.length === 0}}">
+        <text class="empty-icon">📋</text>
+        <text class="empty-title">暂无售后记录</text>
+        <text class="empty-desc">您的售后申请将在这里显示</text>
+    </view>
+
+    <!-- 列表 -->
+    <view class="refund-list" wx:else>
+        <view 
+            class="refund-card" 
+            wx:for="{{refundList}}" 
+            wx:key="id"
+            bindtap="viewDetail"
+            data-id="{{item.id}}"
+        >
+            <view class="card-header">
+                <view class="type-badge {{item.status === 'completed' ? 'completed' : 'processing'}}">
+                    {{item.status_label}}
+                </view>
+                <text class="type-label">{{item.type_label}}</text>
+            </view>
+            <view class="card-body">
+                <image class="product-img" src="{{item.product.cover_image}}" mode="aspectFill"/>
+                <view class="product-info">
+                    <text class="product-name">{{item.product.name}}</text>
+                    <text class="order-no">订单：{{item.order_no}}</text>
+                    <text class="reason">原因：{{item.reason}}</text>
+                </view>
+                <view class="amount-box">
+                    <text class="amount-label">退款</text>
+                    <text class="amount-value">¥{{item.amount}}</text>
+                </view>
+            </view>
+            <view class="card-footer">
+                <text class="time">{{item.created_at}}</text>
+                <view class="action-btn">查看详情 ></view>
+            </view>
+        </view>
+    </view>
+</view>

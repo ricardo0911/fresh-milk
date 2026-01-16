@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员等级 - Fresh Milk 管理后台</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><span class="logo-icon">🥛</span><span class="logo-text">Fresh Milk</span></div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span
+                        class="nav-label">数据概览</span></a>
+                <a href="users.html" class="nav-item"><span class="nav-icon">👥</span><span
+                        class="nav-label">用户管理</span></a>
+                <a href="coupons.html" class="nav-item"><span class="nav-icon">🎫</span><span
+                        class="nav-label">优惠券管理</span></a>
+                <a href="promotions.html" class="nav-item"><span class="nav-icon">🎉</span><span
+                        class="nav-label">促销活动</span></a>
+                <a href="members.html" class="nav-item active"><span class="nav-icon">👑</span><span
+                        class="nav-label">会员等级</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="page-info">
+                    <h1 class="page-title">会员等级</h1>
+                    <p class="page-subtitle">管理会员等级和折扣规则</p>
+                </div>
+            </header>
+
+            <!-- 会员统计 -->
+            <section class="stats-grid small">
+                <div class="stat-card blue">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <span class="stat-label">总会员数</span>
+                        <span class="stat-value">486</span>
+                    </div>
+                </div>
+                <div class="stat-card silver">
+                    <div class="stat-icon">🥈</div>
+                    <div class="stat-content">
+                        <span class="stat-label">银卡会员</span>
+                        <span class="stat-value">256</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-icon">🥇</div>
+                    <div class="stat-content">
+                        <span class="stat-label">金卡会员</span>
+                        <span class="stat-value">168</span>
+                    </div>
+                </div>
+                <div class="stat-card diamond">
+                    <div class="stat-icon">💎</div>
+                    <div class="stat-content">
+                        <span class="stat-label">钻石会员</span>
+                        <span class="stat-value">62</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 会员等级规则 -->
+            <section class="member-levels">
+                <h2 class="section-title">会员等级规则</h2>
+                <div class="levels-grid">
+                    <div class="level-card normal">
+                        <div class="level-header">
+                            <span class="level-icon">👤</span>
+                            <h3>普通用户</h3>
+                        </div>
+                        <div class="level-body">
+                            <div class="level-condition">
+                                <span class="label">升级条件：</span>
+                                <span class="value">注册即可</span>
+                            </div>
+                            <div class="level-benefits">
+                                <h4>会员权益</h4>
+                                <ul>
+                                    <li>✓ 基础购物功能</li>
+                                    <li>✓ 积分累计</li>
+                                    <li>✓ 新人优惠券</li>
+                                </ul>
+                            </div>
+                            <div class="level-discount">
+                                <span class="discount-value">无折扣</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="level-card silver">
+                        <div class="level-header">
+                            <span class="level-icon">🥈</span>
+                            <h3>银卡会员</h3>
+                        </div>
+                        <div class="level-body">
+                            <div class="level-condition">
+                                <span class="label">升级条件：</span>
+                                <span class="value">累计消费 ¥500+</span>
+                            </div>
+                            <div class="level-benefits">
+                                <h4>会员权益</h4>
+                                <ul>
+                                    <li>✓ 全部普通权益</li>
+                                    <li>✓ 98折购物优惠</li>
+                                    <li>✓ 生日专属优惠券</li>
+                                    <li>✓ 积分1.2倍加速</li>
+                                </ul>
+                            </div>
+                            <div class="level-discount">
+                                <span class="discount-value">98折</span>
+                            </div>
+                        </div>
+                        <button class="btn-sm edit" onclick="editLevel('silver')">编辑规则</button>
+                    </div>
+
+                    <div class="level-card gold">
+                        <div class="level-header">
+                            <span class="level-icon">🥇</span>
+                            <h3>金卡会员</h3>
+                        </div>
+                        <div class="level-body">
+                            <div class="level-condition">
+                                <span class="label">升级条件：</span>
+                                <span class="value">累计消费 ¥2000+</span>
+                            </div>
+                            <div class="level-benefits">
+                                <h4>会员权益</h4>
+                                <ul>
+                                    <li>✓ 全部银卡权益</li>
+                                    <li>✓ 95折购物优惠</li>
+                                    <li>✓ 每月专属优惠券</li>
+                                    <li>✓ 积分1.5倍加速</li>
+                                    <li>✓ 优先配送</li>
+                                </ul>
+                            </div>
+                            <div class="level-discount">
+                                <span class="discount-value">95折</span>
+                            </div>
+                        </div>
+                        <button class="btn-sm edit" onclick="editLevel('gold')">编辑规则</button>
+                    </div>
+
+                    <div class="level-card diamond">
+                        <div class="level-header">
+                            <span class="level-icon">💎</span>
+                            <h3>钻石会员</h3>
+                        </div>
+                        <div class="level-body">
+                            <div class="level-condition">
+                                <span class="label">升级条件：</span>
+                                <span class="value">累计消费 ¥5000+</span>
+                            </div>
+                            <div class="level-benefits">
+                                <h4>会员权益</h4>
+                                <ul>
+                                    <li>✓ 全部金卡权益</li>
+                                    <li>✓ 9折购物优惠</li>
+                                    <li>✓ 专属客服通道</li>
+                                    <li>✓ 积分2倍加速</li>
+                                    <li>✓ 免费配送</li>
+                                    <li>✓ 新品优先体验</li>
+                                </ul>
+                            </div>
+                            <div class="level-discount">
+                                <span class="discount-value">9折</span>
+                            </div>
+                        </div>
+                        <button class="btn-sm edit" onclick="editLevel('diamond')">编辑规则</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 积分规则 -->
+            <section class="points-section">
+                <h2 class="section-title">积分规则</h2>
+                <div class="table-card">
+                    <table class="data-table full-width">
+                        <thead>
+                            <tr>
+                                <th>行为</th>
+                                <th>获得积分</th>
+                                <th>说明</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>购物消费</td>
+                                <td>1元 = 1积分</td>
+                                <td>订单完成后自动累计</td>
+                                <td><button class="btn-action" onclick="editRule(1)">编辑</button></td>
+                            </tr>
+                            <tr>
+                                <td>评价订单</td>
+                                <td>+10积分</td>
+                                <td>完成评价后获得</td>
+                                <td><button class="btn-action" onclick="editRule(2)">编辑</button></td>
+                            </tr>
+                            <tr>
+                                <td>签到</td>
+                                <td>+5积分/天</td>
+                                <td>每日签到一次</td>
+                                <td><button class="btn-action" onclick="editRule(3)">编辑</button></td>
+                            </tr>
+                            <tr>
+                                <td>邀请好友</td>
+                                <td>+50积分</td>
+                                <td>好友首次下单后获得</td>
+                                <td><button class="btn-action" onclick="editRule(4)">编辑</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="points-note">* 100积分 = 1元，可在结算时抵扣</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function editLevel(level) {
+            alert('编辑' + level + '等级规则');
+        }
+
+        function editRule(id) {
+            alert('编辑积分规则');
+        }
+    </script>
+</body>
+
+</html>

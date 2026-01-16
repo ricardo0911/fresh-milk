@@ -1,7 +1,7 @@
 /* pages/cart/cart.wxss */
 
 .page-cart {
-  padding-bottom: 140rpx;
+  padding-bottom: 120rpx;
   min-height: 100vh;
   background: var(--bg-color);
 }
@@ -104,8 +104,8 @@
   align-items: center;
   padding: 20rpx 24rpx;
   background: #ffffff;
-  box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.05);
-  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 12rpx rgba(0, 0, 0, 0.08);
+  z-index: 100;
 }
 
 .select-all {
@@ -186,7 +186,7 @@
 
 .guess-section {
   background: #f8fafc;
-  margin-bottom: 160rpx;
+  margin-bottom: 120rpx;
 }
 
 .section-header {

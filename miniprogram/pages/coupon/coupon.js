@@ -6,11 +6,22 @@ Page({
         currentTab: 'available',
         statusFilter: 'unused',
         availableCoupons: [],
-        myCoupons: []
+        myCoupons: [],
+        selectMode: false  // 是否从订单页跳转过来选择优惠券
     },
 
-    onLoad() {
-        this.loadAvailableCoupons();
+    onLoad(options) {
+        // 如果是选择模式，直接显示我的优惠券-未使用
+        if (options.select === '1') {
+            this.setData({
+                selectMode: true,
+                currentTab: 'my',
+                statusFilter: 'unused'
+            });
+            this.loadMyCoupons();
+        } else {
+            this.loadAvailableCoupons();
+        }
     },
 
     onShow() {
@@ -105,5 +116,24 @@ Page({
             wx.hideLoading();
             wx.showToast({ title: err.message || '领取失败', icon: 'none' });
         }
+    },
+
+    // 使用优惠券 (从订单页跳转过来时)
+    useCoupon(e) {
+        const coupon = e.currentTarget.dataset.coupon;
+
+        if (this.data.selectMode) {
+            // 将选中的优惠券存入 storage，供订单页读取
+            wx.setStorageSync('selectedCoupon', coupon);
+            wx.showToast({ title: '已选择优惠券', icon: 'success', duration: 800 });
+
+            setTimeout(() => {
+                wx.navigateBack();
+            }, 800);
+        } else {
+            // 非选择模式，跳转到首页去购物
+            wx.switchTab({ url: '/pages/index/index' });
+        }
     }
 });
+

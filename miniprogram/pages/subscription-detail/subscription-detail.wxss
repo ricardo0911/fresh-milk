@@ -1,0 +1,482 @@
+/* pages/subscription-detail/subscription-detail.wxss - 周期购详情样式 */
+
+.subscription-detail-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+    padding-bottom: 140rpx;
+}
+
+/* 状态卡片 */
+.status-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 32rpx;
+    color: #fff;
+}
+
+.status-card.status-paused {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+}
+
+.status-card.status-cancelled {
+    background: linear-gradient(135deg, #a8a8a8 0%, #6c6c6c 100%);
+}
+
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32rpx;
+}
+
+.status-info {
+    display: flex;
+    align-items: center;
+}
+
+.status-icon {
+    font-size: 48rpx;
+    margin-right: 20rpx;
+}
+
+.status-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-title {
+    font-size: 36rpx;
+    font-weight: 600;
+    margin-bottom: 6rpx;
+}
+
+.status-desc {
+    font-size: 26rpx;
+    opacity: 0.9;
+}
+
+.subscription-no {
+    font-size: 24rpx;
+    opacity: 0.8;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8rpx 16rpx;
+    border-radius: 20rpx;
+}
+
+/* 进度区域 */
+.progress-section {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 16rpx;
+    padding: 24rpx;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16rpx;
+}
+
+.progress-label {
+    font-size: 26rpx;
+    opacity: 0.9;
+}
+
+.progress-value {
+    font-size: 28rpx;
+    font-weight: 600;
+}
+
+.progress-bar-wrap {
+    margin-bottom: 16rpx;
+}
+
+.progress-bar {
+    height: 16rpx;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8rpx;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #fff;
+    border-radius: 8rpx;
+    transition: width 0.3s ease;
+}
+
+.progress-detail {
+    display: flex;
+    justify-content: space-between;
+}
+
+.detail-item {
+    font-size: 24rpx;
+    opacity: 0.85;
+}
+
+/* 通用卡片 */
+.product-card,
+.plan-card,
+.address-card,
+.records-card,
+.fee-card {
+    background: #fff;
+    margin: 24rpx;
+    border-radius: 20rpx;
+    overflow: hidden;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28rpx 32rpx;
+    border-bottom: 1rpx solid #f5f5f5;
+}
+
+.card-title {
+    font-size: 30rpx;
+    font-weight: 600;
+    color: #333;
+}
+
+.card-action {
+    font-size: 26rpx;
+    color: #667eea;
+}
+
+/* 商品信息 */
+.product-info {
+    display: flex;
+    padding: 24rpx 32rpx;
+}
+
+.product-image {
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: 16rpx;
+    margin-right: 24rpx;
+}
+
+.product-detail {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.product-name {
+    font-size: 30rpx;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8rpx;
+}
+
+.product-spec {
+    font-size: 26rpx;
+    color: #999;
+    margin-bottom: 12rpx;
+}
+
+.product-price {
+    display: flex;
+    align-items: center;
+}
+
+.current-price {
+    font-size: 32rpx;
+    color: #e53935;
+    font-weight: 600;
+    margin-right: 12rpx;
+}
+
+.original-price {
+    font-size: 24rpx;
+    color: #bbb;
+    text-decoration: line-through;
+}
+
+/* 配送计划 */
+.plan-info {
+    padding: 24rpx 32rpx;
+}
+
+.plan-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20rpx;
+}
+
+.plan-row:last-child {
+    margin-bottom: 0;
+}
+
+.plan-label {
+    font-size: 26rpx;
+    color: #666;
+}
+
+.plan-value {
+    font-size: 26rpx;
+    color: #333;
+}
+
+/* 地址卡片 */
+.address-card {
+    display: flex;
+    align-items: center;
+    padding: 28rpx 32rpx;
+}
+
+.address-icon {
+    font-size: 40rpx;
+    margin-right: 20rpx;
+}
+
+.address-info {
+    flex: 1;
+}
+
+.address-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8rpx;
+}
+
+.receiver-name {
+    font-size: 30rpx;
+    font-weight: 600;
+    color: #333;
+    margin-right: 16rpx;
+}
+
+.receiver-phone {
+    font-size: 26rpx;
+    color: #666;
+}
+
+.address-detail {
+    font-size: 26rpx;
+    color: #666;
+    line-height: 1.5;
+}
+
+.address-arrow {
+    font-size: 36rpx;
+    color: #ccc;
+}
+
+/* 配送记录 */
+.records-list {
+    padding: 0 32rpx;
+}
+
+.record-item {
+    padding: 24rpx 0;
+    border-bottom: 1rpx solid #f5f5f5;
+}
+
+.record-item:last-child {
+    border-bottom: none;
+}
+
+.record-period {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12rpx;
+}
+
+.period-num {
+    font-size: 28rpx;
+    font-weight: 600;
+    color: #333;
+    margin-right: 16rpx;
+}
+
+.period-status {
+    font-size: 22rpx;
+    padding: 4rpx 16rpx;
+    border-radius: 20rpx;
+}
+
+.period-status.delivered {
+    background: #e8f5e9;
+    color: #4caf50;
+}
+
+.period-status.pending {
+    background: #fff3e0;
+    color: #ff9800;
+}
+
+.period-status.scheduled {
+    background: #f5f5f5;
+    color: #999;
+}
+
+.record-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16rpx;
+}
+
+.record-date {
+    font-size: 26rpx;
+    color: #666;
+    margin-right: 16rpx;
+}
+
+.record-time {
+    font-size: 24rpx;
+    color: #999;
+}
+
+/* 配送员信息 */
+.delivery-info {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 16rpx 20rpx;
+    border-radius: 12rpx;
+}
+
+.delivery-avatar {
+    width: 64rpx;
+    height: 64rpx;
+    border-radius: 50%;
+    margin-right: 16rpx;
+}
+
+.delivery-detail {
+    flex: 1;
+}
+
+.delivery-name {
+    font-size: 26rpx;
+    color: #333;
+    font-weight: 500;
+    display: block;
+}
+
+.sign-info {
+    font-size: 22rpx;
+    color: #999;
+}
+
+.delivery-actions {
+    display: flex;
+    align-items: center;
+    gap: 16rpx;
+}
+
+.action-btn {
+    padding: 12rpx 20rpx;
+    border-radius: 24rpx;
+    font-size: 24rpx;
+}
+
+.action-btn.call {
+    background: #e3f2fd;
+}
+
+.action-btn.rate {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+.rating-display {
+    display: flex;
+    align-items: center;
+}
+
+.rating-display .star {
+    color: #ffc107;
+    font-size: 28rpx;
+    margin-right: 4rpx;
+}
+
+.rating-display .rating-value {
+    font-size: 26rpx;
+    color: #666;
+}
+
+/* 费用明细 */
+.fee-info {
+    padding: 24rpx 32rpx;
+}
+
+.fee-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20rpx;
+}
+
+.fee-row:last-child {
+    margin-bottom: 0;
+    padding-top: 16rpx;
+    border-top: 1rpx solid #f0f0f0;
+}
+
+.fee-label {
+    font-size: 26rpx;
+    color: #666;
+}
+
+.fee-value {
+    font-size: 26rpx;
+    color: #333;
+}
+
+.fee-value.highlight {
+    color: #e53935;
+    font-weight: 600;
+}
+
+/* 底部操作栏 */
+.action-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 24rpx;
+    padding: 20rpx 32rpx;
+    padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+    background: #fff;
+    box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.action-btn {
+    flex: 1;
+    height: 88rpx;
+    font-size: 28rpx;
+    border-radius: 44rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
+.action-btn::after {
+    border: none;
+}
+
+.action-btn.secondary {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+/* 加载状态 */
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    color: #999;
+}

@@ -22,6 +22,14 @@ Page({
     },
 
     onShow() {
+        // 从优惠券选择页面返回时更新优惠券
+        const selectedCoupon = wx.getStorageSync('selectedCoupon');
+        if (selectedCoupon) {
+            this.setData({ selectedCoupon });
+            wx.removeStorageSync('selectedCoupon'); // 清除，避免下次进入时自动选中
+            this.loadOrderItems(); // 重新计算价格
+        }
+
         // 从地址选择页面返回时更新地址
         const selectedAddress = this.data.selectedAddress;
         if (selectedAddress) {
@@ -36,14 +44,29 @@ Page({
         const goodsAmount = orderItems.reduce((sum, item) =>
             sum + parseFloat(item.product.price) * item.quantity, 0);
         const shipping = goodsAmount >= 88 ? 0 : 8;
-        const discountAmount = this.data.selectedCoupon ? this.data.selectedCoupon.amount : 0;
+
+        // 计算会员折扣
+        const userInfo = app.globalData.userInfo;
+        const rates = {
+            'regular': 1.0,
+            'silver': 0.95,
+            'gold': 0.90,
+            'platinum': 0.85,
+        };
+        const rate = userInfo ? (rates[userInfo.member_level] || 1.0) : 1.0;
+        const memberDiscount = goodsAmount * (1 - rate);
+
+        const couponDiscount = this.data.selectedCoupon ? this.data.selectedCoupon.amount : 0;
+        const discountAmount = memberDiscount + couponDiscount;
         const totalAmount = Math.max(0, goodsAmount + shipping - discountAmount);
 
         this.setData({
             orderItems,
             goodsAmount: goodsAmount.toFixed(2),
             shipping,
-            discountAmount,
+            memberDiscount: memberDiscount.toFixed(2),
+            couponDiscount: couponDiscount.toFixed(2),
+            discountAmount: discountAmount.toFixed(2),
             totalAmount: totalAmount.toFixed(2)
         });
     },

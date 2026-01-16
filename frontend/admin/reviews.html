@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评价管理 - Fresh Milk 管理后台</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+    <div class="admin-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo"><span class="logo-icon">🥛</span><span class="logo-text">Fresh Milk</span></div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-item"><span class="nav-icon">📊</span><span
+                        class="nav-label">数据概览</span></a>
+                <a href="orders.html" class="nav-item"><span class="nav-icon">📦</span><span
+                        class="nav-label">订单管理</span></a>
+                <a href="products.html" class="nav-item"><span class="nav-icon">🛒</span><span
+                        class="nav-label">商品管理</span></a>
+                <a href="users.html" class="nav-item"><span class="nav-icon">👥</span><span
+                        class="nav-label">用户管理</span></a>
+                <a href="subscriptions.html" class="nav-item"><span class="nav-icon">🔄</span><span
+                        class="nav-label">周期购管理</span></a>
+                <a href="delivery.html" class="nav-item"><span class="nav-icon">🚚</span><span
+                        class="nav-label">配送管理</span></a>
+                <a href="reviews.html" class="nav-item active"><span class="nav-icon">⭐</span><span
+                        class="nav-label">评价管理</span></a>
+                <a href="aftersales.html" class="nav-item"><span class="nav-icon">🔧</span><span
+                        class="nav-label">售后管理</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="page-info">
+                    <h1 class="page-title">评价管理</h1>
+                    <p class="page-subtitle">管理用户评价和回复</p>
+                </div>
+            </header>
+
+            <!-- 评价统计 -->
+            <section class="stats-grid small">
+                <div class="stat-card blue">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-content">
+                        <span class="stat-label">总评价数</span>
+                        <span class="stat-value">892</span>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-content">
+                        <span class="stat-label">平均评分</span>
+                        <span class="stat-value">4.8</span>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-content">
+                        <span class="stat-label">待回复</span>
+                        <span class="stat-value">8</span>
+                    </div>
+                </div>
+                <div class="stat-card purple">
+                    <div class="stat-icon">👍</div>
+                    <div class="stat-content">
+                        <span class="stat-label">好评率</span>
+                        <span class="stat-value">96%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 筛选 -->
+            <section class="filter-section">
+                <div class="filter-tabs">
+                    <button class="filter-tab active">全部评价</button>
+                    <button class="filter-tab">待回复 <span class="count warning">8</span></button>
+                    <button class="filter-tab">好评(5星)</button>
+                    <button class="filter-tab">中评(3-4星)</button>
+                    <button class="filter-tab">差评(1-2星)</button>
+                    <button class="filter-tab">有图评价</button>
+                </div>
+                <div class="filter-bar">
+                    <input type="text" class="search-input" placeholder="搜索商品名/用户名">
+                    <button class="btn btn-primary">🔍 搜索</button>
+                </div>
+            </section>
+
+            <!-- 评价列表 -->
+            <section class="reviews-list">
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-user">
+                            <img class="user-avatar" src="https://i.pravatar.cc/40?img=5" alt="">
+                            <div>
+                                <span class="user-name">张三</span>
+                                <span class="review-time">2024-01-15 16:30</span>
+                            </div>
+                        </div>
+                        <div class="review-rating">
+                            <span class="stars">★★★★★</span>
+                            <span class="rating-value">5.0</span>
+                        </div>
+                    </div>
+                    <div class="review-product">
+                        <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=50&q=80" alt="">
+                        <span>每日鲜牛奶 250ml×10瓶</span>
+                    </div>
+                    <div class="review-content">
+                        <p>奶味很浓，新鲜度很好！配送也很准时，配送员态度很好。已经订阅了周期购，每周都能喝到新鲜牛奶，非常满意！</p>
+                        <div class="review-images">
+                            <img src="https://images.unsplash.com/photo-1563636619-e9143da7973b?w=100&q=80" alt="">
+                            <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=100&q=80" alt="">
+                        </div>
+                    </div>
+                    <div class="review-reply" id="reply1">
+                        <div class="reply-content">
+                            <span class="reply-label">商家回复：</span>
+                            感谢您的支持！我们会继续保持产品品质和服务水平，期待您的再次光临～
+                        </div>
+                    </div>
+                    <div class="review-actions">
+                        <button class="btn-action" onclick="toggleReply('reply1')">修改回复</button>
+                    </div>
+                </div>
+
+                <div class="review-card pending">
+                    <div class="review-header">
+                        <div class="review-user">
+                            <img class="user-avatar" src="https://i.pravatar.cc/40?img=6" alt="">
+                            <div>
+                                <span class="user-name">李四</span>
+                                <span class="review-time">2024-01-16 10:20</span>
+                            </div>
+                        </div>
+                        <div class="review-rating">
+                            <span class="stars">★★★★☆</span>
+                            <span class="rating-value">4.0</span>
+                        </div>
+                        <span class="pending-badge">待回复</span>
+                    </div>
+                    <div class="review-product">
+                        <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?w=50&q=80" alt="">
+                        <span>A2蛋白鲜牛奶 260ml×8瓶</span>
+                    </div>
+                    <div class="review-content">
+                        <p>口感不错，就是价格稍贵，希望能多做一些优惠活动。</p>
+                    </div>
+                    <div class="review-actions">
+                        <textarea class="reply-input" placeholder="请输入回复内容..."></textarea>
+                        <button class="btn btn-primary" onclick="submitReply()">发送回复</button>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-user">
+                            <img class="user-avatar" src="https://i.pravatar.cc/40?img=7" alt="">
+                            <div>
+                                <span class="user-name">王五</span>
+                                <span class="review-time">2024-01-14 09:15</span>
+                            </div>
+                        </div>
+                        <div class="review-rating warning">
+                            <span class="stars">★★☆☆☆</span>
+                            <span class="rating-value">2.0</span>
+                        </div>
+                    </div>
+                    <div class="review-product">
+                        <img src="https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=50&q=80" alt="">
+                        <span>有机纯牛奶 200ml×12盒</span>
+                    </div>
+                    <div class="review-content">
+                        <p>配送延迟了一天，收到时外包装有点破损，希望能加强包装。</p>
+                    </div>
+                    <div class="review-reply">
+                        <div class="reply-content">
+                            <span class="reply-label">商家回复：</span>
+                            非常抱歉给您带来不好的体验！我们已反馈给配送部门，会加强包装。已为您补发一份作为补偿，请注意查收。
+                        </div>
+                    </div>
+                    <div class="review-actions">
+                        <button class="btn-action">修改回复</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function submitReply() {
+            alert('回复已发送！');
+        }
+
+        function toggleReply(id) {
+            alert('修改回复');
+        }
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function () {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
