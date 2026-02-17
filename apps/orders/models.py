@@ -37,6 +37,11 @@ class Order(models.Model):
     # 配送信息
     delivery_type = models.CharField('配送方式', max_length=20, default='express')
     delivery_fee = models.DecimalField('配送费', max_digits=10, decimal_places=2, default=0)
+
+    # 快递信息
+    express_company = models.CharField('快递公司', max_length=20, blank=True, null=True)  # SF/YTO
+    express_no = models.CharField('快递单号', max_length=50, blank=True, null=True)
+    express_status = models.CharField('物流状态', max_length=20, blank=True, null=True)
     
     # 周期购信息
     is_subscription = models.BooleanField('周期购', default=False)
@@ -138,6 +143,73 @@ class Cart(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.product.name}'
+
+
+class RefundRequest(models.Model):
+    """退款申请"""
+    TYPE_CHOICES = [
+        ('refund_only', '仅退款'),
+        ('return_refund', '退货退款'),
+    ]
+    STATUS_CHOICES = [
+        ('pending', '待处理'),
+        ('approved', '已同意'),
+        ('rejected', '已拒绝'),
+        ('completed', '已完成'),
+        ('cancelled', '已取消'),
+    ]
+    REASON_CHOICES = [
+        ('quality', '商品质量问题'),
+        ('not_on_time', '未按时送达'),
+        ('not_match', '商品与描述不符'),
+        ('no_need', '不想要了'),
+        ('other', '其他'),
+    ]
+
+    refund_no = models.CharField('退款单号', max_length=32, unique=True)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='refund_requests', verbose_name='订单')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='refund_requests', verbose_name='用户')
+
+    type = models.CharField('退款类型', max_length=20, choices=TYPE_CHOICES, default='refund_only')
+    reason = models.CharField('退款原因', max_length=50, choices=REASON_CHOICES)
+    description = models.TextField('详细说明', blank=True, null=True)
+    amount = models.DecimalField('退款金额', max_digits=10, decimal_places=2)
+    images = models.TextField('图片凭证', blank=True, null=True)  # JSON数组
+
+    status = models.CharField('状态', max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    admin = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True, blank=True, related_name='handled_refunds', verbose_name='处理人')
+    admin_remark = models.TextField('处理备注', blank=True, null=True)
+    reject_reason = models.CharField('拒绝原因', max_length=200, blank=True, null=True)
+
+    return_express_company = models.CharField('退货快递公司', max_length=20, blank=True, null=True)
+    return_express_no = models.CharField('退货快递单号', max_length=50, blank=True, null=True)
+    return_address = models.CharField('退货地址', max_length=200, blank=True, null=True)
+
+    processed_at = models.DateTimeField('处理时间', blank=True, null=True)
+    completed_at = models.DateTimeField('完成时间', blank=True, null=True)
+    created_at = models.DateTimeField('创建时间', auto_now_add=True)
+    updated_at = models.DateTimeField('更新时间', auto_now=True)
+
+    class Meta:
+        db_table = 'refund_requests'
+        verbose_name = '退款申请'
+        verbose_name_plural = verbose_name
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.refund_no
+
+    def save(self, *args, **kwargs):
+        if not self.refund_no:
+            self.refund_no = self.generate_refund_no()
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def generate_refund_no():
+        """生成退款单号"""
+        import time
+        return f"RF{time.strftime('%Y%m%d%H%M%S')}{uuid.uuid4().hex[:6].upper()}"
 
 
 class Payment(models.Model):

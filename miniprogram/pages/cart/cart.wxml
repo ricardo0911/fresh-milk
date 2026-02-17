@@ -52,7 +52,7 @@
         <text class="guess-icon">💙</text>
         <text class="section-title">猜你喜欢</text>
       </view>
-      <text class="section-more" bindtap="goToProducts">换一批</text>
+      <text class="section-more" bindtap="goToProducts" data-filter="recommend">换一批</text>
     </view>
     <view class="guess-grid">
       <view class="guess-card" wx:for="{{guessProducts}}" wx:key="id" bindtap="goToProduct" data-id="{{item.id}}">
@@ -69,7 +69,7 @@
           <view class="guess-footer">
             <text class="guess-price">¥{{item.price}}</text>
             <view class="guess-actions">
-              <view class="action-btn-text" catchtap="addToCart" data-product="{{item}}">立即购买</view>
+              <view class="action-btn-text" catchtap="addToCart" data-product="{{item}}">加入购物车</view>
             </view>
           </view>
         </view>

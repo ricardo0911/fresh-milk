@@ -1,0 +1,12 @@
+Importing django...
+Django setup complete.
+Current Time: 2026-01-29 09:04:59.002809+00:00
+--------------------------------------------------
+Total Orders in DB: 25
+Checking orders from 2026-01-23 to 2026-01-29
+Recent Orders Count: 0
+NO ORDERS FOUND in the last 7 days.
+--------------------------------------------------
+Simulating Dashboard Query logic...
+Dashboard Query Result: []
+Dashboard query returned EMPTY list.

@@ -33,12 +33,12 @@ class ProductViewSet(viewsets.ModelViewSet):
     """产品视图集"""
     queryset = Product.objects.all()
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['name', 'subtitle', 'description']
+    search_fields = ['name', 'subtitle', 'description', 'category__name']
     ordering_fields = ['price', 'sales_count', 'created_at']
     ordering = ['-created_at']
-    
+
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve', 'hot', 'new_arrivals', 'subscription', 'recommend']:
             return [permissions.AllowAny()]
         return [permissions.IsAdminUser()]
 
@@ -175,6 +175,33 @@ class AdminProductViewSet(viewsets.ModelViewSet):
         if self.action in ['create', 'update', 'partial_update']:
             return ProductCreateUpdateSerializer
         return ProductDetailSerializer
+
+    def get_queryset(self):
+        queryset = Product.objects.all()
+
+        # 搜索
+        search = self.request.query_params.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(name__icontains=search) | Q(subtitle__icontains=search)
+            )
+
+        # 分类筛选
+        category = self.request.query_params.get('category')
+        if category:
+            queryset = queryset.filter(category_id=category)
+
+        # 状态筛选
+        is_active = self.request.query_params.get('is_active')
+        if is_active is not None and is_active != '':
+            queryset = queryset.filter(is_active=is_active.lower() == 'true')
+
+        # 周期购筛选
+        is_subscription = self.request.query_params.get('is_subscription')
+        if is_subscription is not None and is_subscription != '':
+            queryset = queryset.filter(is_subscription=is_subscription.lower() == 'true')
+
+        return queryset.order_by('-created_at')
 
     @action(detail=True, methods=['post'])
     def toggle_active(self, request, pk=None):

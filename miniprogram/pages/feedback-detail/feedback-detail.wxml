@@ -1,0 +1,53 @@
+<!-- pages/feedback-detail/feedback-detail.wxml -->
+<view class="page-feedback-detail">
+    <!-- 加载中 -->
+    <view class="loading-box" wx:if="{{loading}}">
+        <view class="loading-spinner"></view>
+    </view>
+
+    <block wx:else>
+        <!-- 状态卡片 -->
+        <view class="status-card {{feedback.status}}">
+            <view class="status-icon">
+                <text wx:if="{{feedback.status === 'pending'}}">⏳</text>
+                <text wx:elif="{{feedback.status === 'processing'}}">🔄</text>
+                <text wx:elif="{{feedback.status === 'resolved'}}">✅</text>
+                <text wx:else>📋</text>
+            </view>
+            <view class="status-info">
+                <text class="status-text">{{feedback.status_text}}</text>
+                <text class="status-desc">{{feedback.status_desc}}</text>
+            </view>
+        </view>
+
+        <!-- 反馈内容 -->
+        <view class="section-card">
+            <view class="section-header">
+                <text class="section-title">反馈内容</text>
+                <view class="type-tag">{{feedback.type_text}}</view>
+            </view>
+            <view class="feedback-content">{{feedback.content}}</view>
+            <view class="feedback-meta">
+                <text class="meta-item">提交时间：{{feedback.created_date}}</text>
+                <text class="meta-item" wx:if="{{feedback.contact}}">联系方式：{{feedback.contact}}</text>
+            </view>
+        </view>
+
+        <!-- 客服回复 -->
+        <view class="section-card reply-card" wx:if="{{feedback.reply}}">
+            <view class="section-header">
+                <text class="section-title">客服回复</text>
+            </view>
+            <view class="reply-content">{{feedback.reply}}</view>
+            <view class="reply-meta">
+                <text class="meta-item">回复时间：{{feedback.replied_date}}</text>
+            </view>
+        </view>
+
+        <!-- 等待回复提示 -->
+        <view class="waiting-card" wx:if="{{!feedback.reply && (feedback.status === 'pending' || feedback.status === 'processing')}}">
+            <text class="waiting-icon">💬</text>
+            <text class="waiting-text">客服正在处理中，请耐心等待...</text>
+        </view>
+    </block>
+</view>

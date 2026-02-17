@@ -1,0 +1,64 @@
+<!-- pages/my-reviews/my-reviews.wxml -->
+<view class="page-my-reviews">
+    <!-- 加载中 -->
+    <view class="loading-box" wx:if="{{loading}}">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-box" wx:elif="{{isEmpty}}">
+        <text class="empty-icon">📝</text>
+        <text class="empty-text">暂无评价记录</text>
+        <text class="empty-desc">购买商品后可以发表评价哦</text>
+    </view>
+
+    <!-- 评价列表 -->
+    <view class="review-list" wx:else>
+        <view class="review-item" wx:for="{{reviews}}" wx:key="id">
+            <!-- 商品信息 -->
+            <view class="product-info" bindtap="goToProduct" data-id="{{item.product}}">
+                <image class="product-image" src="{{item.product_image}}" mode="aspectFill"></image>
+                <view class="product-detail">
+                    <text class="product-name">{{item.product_name}}</text>
+                    <view class="rating-row">
+                        <view class="stars">
+                            <text class="star {{idx < item.rating ? 'active' : ''}}" wx:for="{{5}}" wx:for-index="idx" wx:key="idx">★</text>
+                        </view>
+                        <text class="rating-text">{{item.rating_text}}</text>
+                    </view>
+                </view>
+            </view>
+
+            <!-- 评价内容 -->
+            <view class="review-content">{{item.content}}</view>
+
+            <!-- 评价图片 -->
+            <view class="review-images" wx:if="{{item.images && item.images.length > 0}}">
+                <image
+                    wx:for="{{item.images}}"
+                    wx:for-item="img"
+                    wx:key="*this"
+                    class="review-image"
+                    src="{{img}}"
+                    mode="aspectFill"
+                    bindtap="previewImage"
+                    data-current="{{img}}"
+                    data-urls="{{item.images}}"
+                ></image>
+            </view>
+
+            <!-- 评价时间 -->
+            <view class="review-time">{{item.created_date}}</view>
+
+            <!-- 商家回复 -->
+            <view class="reply-box" wx:if="{{item.reply}}">
+                <view class="reply-header">
+                    <text class="reply-label">商家回复</text>
+                    <text class="reply-time">{{item.replied_date}}</text>
+                </view>
+                <view class="reply-content">{{item.reply}}</view>
+            </view>
+        </view>
+    </view>
+</view>

@@ -1,0 +1,103 @@
+<!-- 仿微信支付弹窗组件 -->
+<view class="pay-modal-mask" wx:if="{{visible}}" bindtap="onMaskTap" catchtouchmove="preventMove">
+  <view class="pay-modal-container" catchtap="stopPropagation">
+    <!-- 头部 -->
+    <view class="pay-header">
+      <view class="pay-close" bindtap="onClose">×</view>
+      <view class="pay-title">{{title}}</view>
+      <view class="pay-placeholder"></view>
+    </view>
+
+    <!-- 金额显示 -->
+    <view class="pay-amount-section">
+      <text class="pay-amount-label">支付金额</text>
+      <view class="pay-amount-row">
+        <text class="pay-currency">¥</text>
+        <text class="pay-amount">{{amount}}</text>
+      </view>
+    </view>
+
+    <!-- 支付方式 -->
+    <view class="pay-method-section">
+      <view class="pay-method-item {{selectedMethod === 'wechat' ? 'selected' : ''}}" bindtap="selectMethod" data-method="wechat">
+        <view class="method-icon wechat-icon">
+          <text class="icon-text">微</text>
+        </view>
+        <view class="method-info">
+          <text class="method-name">微信支付</text>
+          <text class="method-desc">推荐使用</text>
+        </view>
+        <view class="method-check {{selectedMethod === 'wechat' ? 'checked' : ''}}">
+          <text wx:if="{{selectedMethod === 'wechat'}}">✓</text>
+        </view>
+      </view>
+
+      <!-- 余额支付选项已移除 -->
+    </view>
+
+    <!-- 密码输入区域 -->
+    <view class="pay-password-section" wx:if="{{showPassword}}">
+      <view class="password-title">请输入支付密码</view>
+      <view class="password-input-wrap">
+        <view class="password-box" wx:for="{{6}}" wx:key="index">
+          <view class="password-dot" wx:if="{{password.length > index}}"></view>
+        </view>
+      </view>
+      <view class="password-hint">
+        <text class="hint-text">提示：测试密码为 123456</text>
+      </view>
+      
+      <!-- 强制显示自定义键盘，移除 wx:if={{showKeyboard}} -->
+      <view class="password-keyboard">
+        <view class="keyboard-row">
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="1">1</view>
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="2">2</view>
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="3">3</view>
+        </view>
+        <view class="keyboard-row">
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="4">4</view>
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="5">5</view>
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="6">6</view>
+        </view>
+        <view class="keyboard-row">
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="7">7</view>
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="8">8</view>
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="9">9</view>
+        </view>
+        <view class="keyboard-row">
+          <view class="keyboard-key keyboard-empty"></view>
+          <view class="keyboard-key" hover-class="key-hover" bindtap="onKeyTap" data-key="0">0</view>
+          <view class="keyboard-key keyboard-delete" hover-class="key-hover" bindtap="onDeleteTap">
+            <text class="delete-icon">⌫</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 支付按钮 -->
+    <view class="pay-button-section" wx:if="{{!showPassword}}">
+      <button class="pay-button" bindtap="onPayClick" disabled="{{paying}}">
+        <text wx:if="{{!paying}}">立即支付</text>
+        <text wx:else>支付中...</text>
+      </button>
+    </view>
+
+    <!-- 支付中状态 -->
+    <view class="paying-status" wx:if="{{paying}}">
+      <view class="paying-loading">
+        <view class="loading-circle"></view>
+      </view>
+      <text class="paying-text">正在支付...</text>
+    </view>
+
+    <!-- 支付结果 -->
+    <view class="pay-result" wx:if="{{payResult}}">
+      <view class="result-icon {{payResult === 'success' ? 'success' : 'fail'}}">
+        <text wx:if="{{payResult === 'success'}}">✓</text>
+        <text wx:else>×</text>
+      </view>
+      <text class="result-text">{{payResult === 'success' ? '支付成功' : '支付失败'}}</text>
+      <text class="result-desc" wx:if="{{payResult === 'fail'}}">{{errorMessage}}</text>
+    </view>
+  </view>
+</view>

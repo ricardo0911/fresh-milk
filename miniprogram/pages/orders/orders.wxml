@@ -13,7 +13,7 @@
 
   <!-- 订单列表 -->
   <view class="order-list">
-    <view class="order-card" wx:for="{{orders}}" wx:key="id" bindtap="goToOrderDetail" data-id="{{item.id}}">
+    <view class="order-card" wx:for="{{orders}}" wx:key="id" bindtap="goToOrderDetail" data-orderno="{{item.order_no}}">
       <view class="order-header">
         <text class="order-no">订单号: {{item.order_no}}</text>
         <text class="order-status status-{{item.status}}">{{item.status_display}}</text>
@@ -39,11 +39,11 @@
           <text class="total-price">¥{{item.total_amount}}</text>
         </view>
         <view class="order-actions">
-          <view class="action-btn btn-default" wx:if="{{item.status === 'pending'}}" catchtap="cancelOrder" data-id="{{item.id}}">取消订单</view>
-          <view class="action-btn btn-primary" wx:if="{{item.status === 'pending'}}" catchtap="payOrder" data-id="{{item.id}}">去支付</view>
-          <view class="action-btn btn-primary" wx:if="{{item.status === 'shipped'}}" catchtap="confirmReceive" data-id="{{item.id}}">确认收货</view>
+          <view class="action-btn btn-default" wx:if="{{item.status === 'pending'}}" catchtap="cancelOrder" data-orderno="{{item.order_no}}">取消订单</view>
+          <view class="action-btn btn-primary" wx:if="{{item.status === 'pending'}}" catchtap="payOrder" data-orderno="{{item.order_no}}">去支付</view>
+          <view class="action-btn btn-primary" wx:if="{{item.status === 'shipped'}}" catchtap="confirmReceive" data-orderno="{{item.order_no}}">确认收货</view>
           <view class="action-btn btn-default" wx:if="{{item.status === 'completed'}}" catchtap="buyAgain" data-order="{{item}}">再次购买</view>
-          <view class="action-btn btn-primary" wx:if="{{item.status === 'completed' && !item.is_reviewed}}" catchtap="goToReview" data-id="{{item.id}}">去评价</view>
+          <view class="action-btn btn-primary" wx:if="{{item.status === 'completed' && !item.is_reviewed}}" catchtap="goToReview" data-orderno="{{item.order_no}}">去评价</view>
         </view>
       </view>
     </view>
@@ -56,3 +56,14 @@
     </view>
   </view>
 </view>
+
+<!-- 支付弹窗 -->
+<pay-modal
+  visible="{{showPayModal}}"
+  amount="{{currentPayOrder.total_amount}}"
+  title="确认支付"
+  orderId="{{currentPayOrder.order_no}}"
+  balance="0.00"
+  bind:success="onPaySuccess"
+  bind:close="onPayClose"
+/>

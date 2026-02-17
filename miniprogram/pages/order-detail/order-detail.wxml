@@ -31,8 +31,8 @@
                 <text class="card-title">配送进度</text>
             </view>
             <view class="progress-timeline">
-                <view 
-                    wx:for="{{progressSteps}}" 
+                <view
+                    wx:for="{{progressSteps}}"
                     wx:key="title"
                     class="timeline-item {{item.completed ? 'completed' : ''}} {{item.current ? 'current' : ''}} {{item.pending ? 'pending' : ''}}"
                 >
@@ -42,6 +42,29 @@
                         <text class="timeline-title">{{item.title}}</text>
                         <text class="timeline-time">{{item.time}}</text>
                     </view>
+                </view>
+            </view>
+        </view>
+
+        <!-- 物流信息 -->
+        <view class="express-card" wx:if="{{order.express_no}}" bindtap="viewExpressTrace">
+            <view class="card-header">
+                <text class="card-title">物流信息</text>
+                <text class="card-arrow">›</text>
+            </view>
+            <view class="express-info">
+                <view class="express-company">
+                    <text class="express-icon">🚚</text>
+                    <text class="express-name">{{expressCompanyName}}</text>
+                    <text class="express-no">{{order.express_no}}</text>
+                    <text class="copy-btn" catchtap="copyExpressNo">复制</text>
+                </view>
+                <view class="express-latest" wx:if="{{latestTrace}}">
+                    <text class="trace-time">{{latestTrace.time}}</text>
+                    <text class="trace-desc">{{latestTrace.description}}</text>
+                </view>
+                <view class="express-latest" wx:else>
+                    <text class="trace-desc">暂无物流信息，请稍后查看</text>
                 </view>
             </view>
         </view>
@@ -179,7 +202,7 @@
             <!-- 待付款 -->
             <block wx:if="{{order.status === 'pending'}}">
                 <button class="action-btn secondary" bindtap="cancelOrder">取消订单</button>
-                <button class="action-btn primary">立即支付</button>
+                <button class="action-btn primary" bindtap="payOrder">立即支付</button>
             </block>
             
             <!-- 待发货 -->

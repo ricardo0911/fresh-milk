@@ -60,20 +60,36 @@ Page({
     async loadProducts() {
         wx.showLoading({ title: '加载中...' });
         try {
-            // 使用模拟数据（后端连接后可切换为API）
-            const mockProducts = [
-                { id: 1, name: '每日鲜牛奶', specification: '250ml×1瓶', price: '3.99', original_price: '4.99', subscription_price: '3.59', cover_image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&q=80' },
-                { id: 2, name: 'A2蛋白鲜牛奶', specification: '260ml×1瓶', price: '7.99', original_price: '9.99', subscription_price: '7.19', cover_image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80' },
-                { id: 3, name: '有机纯牛奶', specification: '200ml×1盒', price: '5.99', original_price: '7.50', subscription_price: '5.39', cover_image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=400&q=80' },
-                { id: 4, name: '低脂鲜牛奶', specification: '500ml×1瓶', price: '8.99', original_price: '11.00', subscription_price: '8.09', cover_image: 'https://images.unsplash.com/photo-1572443490709-e57652c96a1b?w=400&q=80' }
-            ];
-            this.setData({ products: mockProducts });
-
-            // TODO: 使用真实API
-            // const res = await api.getSubscriptionProducts();
-            // this.setData({ products: res.results || res });
+            const res = await api.getSubscriptionProducts();
+            const products = (res.results || res || []).map(p => ({
+                id: p.id,
+                name: p.name,
+                specification: p.specification,
+                price: p.price,
+                original_price: p.original_price,
+                subscription_price: p.subscription_price || (parseFloat(p.price) * 0.9).toFixed(2),
+                cover_image: p.cover_image || '/assets/products/fresh_milk.jpg'
+            }));
+            if (products.length > 0) {
+                this.setData({ products });
+            } else {
+                // 如果没有数据，使用默认数据
+                this.setData({
+                    products: [
+                        { id: 1, name: '每日鲜牛奶', specification: '250ml×1瓶', price: '3.99', original_price: '4.99', subscription_price: '3.59', cover_image: '/assets/products/fresh_milk.jpg' },
+                        { id: 2, name: 'A2蛋白鲜牛奶', specification: '260ml×1瓶', price: '7.99', original_price: '9.99', subscription_price: '7.19', cover_image: '/assets/products/organic_milk.jpg' }
+                    ]
+                });
+            }
         } catch (err) {
             console.error('加载产品失败:', err);
+            // API 失败时使用默认数据
+            this.setData({
+                products: [
+                    { id: 1, name: '每日鲜牛奶', specification: '250ml×1瓶', price: '3.99', original_price: '4.99', subscription_price: '3.59', cover_image: '/assets/products/fresh_milk.jpg' },
+                    { id: 2, name: 'A2蛋白鲜牛奶', specification: '260ml×1瓶', price: '7.99', original_price: '9.99', subscription_price: '7.19', cover_image: '/assets/products/organic_milk.jpg' }
+                ]
+            });
         }
         wx.hideLoading();
     },
@@ -81,30 +97,38 @@ Page({
     async loadSubscriptions() {
         wx.showLoading({ title: '加载中...' });
         try {
-            // 使用模拟数据
-            const mockSubscriptions = [
-                {
-                    id: 1,
-                    subscription_no: 'SUB202401001',
-                    status: 'active',
-                    status_display: '配送中',
-                    product: { name: '每日鲜牛奶', cover_image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&q=80' },
-                    frequency_display: '每周一次',
-                    total_periods: 12,
-                    delivered_count: 3,
-                    next_delivery_date: '2024-01-15',
-                    period_price: '3.59'
-                }
-            ];
-            this.setData({ subscriptions: mockSubscriptions });
-
-            // TODO: 使用真实API
-            // const res = await api.getSubscriptions();
-            // this.setData({ subscriptions: res.results || res });
+            const res = await api.getSubscriptions();
+            const subscriptions = (res.results || res || []).map(s => ({
+                id: s.id,
+                subscription_no: s.subscription_no,
+                status: s.status,
+                status_display: s.status_display || this.getStatusDisplay(s.status),
+                product: {
+                    name: s.product?.name || s.product_name,
+                    cover_image: s.product?.cover_image || '/assets/products/fresh_milk.jpg'
+                },
+                frequency_display: s.frequency_display || this.getFrequencyDisplay(s.frequency),
+                total_periods: s.total_periods,
+                delivered_count: s.delivered_count || 0,
+                next_delivery_date: s.next_delivery_date,
+                period_price: s.period_price
+            }));
+            this.setData({ subscriptions });
         } catch (err) {
             console.error('加载订阅失败:', err);
+            this.setData({ subscriptions: [] });
         }
         wx.hideLoading();
+    },
+
+    getStatusDisplay(status) {
+        const map = { 'active': '配送中', 'paused': '已暂停', 'completed': '已完成', 'cancelled': '已取消' };
+        return map[status] || status;
+    },
+
+    getFrequencyDisplay(frequency) {
+        const map = { 'daily': '每天', 'weekly': '每周一次', 'biweekly': '每两周一次', 'monthly': '每月一次' };
+        return map[frequency] || frequency;
     },
 
     selectProduct(e) {
@@ -178,17 +202,13 @@ Page({
 
         wx.showLoading({ title: '创建订阅中...' });
         try {
-            // TODO: 调用真实API
-            // await api.createSubscription({
-            //   product_id: selectedProduct.id,
-            //   frequency,
-            //   total_periods: periods,
-            //   quantity,
-            //   start_date: startDate
-            // });
-
-            // 模拟成功
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await api.createSubscription({
+                product_id: selectedProduct.id,
+                frequency,
+                total_periods: periods,
+                quantity,
+                start_date: startDate
+            });
 
             wx.hideLoading();
             wx.showToast({ title: '订阅成功', icon: 'success' });
@@ -210,16 +230,13 @@ Page({
                 if (res.confirm) {
                     wx.showLoading({ title: '处理中...' });
                     try {
-                        // TODO: 调用真实API
-                        // await api.cancelSubscription(id);
-                        await new Promise(resolve => setTimeout(resolve, 500));
-
+                        await api.cancelSubscription(id);
                         wx.hideLoading();
                         wx.showToast({ title: '已暂停', icon: 'success' });
                         this.loadSubscriptions();
                     } catch (err) {
                         wx.hideLoading();
-                        wx.showToast({ title: '操作失败', icon: 'none' });
+                        wx.showToast({ title: err.message || '操作失败', icon: 'none' });
                     }
                 }
             }

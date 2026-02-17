@@ -7,10 +7,12 @@ from django.db import models
 class Comment(models.Model):
     """产品评论"""
     user = models.ForeignKey(
-        'users.User', 
-        on_delete=models.CASCADE, 
+        'users.User',
+        on_delete=models.CASCADE,
         related_name='comments',
-        verbose_name='用户'
+        verbose_name='用户',
+        null=True,
+        blank=True
     )
     product = models.ForeignKey(
         'products.Product', 

@@ -3,15 +3,18 @@ const { api } = require('../../utils/api');
 
 Page({
     data: {
-        orderId: null,
+        orderId: null,      // 订单号（用于API查询）
+        orderDbId: null,    // 订单数据库ID（用于提交评论）
         order: null,
         reviews: [], // 每个商品的评价数据
         submitting: false
     },
 
     onLoad(options) {
-        if (options.order_id) {
-            this.setData({ orderId: options.order_id });
+        // 支持 order_id 和 order_no 两种参数
+        const orderId = options.order_id || options.order_no;
+        if (orderId) {
+            this.setData({ orderId: orderId });
             this.loadOrderDetail();
         }
     },
@@ -19,42 +22,36 @@ Page({
     async loadOrderDetail() {
         wx.showLoading({ title: '加载中...' });
         try {
-            // 模拟订单数据
-            const mockOrder = {
-                id: this.data.orderId,
-                order_no: 'ORD202401100003',
-                items: [
-                    {
-                        id: 1,
-                        product_id: 4,
-                        name: '每日鲜牛奶',
-                        specification: '250ml×10瓶',
-                        cover_image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&q=80',
-                        quantity: 1
-                    },
-                    {
-                        id: 2,
-                        product_id: 5,
-                        name: '草莓味酸奶',
-                        specification: '100g×12杯',
-                        cover_image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80',
-                        quantity: 1
-                    }
-                ]
+            const res = await api.getOrder(this.data.orderId);
+            console.log('Order detail response:', JSON.stringify(res));
+
+            const order = {
+                id: res.id,
+                order_no: res.order_no,
+                items: (res.items || []).map(item => ({
+                    id: item.id,
+                    product_id: item.product,  // 这是产品的数据库ID
+                    name: item.product_name || item.name,
+                    specification: item.specification,
+                    cover_image: item.cover_image || item.product_image || '/assets/products/fresh_milk.jpg',
+                    quantity: item.quantity
+                }))
             };
 
             // 初始化每个商品的评价数据
-            const reviews = mockOrder.items.map(item => ({
+            const reviews = order.items.map(item => ({
                 product_id: item.product_id,
                 product_name: item.name,
                 rating: 5,
                 content: '',
-                images: [],
+                images: [],         // 本地临时路径
+                uploadedImages: [], // 上传后的URL
                 is_anonymous: false
             }));
 
             this.setData({
-                order: mockOrder,
+                order,
+                orderDbId: res.id,  // 保存订单的数据库ID
                 reviews
             });
         } catch (err) {
@@ -95,7 +92,8 @@ Page({
             const res = await wx.chooseMedia({
                 count: 9 - currentImages.length,
                 mediaType: ['image'],
-                sourceType: ['album', 'camera']
+                sourceType: ['album', 'camera'],
+                sizeType: ['compressed']
             });
 
             const newImages = res.tempFiles.map(f => f.tempFilePath);
@@ -111,6 +109,10 @@ Page({
         const { index, imgIndex } = e.currentTarget.dataset;
         const reviews = this.data.reviews;
         reviews[index].images.splice(imgIndex, 1);
+        // 同时删除已上传的URL（如果有）
+        if (reviews[index].uploadedImages && reviews[index].uploadedImages[imgIndex]) {
+            reviews[index].uploadedImages.splice(imgIndex, 1);
+        }
         this.setData({ reviews });
     },
 
@@ -132,14 +134,35 @@ Page({
         this.setData({ reviews });
     },
 
+    // 上传单张图片
+    async uploadSingleImage(filePath) {
+        try {
+            const res = await api.uploadImage(filePath, 'comment');
+            return res.url;
+        } catch (err) {
+            console.error('上传图片失败:', err);
+            throw err;
+        }
+    },
+
     // 提交评价
     async submitReview() {
-        const { reviews, orderId } = this.data;
+        const { reviews, orderDbId } = this.data;
+
+        // 验证
+        if (!orderDbId) {
+            wx.showToast({ title: '订单信息错误', icon: 'none' });
+            return;
+        }
 
         // 验证评价内容
         for (let i = 0; i < reviews.length; i++) {
             if (!reviews[i].content.trim()) {
                 wx.showToast({ title: `请填写第${i + 1}个商品的评价`, icon: 'none' });
+                return;
+            }
+            if (!reviews[i].product_id) {
+                wx.showToast({ title: `商品信息错误`, icon: 'none' });
                 return;
             }
         }
@@ -148,11 +171,41 @@ Page({
         wx.showLoading({ title: '提交中...' });
 
         try {
-            // TODO: 调用真实API
-            // await api.submitReview({ order_id: orderId, reviews });
+            // 先上传所有图片
+            for (let i = 0; i < reviews.length; i++) {
+                const review = reviews[i];
+                if (review.images && review.images.length > 0) {
+                    wx.showLoading({ title: `上传图片 ${i + 1}/${reviews.length}...` });
+                    const uploadedUrls = [];
+                    for (const imgPath of review.images) {
+                        try {
+                            const url = await this.uploadSingleImage(imgPath);
+                            uploadedUrls.push(url);
+                        } catch (err) {
+                            console.error('图片上传失败:', err);
+                            // 继续上传其他图片
+                        }
+                    }
+                    review.uploadedImages = uploadedUrls;
+                }
+            }
 
-            // 模拟提交
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            wx.showLoading({ title: '提交评价...' });
+
+            // 为每个商品创建评论
+            for (let i = 0; i < reviews.length; i++) {
+                const review = reviews[i];
+                const commentData = {
+                    order: orderDbId,
+                    product: review.product_id,
+                    rating: review.rating,
+                    content: review.content,
+                    images: review.uploadedImages || [],
+                    is_anonymous: review.is_anonymous || false
+                };
+                console.log('Submitting comment:', JSON.stringify(commentData));
+                await api.createComment(commentData);
+            }
 
             wx.hideLoading();
             wx.showToast({ title: '评价成功', icon: 'success' });

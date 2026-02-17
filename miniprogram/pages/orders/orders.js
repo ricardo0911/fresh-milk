@@ -1,10 +1,22 @@
 // pages/orders/orders.js - 订单列表逻辑
-const { api } = require('../../utils/api');
+const { api, BASE_URL } = require('../../utils/api');
+
+// 获取媒体文件完整URL
+const getMediaUrl = (path) => {
+    if (!path) return '/assets/products/fresh_milk.jpg';
+    if (path.startsWith('http')) return path;
+    if (path.startsWith('/assets')) return path;
+    // 后端返回的相对路径，拼接服务器地址
+    const serverUrl = BASE_URL.replace('/api/v1', '');
+    return serverUrl + (path.startsWith('/') ? path : '/' + path);
+};
 
 Page({
     data: {
         currentStatus: '',
-        orders: []
+        orders: [],
+        showPayModal: false,
+        currentPayOrder: null
     },
 
     onLoad(options) {
@@ -33,65 +45,55 @@ Page({
     async loadOrders() {
         wx.showLoading({ title: '加载中...' });
         try {
-            // 模拟数据
-            const allOrders = [
-                {
-                    id: 1,
-                    order_no: 'ORD202401150001',
-                    status: 'pending',
-                    status_display: '待付款',
-                    total_count: 2,
-                    total_amount: '89.80',
-                    items: [
-                        { id: 1, name: '每日鲜牛奶', specification: '250ml×10瓶', price: '39.90', quantity: 1, cover_image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&q=80' },
-                        { id: 2, name: '有机纯牛奶', specification: '1L×6盒', price: '49.90', quantity: 1, cover_image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80' }
-                    ]
-                },
-                {
-                    id: 2,
-                    order_no: 'ORD202401140002',
-                    status: 'shipped',
-                    status_display: '配送中',
-                    total_count: 1,
-                    total_amount: '56.80',
-                    items: [
-                        { id: 3, name: '低脂鲜牛奶', specification: '500ml×8瓶', price: '56.80', quantity: 1, cover_image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=400&q=80' }
-                    ]
-                },
-                {
-                    id: 3,
-                    order_no: 'ORD202401100003',
-                    status: 'completed',
-                    status_display: '已完成',
-                    total_count: 3,
-                    total_amount: '128.00',
-                    is_reviewed: false,
-                    items: [
-                        { id: 4, name: '儿童成长奶', specification: '200ml×12瓶', price: '68.00', quantity: 1, cover_image: 'https://images.unsplash.com/photo-1572443490709-e57652c96a1b?w=400&q=80' },
-                        { id: 5, name: '草莓味酸奶', specification: '100g×12杯', price: '60.00', quantity: 1, cover_image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80' }
-                    ]
-                }
-            ];
-
             const { currentStatus } = this.data;
-            const filtered = currentStatus
-                ? allOrders.filter(o => o.status === currentStatus)
-                : allOrders;
-
-            this.setData({ orders: filtered });
+            const res = await api.getOrders(currentStatus);
+            const orders = (res.results || res || []).map(o => ({
+                id: o.id,
+                order_no: o.order_no,
+                status: o.status,
+                status_display: o.status_display || this.getStatusDisplay(o.status),
+                total_count: o.total_count || (o.items ? o.items.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0),
+                total_amount: o.total_amount,
+                is_reviewed: o.is_reviewed,
+                items: (o.items || []).map(item => ({
+                    id: item.id,
+                    product_id: item.product_id || item.product?.id,
+                    name: item.product_name || item.product?.name || item.name,
+                    specification: item.specification || item.product?.specification,
+                    price: item.price,
+                    quantity: item.quantity,
+                    cover_image: getMediaUrl(item.cover_image || item.product_image || item.product?.cover_image)
+                }))
+            }));
+            this.setData({ orders });
         } catch (err) {
             console.error('加载订单失败:', err);
+            // API 失败时显示空列表
+            this.setData({ orders: [] });
+            wx.showToast({ title: '加载失败', icon: 'none' });
         }
         wx.hideLoading();
     },
 
+    getStatusDisplay(status) {
+        const statusMap = {
+            'pending': '待付款',
+            'paid': '待发货',
+            'shipped': '待收货',
+            'delivered': '已送达',
+            'completed': '已完成',
+            'cancelled': '已取消'
+        };
+        return statusMap[status] || status;
+    },
+
     goToOrderDetail(e) {
-        const id = e.currentTarget.dataset.id;
-        wx.navigateTo({ url: `/pages/order-detail/order-detail?id=${id}` });
+        const orderNo = e.currentTarget.dataset.orderno;
+        wx.navigateTo({ url: `/pages/order-detail/order-detail?order_no=${orderNo}` });
     },
 
     async cancelOrder(e) {
-        const id = e.currentTarget.dataset.id;
+        const orderNo = e.currentTarget.dataset.orderno;
 
         wx.showModal({
             title: '取消订单',
@@ -100,16 +102,13 @@ Page({
                 if (res.confirm) {
                     wx.showLoading({ title: '处理中...' });
                     try {
-                        // TODO: 调用API
-                        // await api.cancelOrder(id);
-                        await new Promise(resolve => setTimeout(resolve, 500));
-
+                        await api.cancelOrder(orderNo);
                         wx.hideLoading();
                         wx.showToast({ title: '已取消', icon: 'success' });
                         this.loadOrders();
                     } catch (err) {
                         wx.hideLoading();
-                        wx.showToast({ title: '取消失败', icon: 'none' });
+                        wx.showToast({ title: err.message || '取消失败', icon: 'none' });
                     }
                 }
             }
@@ -117,17 +116,54 @@ Page({
     },
 
     payOrder(e) {
-        const id = e.currentTarget.dataset.id;
-        // 跳转到支付页面或调用支付
-        wx.showToast({ title: '跳转支付中...', icon: 'loading' });
-        setTimeout(() => {
+        const orderNo = e.currentTarget.dataset.orderno;
+        const order = this.data.orders.find(o => o.order_no === orderNo);
+
+        if (order) {
+            this.setData({
+                showPayModal: true,
+                currentPayOrder: order
+            });
+        }
+    },
+
+    async onPaySuccess(e) {
+        const orderNo = e.detail.orderId;
+
+        try {
+            // 调用后端支付接口更新订单状态
+            await api.payOrder(orderNo);
+
             wx.showToast({ title: '支付成功', icon: 'success' });
-            this.loadOrders();
-        }, 1500);
+
+            this.setData({
+                showPayModal: false,
+                currentPayOrder: null
+            });
+
+            // 刷新订单列表
+            setTimeout(() => {
+                this.loadOrders();
+            }, 1500);
+        } catch (err) {
+            console.error('支付失败:', err);
+            wx.showToast({ title: err.message || '支付失败', icon: 'none' });
+            this.setData({
+                showPayModal: false,
+                currentPayOrder: null
+            });
+        }
+    },
+
+    onPayClose() {
+        this.setData({
+            showPayModal: false,
+            currentPayOrder: null
+        });
     },
 
     async confirmReceive(e) {
-        const id = e.currentTarget.dataset.id;
+        const orderNo = e.currentTarget.dataset.orderno;
 
         wx.showModal({
             title: '确认收货',
@@ -136,16 +172,19 @@ Page({
                 if (res.confirm) {
                     wx.showLoading({ title: '处理中...' });
                     try {
-                        // TODO: 调用API
-                        // await api.confirmOrder(id);
-                        await new Promise(resolve => setTimeout(resolve, 500));
-
+                        const result = await api.confirmOrder(orderNo);
                         wx.hideLoading();
-                        wx.showToast({ title: '已确认收货', icon: 'success' });
+                        // 显示获得的积分
+                        const points = result.points_earned || 0;
+                        if (points > 0) {
+                            wx.showToast({ title: `收货成功，+${points}积分`, icon: 'success', duration: 2000 });
+                        } else {
+                            wx.showToast({ title: '已确认收货', icon: 'success' });
+                        }
                         this.loadOrders();
                     } catch (err) {
                         wx.hideLoading();
-                        wx.showToast({ title: '操作失败', icon: 'none' });
+                        wx.showToast({ title: err.message || '操作失败', icon: 'none' });
                     }
                 }
             }
@@ -171,8 +210,8 @@ Page({
     },
 
     goToReview(e) {
-        const id = e.currentTarget.dataset.id;
-        wx.navigateTo({ url: `/pages/review/review?order_id=${id}` });
+        const orderNo = e.currentTarget.dataset.orderno;
+        wx.navigateTo({ url: `/pages/review/review?order_no=${orderNo}` });
     },
 
     goShopping() {

@@ -1,0 +1,69 @@
+<!-- pages/points/points.wxml - 积分详情页 -->
+<view class="page-container">
+    <!-- 积分头部 -->
+    <view class="points-header">
+        <view class="points-bg"></view>
+        <view class="points-info">
+            <text class="points-label">当前积分</text>
+            <text class="points-value">{{totalPoints}}</text>
+            <text class="points-tip">积分可兑换优惠券</text>
+        </view>
+    </view>
+
+    <!-- Tab切换 -->
+    <view class="tab-bar">
+        <view class="tab-item {{currentTab === 'records' ? 'active' : ''}}" bindtap="switchTab" data-tab="records">
+            <text>积分明细</text>
+        </view>
+        <view class="tab-item {{currentTab === 'exchange' ? 'active' : ''}}" bindtap="switchTab" data-tab="exchange">
+            <text>兑换优惠券</text>
+        </view>
+    </view>
+
+    <!-- 积分明细 -->
+    <view class="content-area" wx:if="{{currentTab === 'records'}}">
+        <view class="records-list" wx:if="{{pointsRecords.length > 0}}">
+            <view class="record-item" wx:for="{{pointsRecords}}" wx:key="id">
+                <view class="record-left">
+                    <text class="record-desc">{{item.description}}</text>
+                    <text class="record-date">{{item.created_at}}</text>
+                </view>
+                <text class="record-points {{item.points > 0 ? 'earn' : 'spend'}}">
+                    {{item.points > 0 ? '+' : ''}}{{item.points}}
+                </text>
+            </view>
+        </view>
+        <view class="empty-state" wx:else>
+            <text class="empty-text">暂无积分记录</text>
+        </view>
+    </view>
+
+    <!-- 兑换优惠券 -->
+    <view class="content-area" wx:if="{{currentTab === 'exchange'}}">
+        <view class="coupons-list" wx:if="{{exchangeableCoupons.length > 0}}">
+            <view class="coupon-card" wx:for="{{exchangeableCoupons}}" wx:key="id">
+                <view class="coupon-left">
+                    <view class="coupon-amount">
+                        <text class="currency">¥</text>
+                        <text class="value">{{item.amount}}</text>
+                    </view>
+                    <text class="coupon-condition">满{{item.min_amount}}可用</text>
+                </view>
+                <view class="coupon-right">
+                    <text class="coupon-name">{{item.name}}</text>
+                    <text class="coupon-desc">{{item.description}}</text>
+                    <view class="coupon-footer">
+                        <text class="points-cost">{{item.points_required}}积分</text>
+                        <view class="exchange-btn {{totalPoints >= item.points_required ? '' : 'disabled'}}"
+                              bindtap="exchangeCoupon" data-coupon="{{item}}">
+                            兑换
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+        <view class="empty-state" wx:else>
+            <text class="empty-text">暂无可兑换的优惠券</text>
+        </view>
+    </view>
+</view>

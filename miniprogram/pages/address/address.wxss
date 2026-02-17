@@ -5,6 +5,14 @@
   padding-bottom: 140rpx;
 }
 
+.select-tip {
+  background: #10b981;
+  color: #fff;
+  text-align: center;
+  padding: 20rpx;
+  font-size: 28rpx;
+}
+
 .address-list {
   padding: 20rpx;
 }
@@ -80,6 +88,42 @@
 
 .action-icon {
   font-size: 28rpx;
+}
+
+.address-card.selectable {
+  cursor: pointer;
+}
+
+.address-card.selectable:active {
+  background: #f0fdf4;
+}
+
+.select-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background: #f0fdf4;
+  border-top: 1rpx solid #d1fae5;
+}
+
+.select-text {
+  color: #10b981;
+  font-size: 26rpx;
+}
+
+.select-arrow {
+  color: #10b981;
+  font-size: 28rpx;
+}
+
+.select-action {
+  color: #10b981;
+  font-weight: 500;
+}
+
+.select-action .action-icon {
+  color: #10b981;
 }
 
 .empty-state {

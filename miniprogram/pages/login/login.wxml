@@ -9,12 +9,12 @@
   <view class="login-form">
     <view class="form-group">
       <text class="form-icon">📱</text>
-      <input class="form-input" type="number" placeholder="请输入手机号" maxlength="11" 
+      <input class="form-input" type="number" placeholder="请输入手机号" maxlength="11"
              value="{{phone}}" bindinput="onPhoneInput" />
     </view>
     <view class="form-group">
       <text class="form-icon">🔒</text>
-      <input class="form-input" type="text" password="{{true}}" placeholder="请输入密码" 
+      <input class="form-input" type="text" password="{{true}}" placeholder="请输入密码"
              value="{{password}}" bindinput="onPasswordInput" />
     </view>
 
@@ -25,32 +25,11 @@
     <view class="login-options">
       <text class="option-link" bindtap="goToRegister">注册账号</text>
       <text class="option-divider">|</text>
-      <text class="option-link">忘记密码</text>
+      <text class="option-link" bindtap="goToForgotPassword">忘记密码</text>
     </view>
   </view>
 
   <view class="login-footer">
-    <view class="divider">
-      <text class="divider-line"></text>
-      <text class="divider-text">其他登录方式</text>
-      <text class="divider-line"></text>
-    </view>
-
-    <view class="social-login">
-      <!-- 微信一键登录（获取用户信息） -->
-      <button class="social-btn wx-btn" bindtap="wxLogin" disabled="{{isLoading}}">
-        <text class="social-icon">💚</text>
-        <text class="social-text">微信授权登录</text>
-      </button>
-      
-      <!-- 手机号快捷登录（真机才能用） -->
-      <button class="social-btn phone-btn" open-type="getPhoneNumber" 
-              bindgetphonenumber="onGetPhoneNumber" disabled="{{isLoading}}">
-        <text class="social-icon">📞</text>
-        <text class="social-text">手机号快捷登录</text>
-      </button>
-    </view>
-
     <text class="login-agreement">
       登录即表示同意 <text class="link">用户协议</text> 和 <text class="link">隐私政策</text>
     </text>

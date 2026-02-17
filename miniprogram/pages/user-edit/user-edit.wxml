@@ -1,0 +1,50 @@
+<view class="container">
+  <view class="form-group">
+    <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+      <image class="avatar" src="{{userInfo.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"></image>
+      <view class="edit-icon">📷</view>
+    </button>
+    <view class="avatar-tip">点击头像修改</view>
+
+    <view class="input-group">
+      <view class="input-item">
+        <text class="label">昵称</text>
+        <input class="input" type="nickname" value="{{userInfo.nickname}}" placeholder="请输入昵称" bindinput="onNicknameChange" bindblur="onNicknameBlur"/>
+      </view>
+      <view class="divider"></view>
+      <view class="input-item">
+        <text class="label">手机号</text>
+        <input class="input disabled" value="{{userInfo.phone}}" disabled/>
+      </view>
+      <view class="divider"></view>
+      <view class="input-item">
+        <text class="label">性别</text>
+        <picker bindchange="onGenderChange" value="{{genderIndex}}" range="{{genderOptions}}">
+            <view class="picker">
+                {{genderIndex > -1 ? genderOptions[genderIndex] : (userInfo.genderDisplay || '请选择')}}
+            </view>
+        </picker>
+      </view>
+       <view class="divider"></view>
+       <view class="input-item">
+        <text class="label">生日</text>
+        <picker mode="date" value="{{userInfo.birthday}}" bindchange="onDateChange">
+            <view class="picker">
+            {{userInfo.birthday || '请选择'}}
+            </view>
+        </picker>
+      </view>
+      <view class="divider"></view>
+      <view class="input-item clickable" bindtap="goChangePassword">
+        <text class="label">修改密码</text>
+        <view class="arrow-right">
+          <text class="arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="btn-area">
+    <button class="save-btn" bindtap="saveProfile">保存修改</button>
+  </view>
+</view>

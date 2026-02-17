@@ -1,0 +1,47 @@
+<!-- pages/feedback-list/feedback-list.wxml -->
+<view class="page-feedback-list">
+    <!-- 加载中 -->
+    <view class="loading-box" wx:if="{{loading}}">
+        <view class="loading-spinner"></view>
+        <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-box" wx:elif="{{isEmpty}}">
+        <text class="empty-icon">📝</text>
+        <text class="empty-text">暂无反馈记录</text>
+        <text class="empty-desc">有问题或建议？点击下方按钮告诉我们</text>
+    </view>
+
+    <!-- 反馈列表 -->
+    <view class="feedback-list" wx:else>
+        <view class="feedback-item" wx:for="{{feedbacks}}" wx:key="id" bindtap="viewDetail" data-id="{{item.id}}">
+            <!-- 头部 -->
+            <view class="item-header">
+                <view class="type-tag">{{item.type_text}}</view>
+                <view class="status-tag {{item.status_class}}">{{item.status_text}}</view>
+            </view>
+
+            <!-- 内容 -->
+            <view class="item-content">{{item.content}}</view>
+
+            <!-- 回复预览 -->
+            <view class="reply-preview" wx:if="{{item.reply}}">
+                <view class="reply-label">客服回复：</view>
+                <view class="reply-text">{{item.reply}}</view>
+            </view>
+
+            <!-- 底部 -->
+            <view class="item-footer">
+                <text class="time">{{item.created_date}}</text>
+                <text class="view-detail">查看详情 ></text>
+            </view>
+        </view>
+    </view>
+
+    <!-- 新建反馈按钮 -->
+    <view class="fab-btn" bindtap="goToFeedback">
+        <text class="fab-icon">+</text>
+        <text class="fab-text">新建反馈</text>
+    </view>
+</view>

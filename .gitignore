@@ -35,3 +35,12 @@ miniprogram_npm/
 # Environment
 .env
 .env.local
+.ace-tool/
+# backup ignore rules for github upload
+node_modules/
+target/
+.m2repo/
+nul
+uploads/
+*.tmp
+*.cache

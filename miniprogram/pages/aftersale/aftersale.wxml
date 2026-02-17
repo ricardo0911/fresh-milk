@@ -41,10 +41,10 @@
     <!-- 退款原因 -->
     <view class="section">
         <view class="section-title">退款原因</view>
-        <picker mode="selector" range="{{reasonOptions}}" bindchange="selectReason">
+        <picker mode="selector" range="{{reasonOptions}}" range-key="label" bindchange="selectReason">
             <view class="picker-box">
                 <text class="picker-value {{selectedReasonIndex >= 0 ? '' : 'placeholder'}}">
-                    {{selectedReasonIndex >= 0 ? reasonOptions[selectedReasonIndex] : '请选择原因'}}
+                    {{selectedReasonIndex >= 0 ? reasonOptions[selectedReasonIndex].label : '请选择原因'}}
                 </text>
                 <text class="picker-arrow">›</text>
             </view>
@@ -64,41 +64,10 @@
         <text class="char-count">{{description.length}}/500</text>
     </view>
 
-    <!-- 上传凭证 -->
-    <view class="section">
-        <view class="section-title">上传凭证（选填）</view>
-        <view class="image-list">
-            <view 
-                wx:for="{{images}}" 
-                wx:key="index"
-                class="image-item"
-            >
-                <image 
-                    src="{{item}}" 
-                    mode="aspectFill"
-                    data-index="{{index}}"
-                    bindtap="previewImage"
-                />
-                <view 
-                    class="delete-btn"
-                    data-index="{{index}}"
-                    bindtap="deleteImage"
-                >×</view>
-            </view>
-            <view 
-                wx:if="{{images.length < 9}}"
-                class="upload-btn"
-                bindtap="chooseImage"
-            >
-                <text class="upload-icon">📷</text>
-                <text class="upload-text">添加图片</text>
-            </view>
-        </view>
-        <text class="image-tip">最多可上传9张图片，支持jpg、png格式</text>
-    </view>
+
 
     <!-- 退款金额 -->
-    <view class="refund-section" wx:if="{{selectedType === 'refund' || selectedType === 'return'}}">
+    <view class="refund-section" wx:if="{{selectedType === 'refund_only' || selectedType === 'return_refund'}}">>
         <view class="refund-row">
             <text class="refund-label">退款金额</text>
             <text class="refund-amount">¥{{refundAmount}}</text>

@@ -100,6 +100,84 @@ def draw_user(pixels, size, color):
             if 0 <= x < size:
                 pixels[y][x] = color
 
+def draw_member(pixels, size, color):
+    """Draw a member/community icon"""
+    center = size // 2
+    # Left person (smaller)
+    draw_circle(pixels, center - 10, 14, 6, color)
+    for y in range(22, size - 8):
+        half_width = min((y - 22) + 4, 8)
+        for x in range(center - 10 - half_width, center - 10 + half_width + 1):
+            if 0 <= x < size:
+                pixels[y][x] = color
+    # Right person (smaller)
+    draw_circle(pixels, center + 10, 14, 6, color)
+    for y in range(22, size - 8):
+        half_width = min((y - 22) + 4, 8)
+        for x in range(center + 10 - half_width, center + 10 + half_width + 1):
+            if 0 <= x < size:
+                pixels[y][x] = color
+
+def draw_search(pixels, size, color):
+    """Draw a search/magnifying glass icon"""
+    # Circle (magnifying glass lens)
+    cx, cy, r = size // 2 - 4, size // 2 - 4, 12
+    for y in range(len(pixels)):
+        for x in range(len(pixels[0])):
+            dist_sq = (x - cx) ** 2 + (y - cy) ** 2
+            if r - 3 <= (dist_sq ** 0.5) <= r:
+                pixels[y][x] = color
+    # Handle
+    for i in range(10):
+        x = cx + r + i - 2
+        y = cy + r + i - 2
+        if 0 <= x < size and 0 <= y < size:
+            for dx in range(-2, 3):
+                for dy in range(-2, 3):
+                    if 0 <= x + dx < size and 0 <= y + dy < size:
+                        pixels[y + dy][x + dx] = color
+
+def draw_close(pixels, size, color):
+    """Draw a close/X icon"""
+    margin = 12
+    thickness = 3
+    for i in range(size - 2 * margin):
+        x1 = margin + i
+        y1 = margin + i
+        x2 = size - margin - 1 - i
+        y2 = margin + i
+        for dx in range(-thickness, thickness + 1):
+            for dy in range(-thickness, thickness + 1):
+                if 0 <= x1 + dx < size and 0 <= y1 + dy < size:
+                    pixels[y1 + dy][x1 + dx] = color
+                if 0 <= x2 + dx < size and 0 <= y2 + dy < size:
+                    pixels[y2 + dy][x2 + dx] = color
+
+def draw_empty(pixels, size, color):
+    """Draw an empty state icon (empty box)"""
+    margin = 8
+    # Box outline
+    for x in range(margin, size - margin):
+        for t in range(3):
+            pixels[margin + t][x] = color
+            pixels[size - margin - 1 - t][x] = color
+    for y in range(margin, size - margin):
+        for t in range(3):
+            pixels[y][margin + t] = color
+            pixels[y][size - margin - 1 - t] = color
+    # Sad face inside
+    center = size // 2
+    # Eyes
+    draw_circle(pixels, center - 6, center - 4, 2, color)
+    draw_circle(pixels, center + 6, center - 4, 2, color)
+    # Sad mouth (arc)
+    for x in range(center - 6, center + 7):
+        y = center + 6 + abs(x - center) // 2
+        if 0 <= y < size:
+            pixels[y][x] = color
+            if y + 1 < size:
+                pixels[y + 1][x] = color
+
 # Colors
 GRAY = (153, 153, 153, 255)
 GREEN = (16, 185, 129, 255)
@@ -110,6 +188,10 @@ icons = [
     ('category', draw_category),
     ('cart', draw_cart),
     ('user', draw_user),
+    ('member', draw_member),
+    ('search', draw_search),
+    ('close', draw_close),
+    ('empty', draw_empty),
 ]
 
 size = 48

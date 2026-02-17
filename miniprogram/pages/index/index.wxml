@@ -10,7 +10,7 @@
 
   <!-- 轮播图 -->
   <swiper class="banner" indicator-dots autoplay circular interval="4000">
-    <swiper-item wx:for="{{banners}}" wx:key="id">
+    <swiper-item wx:for="{{banners}}" wx:key="id" bindtap="goToBanner" data-id="{{item.id}}">
       <image class="banner-image" src="{{item.image}}" mode="aspectFill" />
     </swiper-item>
   </swiper>

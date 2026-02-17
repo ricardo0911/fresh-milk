@@ -28,14 +28,15 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductListSerializer(serializers.ModelSerializer):
     """产品列表序列化器"""
+    category = serializers.IntegerField(source='category.id', read_only=True)
     category_name = serializers.CharField(source='category.name', read_only=True)
     is_favorited = serializers.SerializerMethodField()
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'subtitle', 'price', 'original_price', 
-                  'cover_image', 'specification', 'sales_count', 'is_hot', 
-                  'is_new', 'is_subscription', 'category_name', 'is_favorited']
+        fields = ['id', 'name', 'subtitle', 'price', 'original_price',
+                  'cover_image', 'specification', 'sales_count', 'is_hot',
+                  'is_new', 'is_subscription', 'category', 'category_name', 'is_favorited']
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')

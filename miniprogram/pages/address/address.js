@@ -26,29 +26,27 @@ Page({
     async loadAddresses() {
         wx.showLoading({ title: '加载中...' });
         try {
-            // 模拟数据
-            const mockAddresses = [
-                { id: 1, name: '张三', phone: '13800138000', province: '北京市', city: '北京市', district: '朝阳区', address: '建国路88号SOHO现代城A座1208室', is_default: true },
-                { id: 2, name: '李四', phone: '13900139000', province: '上海市', city: '上海市', district: '浦东新区', address: '世纪大道100号上海环球金融中心', is_default: false }
-            ];
-            this.setData({ addresses: mockAddresses });
+            const res = await api.getAddresses();
+            // 后端返回的可能是 { results: [...] } 或直接是数组
+            const addresses = res.results || res || [];
+            this.setData({ addresses });
         } catch (err) {
             console.error('加载地址失败:', err);
+            wx.showToast({ title: '加载地址失败', icon: 'none' });
         }
         wx.hideLoading();
     },
 
     selectAddress(e) {
-        if (!this.data.selectMode) return;
-
         const address = e.currentTarget.dataset.address;
         const pages = getCurrentPages();
         const prevPage = pages[pages.length - 2];
 
-        if (prevPage) {
+        // 如果是选择模式，或者有上一页需要接收地址
+        if (this.data.selectMode && prevPage) {
             prevPage.setData({ selectedAddress: address });
+            wx.navigateBack();
         }
-        wx.navigateBack();
     },
 
     showAddForm() {
@@ -66,9 +64,9 @@ Page({
             showForm: true,
             editingAddress: address,
             form: {
-                name: address.name,
-                phone: address.phone,
-                address: address.address,
+                name: address.receiver_name,
+                phone: address.receiver_phone,
+                address: address.detail,
                 is_default: address.is_default
             },
             region: [address.province, address.city, address.district]
@@ -118,21 +116,20 @@ Page({
         wx.showLoading({ title: '保存中...' });
         try {
             const data = {
-                ...form,
+                receiver_name: form.name,
+                receiver_phone: form.phone,
+                detail: form.address,
+                is_default: form.is_default,
                 province: region[0],
                 city: region[1],
                 district: region[2]
             };
 
             if (editingAddress) {
-                // TODO: 调用更新API
-                // await api.updateAddress(editingAddress.id, data);
+                await api.updateAddress(editingAddress.id, data);
             } else {
-                // TODO: 调用添加API
-                // await api.addAddress(data);
+                await api.addAddress(data);
             }
-
-            await new Promise(resolve => setTimeout(resolve, 500));
 
             wx.hideLoading();
             wx.showToast({ title: '保存成功', icon: 'success' });
@@ -149,9 +146,7 @@ Page({
 
         wx.showLoading({ title: '设置中...' });
         try {
-            // TODO: 调用API
-            // await api.setDefaultAddress(id);
-            await new Promise(resolve => setTimeout(resolve, 300));
+            await api.setDefaultAddress(id);
 
             // 更新本地状态
             const addresses = this.data.addresses.map(a => ({
@@ -178,9 +173,7 @@ Page({
                 if (res.confirm) {
                     wx.showLoading({ title: '删除中...' });
                     try {
-                        // TODO: 调用API
-                        // await api.deleteAddress(id);
-                        await new Promise(resolve => setTimeout(resolve, 300));
+                        await api.deleteAddress(id);
 
                         const addresses = this.data.addresses.filter(a => a.id !== id);
                         this.setData({ addresses });

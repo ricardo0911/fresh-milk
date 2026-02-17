@@ -1,0 +1,168 @@
+/* pages/feedback-detail/feedback-detail.wxss */
+.page-feedback-detail {
+    min-height: 100vh;
+    background: #f5f7fa;
+    padding: 20rpx 30rpx;
+    padding-bottom: 60rpx;
+}
+
+/* 加载中 */
+.loading-box {
+    display: flex;
+    justify-content: center;
+    padding: 200rpx 0;
+}
+
+.loading-spinner {
+    width: 60rpx;
+    height: 60rpx;
+    border: 4rpx solid #e0e0e0;
+    border-top-color: #10b981;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 状态卡片 */
+.status-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 20rpx;
+    padding: 40rpx 30rpx;
+    margin-bottom: 24rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.status-card.pending {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.status-card.processing {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+.status-card.resolved {
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+}
+
+.status-card.closed {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+.status-icon {
+    font-size: 60rpx;
+    margin-right: 24rpx;
+}
+
+.status-info {
+    flex: 1;
+}
+
+.status-text {
+    display: block;
+    font-size: 34rpx;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8rpx;
+}
+
+.status-desc {
+    font-size: 26rpx;
+    color: #666;
+}
+
+/* 内容卡片 */
+.section-card {
+    background: #fff;
+    border-radius: 20rpx;
+    padding: 30rpx;
+    margin-bottom: 24rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24rpx;
+    padding-bottom: 20rpx;
+    border-bottom: 1rpx solid #f0f0f0;
+}
+
+.section-title {
+    font-size: 30rpx;
+    font-weight: 600;
+    color: #333;
+}
+
+.type-tag {
+    font-size: 24rpx;
+    color: #666;
+    background: #f0f0f0;
+    padding: 8rpx 20rpx;
+    border-radius: 20rpx;
+}
+
+.feedback-content {
+    font-size: 28rpx;
+    color: #333;
+    line-height: 1.8;
+    margin-bottom: 24rpx;
+}
+
+.feedback-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 12rpx;
+}
+
+.meta-item {
+    font-size: 24rpx;
+    color: #999;
+}
+
+/* 回复卡片 */
+.reply-card {
+    border-left: 8rpx solid #10b981;
+}
+
+.reply-content {
+    font-size: 28rpx;
+    color: #333;
+    line-height: 1.8;
+    margin-bottom: 24rpx;
+    background: #f8faf9;
+    padding: 24rpx;
+    border-radius: 12rpx;
+}
+
+.reply-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 12rpx;
+}
+
+/* 等待回复 */
+.waiting-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    border-radius: 20rpx;
+    padding: 60rpx 30rpx;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.waiting-icon {
+    font-size: 80rpx;
+    margin-bottom: 24rpx;
+}
+
+.waiting-text {
+    font-size: 28rpx;
+    color: #666;
+}

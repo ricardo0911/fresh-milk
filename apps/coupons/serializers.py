@@ -10,7 +10,7 @@ class CouponSerializer(serializers.ModelSerializer):
     type_display = serializers.CharField(source='get_type_display', read_only=True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
     remaining = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = Coupon
         fields = [
@@ -18,10 +18,12 @@ class CouponSerializer(serializers.ModelSerializer):
             'discount_percent', 'discount_amount', 'min_amount', 'max_discount',
             'total_count', 'used_count', 'remaining', 'per_user_limit',
             'start_time', 'end_time', 'is_all_products',
-            'status', 'status_display', 'description', 'created_at'
+            'status', 'status_display', 'description',
+            'points_required', 'is_exchangeable', 'exchange_limit', 'exchanged_count',
+            'created_at'
         ]
-        read_only_fields = ['id', 'code', 'used_count', 'created_at']
-    
+        read_only_fields = ['id', 'code', 'used_count', 'exchanged_count', 'created_at']
+
     def get_remaining(self, obj):
         if obj.total_count == 0:
             return -1  # 无限
@@ -31,13 +33,15 @@ class CouponSerializer(serializers.ModelSerializer):
 class CouponListSerializer(serializers.ModelSerializer):
     """优惠券列表简化序列化器"""
     type_display = serializers.CharField(source='get_type_display', read_only=True)
-    
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+
     class Meta:
         model = Coupon
         fields = [
             'id', 'code', 'name', 'type', 'type_display',
             'discount_percent', 'discount_amount', 'min_amount',
-            'start_time', 'end_time', 'status'
+            'start_time', 'end_time', 'status', 'status_display',
+            'points_required', 'is_exchangeable', 'exchange_limit', 'exchanged_count'
         ]
 
 

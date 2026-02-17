@@ -1,0 +1,27 @@
+<view class="page-favorites">
+  <view class="favorites-list" wx:if="{{!isEmpty}}">
+    <view class="favorite-item" wx:for="{{favorites}}" wx:key="id" bindtap="goToProduct" data-id="{{item.product.id}}">
+      <image class="product-img" src="{{item.product.cover_image}}" mode="aspectFill" lazy-load />
+      <view class="product-info">
+        <view class="product-name">{{item.product.name}}</view>
+        <view class="product-subtitle">{{item.product.subtitle}}</view>
+        <view class="product-bottom">
+          <view class="price-box">
+            <text class="currency">¥</text>
+            <text class="price">{{item.product.price}}</text>
+            <text class="original-price" wx:if="{{item.product.original_price}}">¥{{item.product.original_price}}</text>
+          </view>
+          <view class="action-btn" catchtap="removeFavorite" data-id="{{item.product.id}}" data-index="{{index}}">
+            <text class="delete-icon">✕</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{isEmpty && !loading}}">
+    <image class="empty-img" src="/assets/states/empty-cart.png" mode="aspectFit" />
+    <text class="empty-text">暂无收藏商品</text>
+    <navigator url="/pages/category/category" open-type="switchTab" class="browse-btn">去逛逛</navigator>
+  </view>
+</view>

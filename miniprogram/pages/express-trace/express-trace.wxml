@@ -1,0 +1,55 @@
+<!--pages/express-trace/express-trace.wxml - 物流轨迹页面-->
+<view class="express-trace-page">
+    <!-- 加载中 -->
+    <view class="loading-state" wx:if="{{loading}}">
+        <text>加载中...</text>
+    </view>
+
+    <block wx:else>
+        <!-- 快递信息头部 -->
+        <view class="express-header" wx:if="{{expressInfo}}">
+            <view class="express-icon">🚚</view>
+            <view class="express-detail">
+                <view class="express-company">{{expressInfo.company}}</view>
+                <view class="express-no-row">
+                    <text class="express-no">{{expressInfo.no}}</text>
+                    <text class="copy-btn" bindtap="copyExpressNo">复制</text>
+                </view>
+                <view class="express-status">
+                    <text class="status-label">当前状态：</text>
+                    <text class="status-value">{{expressInfo.status}}</text>
+                </view>
+            </view>
+            <view class="refresh-btn" bindtap="onRefresh">
+                <text class="refresh-icon">🔄</text>
+            </view>
+        </view>
+
+        <!-- 物流轨迹时间线 -->
+        <view class="trace-card" wx:if="{{traces.length > 0}}">
+            <view class="card-title">物流轨迹</view>
+            <view class="trace-timeline">
+                <view
+                    class="trace-item {{index === 0 ? 'current' : ''}}"
+                    wx:for="{{traces}}"
+                    wx:key="index"
+                >
+                    <view class="trace-dot"></view>
+                    <view class="trace-line" wx:if="{{index < traces.length - 1}}"></view>
+                    <view class="trace-content">
+                        <text class="trace-time">{{item.time}}</text>
+                        <text class="trace-desc">{{item.description}}</text>
+                        <text class="trace-location" wx:if="{{item.location}}">{{item.location}}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <!-- 暂无物流信息 -->
+        <view class="empty-state" wx:else>
+            <view class="empty-icon">📦</view>
+            <text class="empty-text">暂无物流信息</text>
+            <text class="empty-hint">快递已下单，请稍后查看</text>
+        </view>
+    </block>
+</view>

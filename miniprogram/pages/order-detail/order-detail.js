@@ -1,23 +1,42 @@
 // pages/order-detail/order-detail.js - 订单详情逻辑
 const { api } = require('../../utils/api');
+const payment = require('../../utils/payment');
+
+// 快递公司名称映射
+const expressCompanyMap = {
+    'SF': '顺丰速运',
+    'YTO': '圆通速递',
+    'ZTO': '中通快递',
+    'YD': '韵达快递',
+    'JTSD': '极兔速递'
+};
 
 Page({
     data: {
-        orderId: null,
+        orderNo: null,
         order: null,
         deliveryPerson: null,
-        progressSteps: []
+        progressSteps: [],
+        expressCompanyName: '',
+        latestTrace: null,
+        expressTraces: []
     },
 
     onLoad(options) {
-        if (options.id) {
-            this.setData({ orderId: options.id });
+        console.log('order-detail onLoad options:', options);
+        // 支持 order_no 和 id 两种参数（兼容旧版本）
+        const orderNo = options.order_no || options.id;
+        if (orderNo) {
+            this.setData({ orderNo: orderNo });
             this.loadOrderDetail();
+        } else {
+            wx.showToast({ title: '订单参数错误', icon: 'none' });
+            setTimeout(() => wx.navigateBack(), 1500);
         }
     },
 
     onShow() {
-        if (this.data.orderId) {
+        if (this.data.orderNo) {
             this.loadOrderDetail();
         }
     },
@@ -25,91 +44,111 @@ Page({
     async loadOrderDetail() {
         wx.showLoading({ title: '加载中...' });
         try {
-            // 模拟订单详情数据
-            const mockOrder = {
-                id: this.data.orderId,
-                order_no: 'FM202401150001',
-                status: 'shipped',
-                status_display: '配送中',
+            console.log('Loading order detail for:', this.data.orderNo);
+            const res = await api.getOrder(this.data.orderNo);
+            console.log('Order detail response:', res);
+            const order = res;
 
-                // 商品信息
-                items: [
-                    {
-                        id: 1,
-                        product_id: 1,
-                        name: '每日鲜牛奶',
-                        specification: '250ml×10瓶',
-                        price: '39.90',
-                        quantity: 2,
-                        total_price: '79.80',
-                        cover_image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&q=80'
-                    },
-                    {
-                        id: 2,
-                        product_id: 2,
-                        name: '有机纯牛奶',
-                        specification: '1L×6盒',
-                        price: '49.90',
-                        quantity: 1,
-                        total_price: '49.90',
-                        cover_image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&q=80'
-                    }
-                ],
+            if (order) {
+                // 格式化订单数据
+                const fullOrder = {
+                    id: order.id,
+                    order_no: order.order_no,
+                    status: order.status,
+                    status_display: order.status_display || this.getStatusDisplay(order.status),
+                    total_amount: order.total_amount,
+                    delivery_fee: order.delivery_fee || '0.00',
+                    discount_amount: order.discount_amount || '0.00',
+                    pay_amount: order.pay_amount || order.total_amount,
+                    receiver_name: order.receiver_name || order.address?.name,
+                    receiver_phone: order.receiver_phone || order.address?.phone,
+                    receiver_address: order.receiver_address || order.address?.full_address,
+                    created_at: order.created_at,
+                    paid_at: order.paid_at,
+                    shipped_at: order.shipped_at,
+                    delivered_at: order.delivered_at,
+                    completed_at: order.completed_at,
+                    expected_delivery: order.expected_delivery,
+                    is_reviewed: order.is_reviewed,
+                    // 快递信息
+                    express_company: order.express_company,
+                    express_no: order.express_no,
+                    express_status: order.express_status,
+                    items: (order.items || []).map(item => ({
+                        id: item.id,
+                        product_id: item.product_id || item.product?.id,
+                        name: item.product_name || item.product?.name || item.name,
+                        specification: item.specification || item.product?.specification,
+                        price: item.price,
+                        quantity: item.quantity,
+                        total_price: (parseFloat(item.price) * item.quantity).toFixed(2),
+                        cover_image: item.cover_image || item.product?.cover_image || '/assets/products/fresh_milk.jpg'
+                    }))
+                };
 
-                // 价格信息
-                total_amount: '129.70',
-                delivery_fee: '0.00',
-                discount_amount: '10.00',
-                pay_amount: '119.70',
+                // 配送员信息（如果有）
+                const deliveryPerson = order.delivery_person ? {
+                    id: order.delivery_person.id,
+                    name: order.delivery_person.name,
+                    phone: order.delivery_person.phone,
+                    avatar: order.delivery_person.avatar || '/assets/default_avatar.png',
+                    rating: order.delivery_person.rating,
+                    total_deliveries: order.delivery_person.total_deliveries
+                } : null;
 
-                // 收货信息
-                receiver_name: '张三',
-                receiver_phone: '138****8888',
-                receiver_address: '浙江省杭州市西湖区文三路999号',
+                const progressSteps = this.generateProgressSteps(fullOrder);
 
-                // 周期购信息（如果是周期购订单）
-                is_subscription: true,
-                subscription_no: 'SUB202401001',
-                subscription_frequency: '每周一次',
-                subscription_periods: 12,
-                current_period: 3,
+                // 快递公司名称
+                const expressCompanyName = expressCompanyMap[order.express_company] || order.express_company || '';
 
-                // 时间
-                created_at: '2024-01-15 10:30:00',
-                paid_at: '2024-01-15 10:32:15',
-                shipped_at: '2024-01-15 14:00:00',
-                expected_delivery: '2024-01-16 08:00-10:00',
+                this.setData({
+                    order: fullOrder,
+                    deliveryPerson,
+                    progressSteps,
+                    expressCompanyName
+                });
 
-                // 备注
-                remark: '请放到门口，谢谢',
-
-                // 是否已评价
-                is_reviewed: false
-            };
-
-            // 配送员信息
-            const mockDeliveryPerson = {
-                id: 1,
-                name: '张师傅',
-                phone: '13800138000',
-                avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80',
-                rating: 4.9,
-                total_deliveries: 1256
-            };
-
-            // 生成进度步骤
-            const progressSteps = this.generateProgressSteps(mockOrder);
-
-            this.setData({
-                order: mockOrder,
-                deliveryPerson: mockDeliveryPerson,
-                progressSteps
-            });
+                // 如果有快递单号，加载物流轨迹
+                if (order.express_no) {
+                    this.loadExpressTrace();
+                }
+            } else {
+                wx.showToast({ title: '未找到订单', icon: 'error' });
+                setTimeout(() => wx.navigateBack(), 1500);
+            }
+            wx.hideLoading();
         } catch (err) {
+            wx.hideLoading();
             console.error('加载订单详情失败:', err);
             wx.showToast({ title: '加载失败', icon: 'none' });
         }
-        wx.hideLoading();
+    },
+
+    // 加载物流轨迹
+    async loadExpressTrace() {
+        try {
+            const res = await api.getExpressTrace(this.data.orderNo);
+            if (res && res.traces && res.traces.length > 0) {
+                this.setData({
+                    expressTraces: res.traces,
+                    latestTrace: res.traces[0]
+                });
+            }
+        } catch (err) {
+            console.error('加载物流轨迹失败:', err);
+        }
+    },
+
+    getStatusDisplay(status) {
+        const statusMap = {
+            'pending': '待付款',
+            'paid': '待发货',
+            'shipped': '配送中',
+            'delivered': '待收货',
+            'completed': '已完成',
+            'cancelled': '已取消'
+        };
+        return statusMap[status] || status;
     },
 
     generateProgressSteps(order) {
@@ -194,6 +233,26 @@ Page({
         }
     },
 
+    // 复制快递单号
+    copyExpressNo() {
+        const expressNo = this.data.order?.express_no;
+        if (expressNo) {
+            wx.setClipboardData({
+                data: expressNo,
+                success: () => {
+                    wx.showToast({ title: '已复制', icon: 'success' });
+                }
+            });
+        }
+    },
+
+    // 查看物流轨迹
+    viewExpressTrace() {
+        wx.navigateTo({
+            url: `/pages/express-trace/express-trace?order_no=${this.data.orderNo}`
+        });
+    },
+
     // 取消订单
     cancelOrder() {
         wx.showModal({
@@ -203,14 +262,45 @@ Page({
                 if (res.confirm) {
                     wx.showLoading({ title: '处理中...' });
                     try {
-                        // TODO: 调用API取消订单
-                        await new Promise(resolve => setTimeout(resolve, 500));
+                        await api.cancelOrder(this.data.orderNo);
                         wx.hideLoading();
                         wx.showToast({ title: '已取消', icon: 'success' });
                         setTimeout(() => wx.navigateBack(), 1500);
                     } catch (err) {
                         wx.hideLoading();
-                        wx.showToast({ title: '取消失败', icon: 'none' });
+                        wx.showToast({ title: err.message || '取消失败', icon: 'none' });
+                    }
+                }
+            }
+        });
+    },
+
+    // 支付订单
+    payOrder() {
+        const order = this.data.order;
+        if (!order) return;
+
+        wx.showModal({
+            title: '确认支付',
+            content: `支付金额：¥${order.pay_amount}`,
+            confirmText: '确认支付',
+            cancelText: '取消',
+            success: async (res) => {
+                if (res.confirm) {
+                    wx.showLoading({ title: '支付中...' });
+                    try {
+                        // 调用后端支付接口更新订单状态
+                        await api.payOrder(this.data.orderNo);
+                        wx.hideLoading();
+
+                        // 跳转到支付成功页面
+                        wx.redirectTo({
+                            url: `/pages/order-result/order-result?order_no=${order.order_no}&amount=${order.pay_amount}&success=true`
+                        });
+                    } catch (err) {
+                        wx.hideLoading();
+                        console.error('支付失败:', err);
+                        wx.showToast({ title: err.message || '支付失败', icon: 'none' });
                     }
                 }
             }
@@ -226,14 +316,19 @@ Page({
                 if (res.confirm) {
                     wx.showLoading({ title: '处理中...' });
                     try {
-                        // TODO: 调用API确认收货
-                        await new Promise(resolve => setTimeout(resolve, 500));
+                        const result = await api.confirmOrder(this.data.orderNo);
                         wx.hideLoading();
-                        wx.showToast({ title: '已确认收货', icon: 'success' });
+                        // 显示获得的积分
+                        const points = result.points_earned || 0;
+                        if (points > 0) {
+                            wx.showToast({ title: `收货成功，+${points}积分`, icon: 'success', duration: 2000 });
+                        } else {
+                            wx.showToast({ title: '已确认收货', icon: 'success' });
+                        }
                         this.loadOrderDetail();
                     } catch (err) {
                         wx.hideLoading();
-                        wx.showToast({ title: '操作失败', icon: 'none' });
+                        wx.showToast({ title: err.message || '操作失败', icon: 'none' });
                     }
                 }
             }
@@ -243,14 +338,14 @@ Page({
     // 申请售后
     applyAfterSale() {
         wx.navigateTo({
-            url: `/pages/aftersale/aftersale?order_id=${this.data.orderId}`
+            url: `/pages/aftersale/aftersale?order_no=${this.data.orderNo}`
         });
     },
 
     // 去评价
     goToReview() {
         wx.navigateTo({
-            url: `/pages/review/review?order_id=${this.data.orderId}`
+            url: `/pages/review/review?order_no=${this.data.orderNo}`
         });
     },
 

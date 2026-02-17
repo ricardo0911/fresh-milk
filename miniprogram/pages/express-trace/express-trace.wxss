@@ -1,0 +1,207 @@
+/* pages/express-trace/express-trace.wxss - 物流轨迹样式 */
+
+.express-trace-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+    padding-bottom: 40rpx;
+}
+
+/* 加载状态 */
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    color: #999;
+}
+
+/* 快递信息头部 */
+.express-header {
+    display: flex;
+    align-items: flex-start;
+    padding: 32rpx;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+
+.express-icon {
+    font-size: 64rpx;
+    margin-right: 24rpx;
+}
+
+.express-detail {
+    flex: 1;
+}
+
+.express-company {
+    font-size: 32rpx;
+    font-weight: 600;
+    margin-bottom: 12rpx;
+}
+
+.express-no-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12rpx;
+}
+
+.express-no {
+    font-size: 28rpx;
+    opacity: 0.9;
+}
+
+.copy-btn {
+    font-size: 22rpx;
+    padding: 4rpx 16rpx;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 20rpx;
+    margin-left: 16rpx;
+}
+
+.express-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-label {
+    font-size: 26rpx;
+    opacity: 0.8;
+}
+
+.status-value {
+    font-size: 26rpx;
+    font-weight: 500;
+}
+
+.refresh-btn {
+    padding: 16rpx;
+}
+
+.refresh-icon {
+    font-size: 36rpx;
+}
+
+/* 物流轨迹卡片 */
+.trace-card {
+    margin: 24rpx;
+    background: #fff;
+    border-radius: 20rpx;
+    overflow: hidden;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.card-title {
+    font-size: 30rpx;
+    font-weight: 600;
+    color: #333;
+    padding: 28rpx 32rpx;
+    border-bottom: 1rpx solid #f5f5f5;
+}
+
+/* 物流轨迹时间线 */
+.trace-timeline {
+    padding: 24rpx 32rpx;
+}
+
+.trace-item {
+    display: flex;
+    position: relative;
+    padding-bottom: 32rpx;
+    padding-left: 40rpx;
+}
+
+.trace-item:last-child {
+    padding-bottom: 0;
+}
+
+.trace-dot {
+    position: absolute;
+    left: 0;
+    top: 8rpx;
+    width: 20rpx;
+    height: 20rpx;
+    background: #ddd;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.trace-item.current .trace-dot {
+    width: 24rpx;
+    height: 24rpx;
+    top: 6rpx;
+    left: -2rpx;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 0 0 6rpx rgba(102, 126, 234, 0.2);
+}
+
+.trace-line {
+    position: absolute;
+    left: 9rpx;
+    top: 28rpx;
+    width: 2rpx;
+    height: calc(100% - 28rpx);
+    background: #e0e0e0;
+}
+
+.trace-item.current .trace-line {
+    background: linear-gradient(180deg, #667eea 0%, #e0e0e0 100%);
+}
+
+.trace-content {
+    flex: 1;
+}
+
+.trace-time {
+    font-size: 24rpx;
+    color: #999;
+    display: block;
+    margin-bottom: 8rpx;
+}
+
+.trace-item.current .trace-time {
+    color: #667eea;
+}
+
+.trace-desc {
+    font-size: 28rpx;
+    color: #333;
+    line-height: 1.5;
+    display: block;
+}
+
+.trace-item.current .trace-desc {
+    color: #333;
+    font-weight: 500;
+}
+
+.trace-location {
+    font-size: 24rpx;
+    color: #999;
+    display: block;
+    margin-top: 8rpx;
+}
+
+/* 空状态 */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 120rpx 40rpx;
+}
+
+.empty-icon {
+    font-size: 120rpx;
+    margin-bottom: 32rpx;
+}
+
+.empty-text {
+    font-size: 32rpx;
+    color: #333;
+    margin-bottom: 16rpx;
+}
+
+.empty-hint {
+    font-size: 26rpx;
+    color: #999;
+}

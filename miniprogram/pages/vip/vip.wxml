@@ -1,0 +1,113 @@
+<!-- pages/vip/vip.wxml - 会员中心（高端设计） -->
+<view class="page-vip">
+  <!-- 顶部渐变背景 -->
+  <view class="header-bg">
+    <view class="header-pattern"></view>
+  </view>
+
+  <!-- 会员卡片 -->
+  <view class="member-card">
+    <view class="card-inner">
+      <!-- 当前会员信息 -->
+      <view class="member-info">
+        <view class="avatar-wrap">
+          <image class="avatar" src="{{userInfo.avatar || '/assets/default_avatar.png'}}" mode="aspectFill"></image>
+          <view class="crown-icon" wx:if="{{isMemberValid}}">👑</view>
+        </view>
+        <view class="info-content">
+          <text class="nickname">{{userInfo.nickname || userInfo.phone || '会员用户'}}</text>
+          <view class="level-tag {{memberLevel}}">
+            <text>{{memberLevelName}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 会员权益状态 -->
+      <view class="member-status">
+        <view class="status-item" wx:if="{{isMemberValid}}">
+          <text class="status-label">有效期至</text>
+          <text class="status-value">{{expireDate}}</text>
+        </view>
+        <view class="status-item" wx:if="{{isMemberValid}}">
+          <text class="status-label">专享折扣</text>
+          <text class="status-value highlight">{{discountRate}}</text>
+        </view>
+        <view class="status-item full" wx:else>
+          <text class="status-tip">开通会员，享受专属折扣优惠</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 会员权益说明 -->
+  <view class="benefits-section">
+    <view class="section-title">
+      <text class="title-icon">✨</text>
+      <text>会员专属权益</text>
+    </view>
+    <view class="benefits-grid">
+      <view class="benefit-item">
+        <view class="benefit-icon">💰</view>
+        <text class="benefit-name">全场折扣</text>
+        <text class="benefit-desc">至高85折</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 套餐选择 -->
+  <view class="plans-section">
+    <view class="section-title">
+      <text class="title-icon">🎫</text>
+      <text>选择会员套餐</text>
+    </view>
+    
+    <!-- 套餐卡片 -->
+    <view class="plans-list">
+      <view class="plan-card {{selectedPlanId === item.id ? 'selected' : ''}} {{item.level}}"
+            wx:for="{{plans}}" wx:key="id"
+            bindtap="selectPlan" data-id="{{item.id}}">
+        <view class="plan-badge" wx:if="{{item.isHot}}">推荐</view>
+        <view class="plan-header">
+          <text class="plan-name">{{item.name}}</text>
+          <text class="plan-level">{{item.level_display}}</text>
+        </view>
+        <view class="plan-price">
+          <text class="price-symbol">¥</text>
+          <text class="price-value">{{item.price}}</text>
+          <text class="price-original" wx:if="{{item.original_price > item.price}}">¥{{item.original_price}}</text>
+        </view>
+        <view class="plan-info">
+          <text class="plan-duration">{{item.duration_days}}天有效</text>
+          <text class="plan-discount">{{item.discount_display}}</text>
+        </view>
+        <view class="plan-check" wx:if="{{selectedPlanId === item.id}}">✓</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部购买按钮 -->
+  <view class="footer-action">
+    <view class="price-summary">
+      <text class="summary-label">应付：</text>
+      <text class="summary-price">¥{{selectedPrice}}</text>
+    </view>
+    <button class="buy-btn {{!selectedPlanId ? 'disabled' : ''}}" bindtap="buyMembership">
+      立即开通
+    </button>
+  </view>
+
+  <!-- 安全提示 -->
+  <view class="safe-tips">
+    <text>🔒 安全支付 · 随时续费 · 客服保障</text>
+  </view>
+
+  <!-- 支付弹窗 -->
+  <pay-modal
+    visible="{{showPayModal}}"
+    orderId="{{currentOrderId}}"
+    amount="{{selectedPrice}}"
+    balance="{{userBalance}}"
+    bind:success="onPaySuccess"
+    bind:close="onPayClose"
+  />
+</view>

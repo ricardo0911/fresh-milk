@@ -1,17 +1,22 @@
 <!-- pages/address/address.wxml - 收货地址 -->
 <view class="page-address">
+  <!-- 选择模式提示 -->
+  <view class="select-tip" wx:if="{{selectMode}}">
+    <text>请选择收货地址</text>
+  </view>
+
   <!-- 地址列表 -->
   <view class="address-list" wx:if="{{addresses.length > 0}}">
-    <view class="address-card {{item.is_default ? 'default' : ''}}" wx:for="{{addresses}}" wx:key="id">
-      <view class="address-main" bindtap="selectAddress" data-address="{{item}}">
+    <view class="address-card {{item.is_default ? 'default' : ''}} {{selectMode ? 'selectable' : ''}}" wx:for="{{addresses}}" wx:key="id" bindtap="{{selectMode ? 'selectAddress' : ''}}" data-address="{{item}}">
+      <view class="address-main">
         <view class="address-header">
-          <text class="address-name">{{item.name}}</text>
-          <text class="address-phone">{{item.phone}}</text>
+          <text class="address-name">{{item.receiver_name}}</text>
+          <text class="address-phone">{{item.receiver_phone}}</text>
           <text class="default-tag" wx:if="{{item.is_default}}">默认</text>
         </view>
-        <text class="address-detail">{{item.province}}{{item.city}}{{item.district}}{{item.address}}</text>
+        <text class="address-detail">{{item.province}}{{item.city}}{{item.district}}{{item.detail}}</text>
       </view>
-      <view class="address-actions">
+      <view class="address-actions" wx:if="{{!selectMode}}">
         <view class="action-item" catchtap="setDefault" data-id="{{item.id}}" wx:if="{{!item.is_default}}">
           <text class="action-icon">⭐</text>
           <text>设为默认</text>
@@ -24,6 +29,11 @@
           <text class="action-icon">🗑️</text>
           <text>删除</text>
         </view>
+      </view>
+      <!-- 选择模式下显示选择指示 -->
+      <view class="select-indicator" wx:if="{{selectMode}}">
+        <text class="select-text">点击选择</text>
+        <text class="select-arrow">></text>
       </view>
     </view>
   </view>

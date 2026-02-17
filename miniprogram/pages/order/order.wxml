@@ -4,10 +4,10 @@
   <view class="address-section card" bindtap="selectAddress">
     <view wx:if="{{address}}">
       <view class="address-info">
-        <text class="address-name">{{address.name}}</text>
-        <text class="address-phone">{{address.phone}}</text>
+        <text class="address-name">{{address.receiver_name}}</text>
+        <text class="address-phone">{{address.receiver_phone}}</text>
       </view>
-      <text class="address-detail">{{address.province}}{{address.city}}{{address.district}}{{address.address}}</text>
+      <text class="address-detail">{{address.province}}{{address.city}}{{address.district}}{{address.detail}}</text>
     </view>
     <view wx:else class="address-empty">
       <text class="address-icon">📍</text>
@@ -78,3 +78,14 @@
     <button class="submit-btn" bindtap="submitOrder">提交订单</button>
   </view>
 </view>
+
+<!-- 支付弹窗 -->
+<pay-modal
+  visible="{{showPayModal}}"
+  amount="{{totalAmount}}"
+  title="确认支付"
+  orderId="{{currentOrderId}}"
+  balance="{{userBalance}}"
+  bind:success="onPaySuccess"
+  bind:close="onPayClose"
+/>

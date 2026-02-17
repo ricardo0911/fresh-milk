@@ -15,7 +15,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.filter(is_approved=True)
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve', 'create']:
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
 
@@ -32,7 +32,25 @@ class CommentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        if self.request.user.is_authenticated:
+            serializer.save(user=self.request.user)
+        else:
+            # 对于匿名用户，需要在序列化器中处理
+            serializer.save()
+
+    @action(detail=False, methods=['get'])
+    def my(self, request):
+        """获取当前用户的评价列表"""
+        if not request.user.is_authenticated:
+            return Response({'detail': '请先登录'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        queryset = Comment.objects.filter(user=request.user).order_by('-created_at')
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = CommentSerializer(page, many=True, context={'request': request})
+            return self.get_paginated_response(serializer.data)
+        serializer = CommentSerializer(queryset, many=True, context={'request': request})
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
@@ -57,16 +75,55 @@ class AdminCommentViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
-        queryset = Comment.objects.all()
-        is_approved = self.request.query_params.get('is_approved')
-        product_id = self.request.query_params.get('product_id')
+        from django.db.models import Q
+        queryset = Comment.objects.select_related('user', 'product', 'order').all()
         
+        # 审核状态筛选
+        is_approved = self.request.query_params.get('is_approved')
         if is_approved is not None:
             queryset = queryset.filter(is_approved=is_approved == 'true')
+        
+        # 产品筛选
+        product_id = self.request.query_params.get('product_id')
         if product_id:
             queryset = queryset.filter(product_id=product_id)
         
-        return queryset
+        # 搜索（产品名或用户名）
+        search = self.request.query_params.get('search')
+        if search:
+            queryset = queryset.filter(
+                Q(product__name__icontains=search) | 
+                Q(user__username__icontains=search) |
+                Q(user__nickname__icontains=search) |
+                Q(content__icontains=search)
+            )
+        
+        # 评分筛选
+        rating = self.request.query_params.get('rating')
+        if rating:
+            queryset = queryset.filter(rating=int(rating))
+        
+        rating_min = self.request.query_params.get('rating_min')
+        if rating_min:
+            queryset = queryset.filter(rating__gte=int(rating_min))
+        
+        rating_max = self.request.query_params.get('rating_max')
+        if rating_max:
+            queryset = queryset.filter(rating__lte=int(rating_max))
+        
+        # 是否有回复
+        has_reply = self.request.query_params.get('has_reply')
+        if has_reply == 'true':
+            queryset = queryset.exclude(reply__isnull=True).exclude(reply='')
+        elif has_reply == 'false':
+            queryset = queryset.filter(Q(reply__isnull=True) | Q(reply=''))
+        
+        # 是否有图片
+        has_images = self.request.query_params.get('has_images')
+        if has_images == 'true':
+            queryset = queryset.exclude(images=[]).exclude(images__isnull=True)
+        
+        return queryset.order_by('-created_at')
 
     @action(detail=True, methods=['post'])
     def approve(self, request, pk=None):

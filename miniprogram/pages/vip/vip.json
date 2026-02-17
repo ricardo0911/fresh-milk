@@ -1,0 +1,7 @@
+{
+    "navigationBarTitleText": "会员中心",
+    "navigationBarBackgroundColor": "#1a2a5e",
+    "usingComponents": {
+        "pay-modal": "/components/pay-modal/pay-modal"
+    }
+}

@@ -1,0 +1,85 @@
+<view class="search-page">
+  <view class="search-header">
+    <view class="search-box">
+      <image class="search-icon" src="/assets/icons/search.png" mode="aspectFit"></image>
+      <input
+        class="search-input"
+        placeholder="搜索商品"
+        value="{{keyword}}"
+        bindinput="onInput"
+        bindconfirm="onSearch"
+        focus="{{true}}"
+      />
+      <image
+        wx:if="{{keyword}}"
+        class="clear-icon"
+        src="/assets/icons/close.png"
+        mode="aspectFit"
+        bindtap="clearKeyword"
+      ></image>
+    </view>
+    <text class="cancel-btn" bindtap="goBack">取消</text>
+  </view>
+
+  <view class="history-section" wx:if="{{!keyword && historyList.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">搜索历史</text>
+      <text class="clear-text" bindtap="clearHistory">清空</text>
+    </view>
+    <view class="tag-list">
+      <view
+        class="tag-item"
+        wx:for="{{historyList}}"
+        wx:key="index"
+        bindtap="searchByTag"
+        data-keyword="{{item}}"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <view class="hot-section" wx:if="{{!keyword}}">
+    <view class="section-header">
+      <text class="section-title">热门搜索</text>
+    </view>
+    <view class="tag-list">
+      <view
+        class="tag-item"
+        wx:for="{{hotList}}"
+        wx:key="index"
+        bindtap="searchByTag"
+        data-keyword="{{item}}"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <view class="result-section" wx:if="{{keyword && searched}}">
+    <view class="result-header" wx:if="{{productList.length > 0}}">
+      <text>找到 {{productList.length}} 个商品</text>
+    </view>
+
+    <view class="product-list" wx:if="{{productList.length > 0}}">
+      <view
+        class="product-item"
+        wx:for="{{productList}}"
+        wx:key="id"
+        bindtap="goToProduct"
+        data-id="{{item.id}}"
+      >
+        <image class="product-image" src="{{item.cover_image}}" mode="aspectFill"></image>
+        <view class="product-info">
+          <text class="product-name">{{item.name}}</text>
+          <text class="product-desc">{{item.subtitle || item.specification}}</text>
+          <view class="product-bottom">
+            <text class="product-price">¥{{item.price}}</text>
+            <text class="product-unit" wx:if="{{item.specification}}">/{{item.specification}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty-result" wx:if="{{productList.length === 0}}">
+      <image class="empty-icon" src="/assets/icons/empty.png" mode="aspectFit"></image>
+      <text class="empty-text">未找到相关商品</text>
+    </view>
+  </view>
+</view>

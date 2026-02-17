@@ -77,7 +77,8 @@
 .address-card,
 .products-card,
 .subscription-card,
-.order-info-card {
+.order-info-card,
+.express-card {
     background: #fff;
     margin: 24rpx;
     border-radius: 20rpx;
@@ -479,6 +480,58 @@
     padding: 4rpx 16rpx;
     border: 1rpx solid #667eea;
     border-radius: 20rpx;
+}
+
+/* 物流信息卡片 */
+.express-card {
+    cursor: pointer;
+}
+
+.express-info {
+    padding: 24rpx 32rpx;
+}
+
+.express-company {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16rpx;
+}
+
+.express-icon {
+    font-size: 32rpx;
+    margin-right: 12rpx;
+}
+
+.express-name {
+    font-size: 28rpx;
+    color: #333;
+    font-weight: 500;
+    margin-right: 16rpx;
+}
+
+.express-no {
+    font-size: 26rpx;
+    color: #666;
+    flex: 1;
+}
+
+.express-latest {
+    background: #f8f8f8;
+    padding: 20rpx;
+    border-radius: 12rpx;
+}
+
+.trace-time {
+    font-size: 24rpx;
+    color: #999;
+    display: block;
+    margin-bottom: 8rpx;
+}
+
+.trace-desc {
+    font-size: 26rpx;
+    color: #333;
+    line-height: 1.5;
 }
 
 /* 底部操作栏 */

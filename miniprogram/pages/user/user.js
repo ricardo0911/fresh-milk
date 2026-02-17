@@ -1,5 +1,6 @@
 // pages/user/user.js - 高端定制版逻辑
 const app = getApp();
+const { api } = require('../../utils/api');
 
 Page({
     data: {
@@ -12,6 +13,8 @@ Page({
         memberLevel: '',
         memberLevelName: '',
         discountRate: '',
+        isMemberValid: false,
+        memberExpireDate: '',
         // 订单角标数据
         pendingCount: 0,
         paidCount: 0,
@@ -26,7 +29,16 @@ Page({
     },
 
     loadUserInfo() {
-        const userInfo = app.globalData.userInfo || wx.getStorageSync('userInfo');
+        let userInfo = app.globalData.userInfo || wx.getStorageSync('userInfo');
+
+        // 如果是字符串（可能是旧版本残留），尝试转成对象或包装成对象
+        if (typeof userInfo === 'string') {
+            try {
+                userInfo = JSON.parse(userInfo);
+            } catch (e) {
+                userInfo = { username: userInfo };
+            }
+        }
 
         // 计算会员等级显示
         const levelMap = {
@@ -39,20 +51,37 @@ Page({
         const level = userInfo?.member_level || 'regular';
         const levelInfo = levelMap[level] || levelMap['regular'];
 
+        // 计算会员有效期
+        let isMemberValid = false;
+        let memberExpireDate = '';
+        if (userInfo?.member_expire_at && level !== 'regular') {
+            const expire = new Date(userInfo.member_expire_at);
+            isMemberValid = expire > new Date();
+            memberExpireDate = expire.toLocaleDateString('zh-CN');
+        }
+
         this.setData({
             userInfo,
             memberLevel: level,
             memberLevelName: levelInfo.name,
-            discountRate: levelInfo.discount
+            discountRate: isMemberValid ? levelInfo.discount : '100%',
+            isMemberValid,
+            memberExpireDate,
+            points: userInfo?.points || 0
         });
     },
 
     loadUserStats() {
-        // 模拟会员数据 (后续接API)
-        this.setData({
-            points: 1280,
-            couponCount: 5,
-            balance: '88.00'
+        const token = wx.getStorageSync('token');
+        if (!token) return;
+
+        api.getUserStats().then(res => {
+            this.setData({
+                points: res.points || 0,
+                couponCount: res.coupon_count || 0
+            });
+        }).catch(err => {
+            console.error('获取用户统计失败:', err);
         });
     },
 
@@ -72,8 +101,7 @@ Page({
     },
 
     goToProfile() {
-        // 个人资料页 (暂未实现，可提示)
-        wx.showToast({ title: '个人资料', icon: 'none' });
+        wx.navigateTo({ url: '/pages/user-edit/user-edit' });
     },
 
     goToOrders(e) {
@@ -89,23 +117,36 @@ Page({
         wx.navigateTo({ url: '/pages/subscription/subscription' });
     },
 
+    goToVip() {
+        wx.navigateTo({ url: '/pages/vip/vip' });
+    },
+
     goToAddress() {
         wx.navigateTo({ url: '/pages/address/address' });
     },
 
     goToFavorites() {
-        // wx.navigateTo({ url: '/pages/favorites/favorites' });
-        wx.showToast({ title: '收藏功能开发中', icon: 'none' });
+        wx.navigateTo({ url: '/pages/favorites/favorites' });
+    },
+
+    goToCoupon() {
+        wx.navigateTo({ url: '/pages/coupon/coupon' });
+    },
+
+    goToPoints() {
+        wx.navigateTo({ url: '/pages/points/points' });
     },
 
     goToFeedback() {
-        // wx.navigateTo({ url: '/pages/feedback/feedback' });
-        wx.showToast({ title: '意见反馈功能开发中', icon: 'none' });
+        wx.navigateTo({ url: '/pages/feedback-list/feedback-list' });
+    },
+
+    goToMyReviews() {
+        wx.navigateTo({ url: '/pages/my-reviews/my-reviews' });
     },
 
     goToSettings() {
-        // wx.navigateTo({ url: '/pages/settings/settings' });
-        wx.showToast({ title: '设置功能开发中', icon: 'none' });
+        wx.navigateTo({ url: '/pages/settings/settings' });
     },
 
     callService() {

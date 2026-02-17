@@ -52,51 +52,6 @@
                     />
                     <text class="char-count">{{item.content.length}}/500</text>
                 </view>
-
-                <!-- 图片上传 -->
-                <view class="image-section">
-                    <view class="image-list">
-                        <view 
-                            wx:for="{{item.images}}" 
-                            wx:for-item="img" 
-                            wx:for-index="imgIndex"
-                            wx:key="imgIndex"
-                            class="image-item"
-                        >
-                            <image 
-                                src="{{img}}" 
-                                mode="aspectFill"
-                                data-index="{{index}}"
-                                data-img-index="{{imgIndex}}"
-                                bindtap="previewImage"
-                            />
-                            <view 
-                                class="delete-btn"
-                                data-index="{{index}}"
-                                data-img-index="{{imgIndex}}"
-                                bindtap="deleteImage"
-                            >×</view>
-                        </view>
-                        <view 
-                            wx:if="{{item.images.length < 9}}"
-                            class="upload-btn"
-                            data-index="{{index}}"
-                            bindtap="chooseImage"
-                        >
-                            <text class="upload-icon">📷</text>
-                            <text class="upload-text">添加图片</text>
-                        </view>
-                    </view>
-                    <text class="image-tip">最多可上传9张图片</text>
-                </view>
-
-                <!-- 匿名评价 -->
-                <view class="anonymous-section" data-index="{{index}}" bindtap="toggleAnonymous">
-                    <view class="checkbox {{item.is_anonymous ? 'checked' : ''}}">
-                        <text wx:if="{{item.is_anonymous}}">✓</text>
-                    </view>
-                    <text class="anonymous-label">匿名评价</text>
-                </view>
             </view>
         </block>
     </view>

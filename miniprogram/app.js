@@ -49,7 +49,7 @@ App({
         const count = cart.reduce((sum, item) => sum + item.quantity, 0);
         this.globalData.cartCount = count;
 
-        const TAB_BAR_CART_INDEX = 3; // 首页:0, 分类:1, 会员:2, 购物车:3, 个人:4
+        const TAB_BAR_CART_INDEX = 2; // 首页:0, 商品:1, 购物车:2, 个人中心:3
         if (count > 0) {
             wx.setTabBarBadge({
                 index: TAB_BAR_CART_INDEX,

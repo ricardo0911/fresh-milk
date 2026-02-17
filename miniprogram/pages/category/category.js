@@ -1,20 +1,10 @@
 // pages/category/category.js
 const app = getApp();
+const { api } = require('../../utils/api');
 
 Page({
     data: {
-        categories: [
-            { id: 0, icon: '🥛', name: '全部' },
-            { id: 1, icon: '🥛', name: '鲜牛奶' },
-            { id: 2, icon: '🍶', name: '酸奶' },
-            { id: 3, icon: '🧀', name: '奶酪' },
-            { id: 4, icon: '🌿', name: '有机奶' },
-            { id: 5, icon: '👶', name: '儿童奶' },
-            { id: 6, icon: '🎁', name: '心意臻选' },   // 送礼场景
-            { id: 7, icon: '💪', name: '元气早餐' },   // 早餐搭配
-            { id: 8, icon: '🌙', name: '晚安时光' },   // 助眠/晚间
-            { id: 9, icon: '👨‍👩‍👧', name: '阖家欢享' }    // 家庭装
-        ],
+        categories: [],
         currentCategory: 0,
         sortBy: 'default',
         products: [],
@@ -25,6 +15,7 @@ Page({
         if (options.id) {
             this.setData({ currentCategory: parseInt(options.id) });
         }
+        this.loadCategories();
         this.loadProducts();
     },
 
@@ -32,51 +23,69 @@ Page({
         app.updateCartBadge();
     },
 
-    loadProducts() {
-        // 模拟数据 - 增加场景分类
-        const mockProducts = [
-            // 鲜牛奶
-            { id: 1, name: '每日鲜牛奶', specification: '250ml×10瓶', price: '39.90', original_price: '49.90', cover_image: '/assets/products/fresh_milk.jpg', category: 1, is_hot: true, sales: 1520 },
-            { id: 3, name: '低脂鲜牛奶', specification: '500ml×8瓶', price: '56.80', cover_image: '/assets/products/fresh_milk.jpg', category: 1, sales: 856 },
+    async loadCategories() {
+        try {
+            const res = await api.getCategories();
+            const apiCategories = (res.results || res || []).map(c => ({
+                id: c.id,
+                icon: c.icon || '🥛',
+                name: c.name
+            }));
+            // 添加"全部"选项
+            const categories = [{ id: 0, icon: '🥛', name: '全部' }, ...apiCategories];
+            this.setData({ categories });
+        } catch (err) {
+            console.error('加载分类失败:', err);
+            // 使用默认分类
+            this.setData({
+                categories: [
+                    { id: 0, icon: '🥛', name: '全部' },
+                    { id: 1, icon: '🥛', name: '鲜牛奶' },
+                    { id: 2, icon: '🍶', name: '酸奶' },
+                    { id: 3, icon: '🧀', name: '奶酪' },
+                    { id: 4, icon: '🌿', name: '有机奶' },
+                    { id: 5, icon: '👶', name: '儿童奶' }
+                ]
+            });
+        }
+    },
 
-            // 酸奶
-            { id: 5, name: '草莓酸奶', specification: '100g×12杯', price: '38.00', cover_image: '/assets/products/strawberry_yogurt.jpg', category: 2, is_new: true, sales: 620 },
-            { id: 6, name: '希腊酸奶', specification: '400g×4盒', price: '59.00', cover_image: '/assets/products/strawberry_yogurt.jpg', category: 2, sales: 380 },
-
-            // 奶酪
-            { id: 7, name: '马苏里拉奶酪', specification: '200g×3袋', price: '48.00', cover_image: '/assets/products/organic_milk.jpg', category: 3, sales: 280 },
-
-            // 有机奶
-            { id: 2, name: '有机纯牛奶', specification: '1L×6盒', price: '89.00', original_price: '108.00', cover_image: '/assets/products/organic_milk.jpg', category: 4, is_hot: true, is_new: true, sales: 980 },
-
-            // 儿童奶
-            { id: 4, name: '儿童成长奶', specification: '200ml×12瓶', price: '68.00', cover_image: '/assets/products/children_milk.jpg', category: 5, is_new: true, sales: 720 },
-            { id: 11, name: '宝贝DHA牛奶', specification: '190ml×15瓶', price: '88.00', cover_image: '/assets/products/children_milk.jpg', category: 5, sales: 560 },
-
-            // 心意臻选 (送礼)
-            { id: 12, name: '沙漠有机礼盒', specification: '250ml×12盒', price: '168.00', original_price: '198.00', cover_image: '/assets/products/organic_milk.jpg', category: 6, is_hot: true, sales: 890 },
-            { id: 13, name: '臻享金装礼遇', specification: '1L×8盒', price: '238.00', cover_image: '/assets/products/organic_milk.jpg', category: 6, sales: 450 },
-            { id: 14, name: '新春限定礼盒', specification: '250ml×20盒', price: '288.00', cover_image: '/assets/products/fresh_milk.jpg', category: 6, is_new: true, sales: 320 },
-
-            // 元气早餐
-            { id: 15, name: '早安蛋白奶', specification: '250ml×10瓶', price: '49.90', cover_image: '/assets/products/fresh_milk.jpg', category: 7, is_hot: true, sales: 1200 },
-            { id: 16, name: '谷物燕麦奶', specification: '200ml×12盒', price: '58.00', cover_image: '/assets/products/organic_milk.jpg', category: 7, sales: 780 },
-
-            // 晚安时光
-            { id: 17, name: '舒眠热牛奶', specification: '200ml×10瓶', price: '45.00', cover_image: '/assets/products/fresh_milk.jpg', category: 8, sales: 650 },
-            { id: 18, name: '晚安香蕉奶', specification: '200ml×8瓶', price: '42.00', cover_image: '/assets/products/strawberry_yogurt.jpg', category: 8, is_new: true, sales: 420 },
-
-            // 阖家欢享 (家庭装)
-            { id: 19, name: '家庭畅饮装', specification: '1L×12盒', price: '129.00', original_price: '158.00', cover_image: '/assets/products/fresh_milk.jpg', category: 9, is_hot: true, sales: 2100 },
-            { id: 20, name: '全家营养套装', specification: '混合×24件', price: '199.00', cover_image: '/assets/products/organic_milk.jpg', category: 9, sales: 980 }
-        ];
-
-        this.setData({ allProducts: mockProducts });
-        this.filterProducts();
+    async loadProducts() {
+        wx.showLoading({ title: '加载中...' });
+        try {
+            const res = await api.getProducts({ page_size: 50 });
+            const products = (res.results || res || []).map(p => ({
+                id: p.id,
+                name: p.name,
+                specification: p.specification,
+                price: p.price,
+                original_price: p.original_price,
+                cover_image: p.cover_image || '/assets/products/fresh_milk.jpg',
+                category: p.category,
+                is_hot: p.is_hot,
+                is_new: p.is_new,
+                sales: p.sales || 0
+            }));
+            this.setData({ allProducts: products });
+            this.filterProducts();
+        } catch (err) {
+            console.error('加载产品失败:', err);
+            // 使用默认数据
+            const defaultProducts = [
+                { id: 1, name: '每日鲜牛奶', specification: '250ml×10瓶', price: '39.90', original_price: '49.90', cover_image: '/assets/products/fresh_milk.jpg', category: 1, is_hot: true, sales: 1520 },
+                { id: 2, name: '有机纯牛奶', specification: '1L×6盒', price: '89.00', original_price: '108.00', cover_image: '/assets/products/organic_milk.jpg', category: 4, is_hot: true, is_new: true, sales: 980 },
+                { id: 3, name: '低脂鲜牛奶', specification: '500ml×8瓶', price: '56.80', cover_image: '/assets/products/fresh_milk.jpg', category: 1, sales: 856 },
+                { id: 4, name: '儿童成长奶', specification: '200ml×12瓶', price: '68.00', cover_image: '/assets/products/children_milk.jpg', category: 5, is_new: true, sales: 720 },
+                { id: 5, name: '草莓酸奶', specification: '100g×12杯', price: '38.00', cover_image: '/assets/products/strawberry_yogurt.jpg', category: 2, is_new: true, sales: 620 }
+            ];
+            this.setData({ allProducts: defaultProducts });
+            this.filterProducts();
+        }
+        wx.hideLoading();
     },
 
     selectCategory(e) {
-        const id = e.currentTarget.dataset.id;
+        const id = parseInt(e.currentTarget.dataset.id) || 0;
         this.setData({ currentCategory: id });
         this.filterProducts();
     },

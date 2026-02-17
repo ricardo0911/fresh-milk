@@ -17,8 +17,12 @@ Page({
 
     loadCart() {
         let cart = wx.getStorageSync('cart') || [];
+        // 过滤掉无效的商品（没有product或product.id的）
+        cart = cart.filter(item => item.product && item.product.id);
         // 添加selected属性
         cart = cart.map(item => ({ ...item, selected: item.selected !== false }));
+        // 保存清理后的购物车
+        wx.setStorageSync('cart', cart);
         this.setData({ cartItems: cart });
         this.updateSummary();
     },
@@ -129,8 +133,27 @@ Page({
         this.setData({ guessProducts });
     },
 
-    goToProducts() {
+    goToProducts(e) {
+        const filter = e.currentTarget.dataset.filter;
+        if (filter === 'recommend') {
+            this.refreshGuessProducts();
+            wx.showToast({ title: '已更新推荐', icon: 'none' });
+            return;
+        }
         wx.switchTab({ url: '/pages/index/index' });
+    },
+
+    refreshGuessProducts() {
+        const allProducts = [
+            { id: 7, name: '特仑苏有机纯牛奶', specification: '250ml×10瓶', price: '78', cover_image: '/assets/products/organic_milk.jpg', fresh_days: 6 },
+            { id: 8, name: '德国进口有机奶', specification: '200ml×12包', price: '55', cover_image: '/assets/products/fresh_milk.jpg', fresh_days: 10 },
+            { id: 9, name: '有机甄选限定上市', specification: '250ml×12盒', price: '66', cover_image: '/assets/products/organic_milk.jpg', fresh_days: 8 },
+            { id: 10, name: '有机营养家庭周货', specification: '250ml×24盒', price: '187', cover_image: '/assets/products/children_milk.jpg', fresh_days: 17 },
+            { id: 11, name: '低脂鲜牛奶', specification: '500ml×8瓶', price: '56.80', cover_image: '/assets/products/fresh_milk.jpg', fresh_days: 7 },
+            { id: 12, name: '儿童成长奶', specification: '200ml×12瓶', price: '68', cover_image: '/assets/products/children_milk.jpg', fresh_days: 15 }
+        ];
+        const shuffled = allProducts.sort(() => Math.random() - 0.5).slice(0, 4);
+        this.setData({ guessProducts: shuffled });
     },
 
     addToCart(e) {

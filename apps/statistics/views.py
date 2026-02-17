@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from django.db.models import Sum, Count, Avg, Q
 from django.db.models.functions import TruncDate
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from apps.users.models import User, UserLog
 from apps.products.models import Product, Category
@@ -20,7 +20,13 @@ class DashboardView(views.APIView):
     permission_classes = [permissions.IsAdminUser]
 
     def get(self, request):
-        today = timezone.now().date()
+        now = timezone.now()
+        # Ensure we have timezone aware datetimes for the range
+        today_start = timezone.localtime(now).replace(hour=0, minute=0, second=0, microsecond=0)
+        today_end = today_start + timedelta(days=1)
+        
+        # Convert back to UTC for database query if necessary, or let Django handle aware datetimes
+        # Using accurate range query is safer than __date
         
         # 基本统计
         total_users = User.objects.filter(is_admin=False).count()
@@ -31,12 +37,18 @@ class DashboardView(views.APIView):
         ).aggregate(total=Sum('pay_amount'))['total'] or 0
         
         # 今日统计
-        today_orders = Order.objects.filter(created_at__date=today).count()
+        today_orders = Order.objects.filter(
+            created_at__range=(today_start, today_end)
+        ).count()
+        
         today_revenue = Order.objects.filter(
-            created_at__date=today,
+            created_at__range=(today_start, today_end),
             status__in=['paid', 'shipped', 'delivered', 'completed']
         ).aggregate(total=Sum('pay_amount'))['total'] or 0
-        today_users = User.objects.filter(date_joined__date=today).count()
+        
+        today_users = User.objects.filter(
+            date_joined__range=(today_start, today_end)
+        ).count()
         
         # 待处理事项
         pending_orders = Order.objects.filter(status='paid').count()
@@ -69,19 +81,55 @@ class SalesStatisticsView(views.APIView):
 
     def get(self, request):
         days = int(request.query_params.get('days', 7))
-        start_date = timezone.now().date() - timedelta(days=days-1)
-        
-        # 每日销售额
-        daily_sales = Order.objects.filter(
-            created_at__date__gte=start_date,
+
+        # 使用本地时间计算日期范围
+        now = timezone.localtime(timezone.now())
+        today = now.date()
+        start_date = today - timedelta(days=days-1)
+
+        # 转换为时间范围
+        start_datetime = timezone.make_aware(
+            datetime.combine(start_date, datetime.min.time()),
+            timezone.get_current_timezone()
+        )
+        end_datetime = timezone.make_aware(
+            datetime.combine(today, datetime.max.time()),
+            timezone.get_current_timezone()
+        )
+
+        # 每日销售额 - 使用时间范围查询
+        valid_orders = Order.objects.filter(
+            created_at__gte=start_datetime,
+            created_at__lte=end_datetime,
             status__in=['paid', 'shipped', 'delivered', 'completed']
-        ).annotate(
-            date=TruncDate('created_at')
-        ).values('date').annotate(
-            revenue=Sum('pay_amount'),
-            count=Count('id')
-        ).order_by('date')
-        
+        )
+
+        # 按日期分组统计
+        sales_dict = {}
+        for order in valid_orders:
+            order_date = timezone.localtime(order.created_at).date()
+            if order_date not in sales_dict:
+                sales_dict[order_date] = {'revenue': 0, 'count': 0}
+            sales_dict[order_date]['revenue'] += float(order.pay_amount or 0)
+            sales_dict[order_date]['count'] += 1
+
+        # 生成完整的日期范围数据
+        daily_sales = []
+        for i in range(days):
+            date = start_date + timedelta(days=i)
+            if date in sales_dict:
+                daily_sales.append({
+                    'date': date.strftime('%m-%d'),
+                    'revenue': sales_dict[date]['revenue'],
+                    'count': sales_dict[date]['count']
+                })
+            else:
+                daily_sales.append({
+                    'date': date.strftime('%m-%d'),
+                    'revenue': 0,
+                    'count': 0
+                })
+
         # 分类销售占比
         category_sales = OrderItem.objects.filter(
             order__status__in=['paid', 'shipped', 'delivered', 'completed'],
@@ -92,9 +140,9 @@ class SalesStatisticsView(views.APIView):
             total=Sum('total_price'),
             count=Count('id')
         ).order_by('-total')[:10]
-        
+
         return Response({
-            'daily_sales': list(daily_sales),
+            'daily_sales': daily_sales,
             'category_sales': list(category_sales),
         })
 
@@ -142,27 +190,59 @@ class UserStatisticsView(views.APIView):
 
     def get(self, request):
         days = int(request.query_params.get('days', 7))
-        start_date = timezone.now().date() - timedelta(days=days-1)
+        now = timezone.localtime(timezone.now())
+        today = now.date()
+        start_date = today - timedelta(days=days-1)
         
-        # 每日新增用户
-        daily_users = User.objects.filter(
-            date_joined__date__gte=start_date,
+        start_dt = timezone.make_aware(datetime.combine(start_date, datetime.min.time()))
+
+        # 1. 每日新增用户
+        new_users_qs = User.objects.filter(
+            date_joined__gte=start_dt,
             is_admin=False
-        ).annotate(
-            date=TruncDate('date_joined')
-        ).values('date').annotate(
-            count=Count('id')
-        ).order_by('date')
+        ).values('date_joined')
         
-        # 每日登录用户(UV)
-        daily_logins = UserLog.objects.filter(
-            created_at__date__gte=start_date,
+        daily_new_users = {}
+        for u in new_users_qs:
+            local_dt = timezone.localtime(u['date_joined'])
+            date_str = local_dt.strftime('%Y-%m-%d')
+            daily_new_users[date_str] = daily_new_users.get(date_str, 0) + 1
+
+        # 2. 每日登录用户
+        logins_qs = UserLog.objects.filter(
+            created_at__gte=start_dt,
             action='login'
-        ).annotate(
-            date=TruncDate('created_at')
-        ).values('date').annotate(
-            count=Count('user', distinct=True)
-        ).order_by('date')
+        ).values('created_at', 'user_id')
+        
+        daily_logins = {}
+        seen_logins = set()
+        
+        for log in logins_qs:
+            local_dt = timezone.localtime(log['created_at'])
+            date_str = local_dt.strftime('%Y-%m-%d')
+            key = (date_str, log['user_id'])
+            
+            if key not in seen_logins:
+                seen_logins.add(key)
+                daily_logins[date_str] = daily_logins.get(date_str, 0) + 1
+
+        # 3. 组装结果
+        result_daily_users = []
+        result_daily_logins = []
+        
+        for i in range(days):
+            current_date = start_date + timedelta(days=i)
+            date_key = current_date.strftime('%Y-%m-%d')
+            
+            result_daily_users.append({
+                'date': date_key,
+                'count': daily_new_users.get(date_key, 0)
+            })
+            
+            result_daily_logins.append({
+                'date': date_key,
+                'count': daily_logins.get(date_key, 0)
+            })
         
         # 用户订购行为
         user_orders = Order.objects.filter(
@@ -173,7 +253,7 @@ class UserStatisticsView(views.APIView):
         ).order_by('-total_spent')[:10]
         
         return Response({
-            'daily_users': list(daily_users),
-            'daily_logins': list(daily_logins),
+            'daily_users': result_daily_users,
+            'daily_logins': result_daily_logins,
             'top_buyers': list(user_orders),
         })

@@ -30,127 +30,96 @@ Page({
     async loadSubscriptionDetail() {
         wx.showLoading({ title: '加载中...' });
         try {
-            // 模拟订阅详情数据
-            const mockSubscription = {
-                id: this.data.subscriptionId,
-                subscription_no: 'SUB202401001',
-                status: 'active',
-                status_display: '配送中',
-
-                // 商品信息
+            const res = await api.getSubscription(this.data.subscriptionId);
+            const subscription = {
+                id: res.id,
+                subscription_no: res.subscription_no,
+                status: res.status,
+                status_display: res.status_display || this.getStatusDisplay(res.status),
                 product: {
-                    id: 1,
-                    name: '每日鲜牛奶',
-                    specification: '250ml×1瓶',
-                    price: '3.99',
-                    subscription_price: '3.59',
-                    cover_image: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&q=80'
+                    id: res.product?.id || res.product_id,
+                    name: res.product?.name || res.product_name,
+                    specification: res.product?.specification,
+                    price: res.product?.price,
+                    subscription_price: res.product?.subscription_price || res.period_price,
+                    cover_image: res.product?.cover_image || '/assets/products/fresh_milk.jpg'
                 },
-                quantity: 1,
-
-                // 配送信息
-                frequency: 'weekly',
-                frequency_display: '每周一次',
-                delivery_day: '周一',
-                delivery_time: '08:00-10:00',
-
-                // 周期进度
-                total_periods: 12,
-                delivered_count: 3,
-                remaining_count: 9,
-
-                // 价格信息
-                period_price: '3.59',
-                total_price: '43.08',
-                paid_amount: '10.77',
-
-                // 地址
-                receiver_name: '张三',
-                receiver_phone: '138****8888',
-                receiver_address: '浙江省杭州市西湖区文三路999号',
-
-                // 时间
-                start_date: '2024-01-01',
-                next_delivery_date: '2024-01-22',
-                end_date: '2024-03-25',
-                created_at: '2024-01-01 09:30:00'
+                quantity: res.quantity || 1,
+                frequency: res.frequency,
+                frequency_display: res.frequency_display || this.getFrequencyDisplay(res.frequency),
+                delivery_day: res.delivery_day,
+                delivery_time: res.delivery_time,
+                total_periods: res.total_periods,
+                delivered_count: res.delivered_count || 0,
+                remaining_count: res.total_periods - (res.delivered_count || 0),
+                period_price: res.period_price,
+                total_price: res.total_price,
+                paid_amount: res.paid_amount,
+                receiver_name: res.receiver_name || res.address?.name,
+                receiver_phone: res.receiver_phone || res.address?.phone,
+                receiver_address: res.receiver_address || res.address?.full_address,
+                start_date: res.start_date,
+                next_delivery_date: res.next_delivery_date,
+                end_date: res.end_date,
+                created_at: res.created_at
             };
 
-            // 模拟配送记录
-            const mockDeliveryRecords = [
-                {
-                    id: 1,
-                    period: 3,
-                    status: 'delivered',
-                    status_display: '已送达',
-                    delivery_date: '2024-01-15',
-                    delivery_time: '08:35',
-                    delivery_person: {
-                        name: '张师傅',
-                        phone: '13800138000',
-                        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80'
-                    },
-                    signed_by: '本人签收',
-                    is_rated: true,
-                    rating: 5
-                },
-                {
-                    id: 2,
-                    period: 2,
-                    status: 'delivered',
-                    status_display: '已送达',
-                    delivery_date: '2024-01-08',
-                    delivery_time: '08:42',
-                    delivery_person: {
-                        name: '张师傅',
-                        phone: '13800138000',
-                        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80'
-                    },
-                    signed_by: '本人签收',
-                    is_rated: true,
-                    rating: 5
-                },
-                {
-                    id: 3,
-                    period: 1,
-                    status: 'delivered',
-                    status_display: '已送达',
-                    delivery_date: '2024-01-01',
-                    delivery_time: '09:15',
-                    delivery_person: {
-                        name: '李师傅',
-                        phone: '13900139000',
-                        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80'
-                    },
-                    signed_by: '家人代收',
-                    is_rated: false,
-                    rating: 0
-                }
-            ];
+            // 配送记录
+            const deliveryRecords = (res.delivery_records || []).map(r => ({
+                id: r.id,
+                period: r.period,
+                status: r.status,
+                status_display: r.status_display || this.getDeliveryStatusDisplay(r.status),
+                delivery_date: r.delivery_date,
+                delivery_time: r.delivery_time,
+                delivery_person: r.delivery_person ? {
+                    name: r.delivery_person.name,
+                    phone: r.delivery_person.phone,
+                    avatar: r.delivery_person.avatar || '/assets/default_avatar.png'
+                } : null,
+                signed_by: r.signed_by,
+                is_rated: r.is_rated,
+                rating: r.rating
+            }));
 
             // 生成未来配送记录
             const futureRecords = [];
-            for (let i = mockSubscription.delivered_count + 1; i <= mockSubscription.total_periods; i++) {
+            for (let i = subscription.delivered_count + 1; i <= subscription.total_periods; i++) {
                 futureRecords.push({
                     id: 100 + i,
                     period: i,
-                    status: i === mockSubscription.delivered_count + 1 ? 'pending' : 'scheduled',
-                    status_display: i === mockSubscription.delivered_count + 1 ? '待配送' : '计划中',
-                    delivery_date: this.calculateFutureDate(mockSubscription.next_delivery_date, i - mockSubscription.delivered_count - 1, 7),
+                    status: i === subscription.delivered_count + 1 ? 'pending' : 'scheduled',
+                    status_display: i === subscription.delivered_count + 1 ? '待配送' : '计划中',
+                    delivery_date: this.calculateFutureDate(subscription.next_delivery_date, i - subscription.delivered_count - 1, 7),
                     delivery_time: '',
                     delivery_person: null
                 });
             }
 
             this.setData({
-                subscription: mockSubscription,
-                deliveryRecords: [...futureRecords.reverse(), ...mockDeliveryRecords]
+                subscription,
+                deliveryRecords: [...futureRecords.reverse(), ...deliveryRecords]
             });
         } catch (err) {
             console.error('加载订阅详情失败:', err);
             wx.showToast({ title: '加载失败', icon: 'none' });
         }
         wx.hideLoading();
+    },
+
+    getStatusDisplay(status) {
+        const map = { 'active': '配送中', 'paused': '已暂停', 'completed': '已完成', 'cancelled': '已取消' };
+        return map[status] || status;
+    },
+
+    getFrequencyDisplay(frequency) {
+        const map = { 'daily': '每天', 'weekly': '每周一次', 'biweekly': '每两周一次', 'monthly': '每月一次' };
+        return map[frequency] || frequency;
+    },
+
+    getDeliveryStatusDisplay(status) {
+        const map = { 'pending': '待配送', 'delivering': '配送中', 'delivered': '已送达', 'scheduled': '计划中' };
+        return map[status] || status;
     },
 
     calculateFutureDate(startDate, weeksToAdd, daysPerWeek) {
@@ -182,13 +151,13 @@ Page({
                 if (res.confirm) {
                     wx.showLoading({ title: '处理中...' });
                     try {
-                        await new Promise(resolve => setTimeout(resolve, 500));
+                        await api.pauseSubscription(this.data.subscriptionId);
                         wx.hideLoading();
                         wx.showToast({ title: '已暂停', icon: 'success' });
                         this.loadSubscriptionDetail();
                     } catch (err) {
                         wx.hideLoading();
-                        wx.showToast({ title: '操作失败', icon: 'none' });
+                        wx.showToast({ title: err.message || '操作失败', icon: 'none' });
                     }
                 }
             }
@@ -205,13 +174,13 @@ Page({
                 if (res.confirm) {
                     wx.showLoading({ title: '处理中...' });
                     try {
-                        await new Promise(resolve => setTimeout(resolve, 500));
+                        await api.cancelSubscription(this.data.subscriptionId);
                         wx.hideLoading();
                         wx.showToast({ title: '已取消', icon: 'success' });
                         setTimeout(() => wx.navigateBack(), 1500);
                     } catch (err) {
                         wx.hideLoading();
-                        wx.showToast({ title: '操作失败', icon: 'none' });
+                        wx.showToast({ title: err.message || '操作失败', icon: 'none' });
                     }
                 }
             }

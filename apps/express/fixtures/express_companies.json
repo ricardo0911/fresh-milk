@@ -1,0 +1,25 @@
+[
+    {
+        "model": "express.expresscompany",
+        "pk": 1,
+        "fields": {
+            "code": "SF",
+            "name": "顺丰速运",
+            "app_id": "YXO9F7GH",
+            "app_key": "",
+            "app_secret": "m1tuvEcRWwxlMYlHIAWeCz5c6e3QitT5",
+            "customer_code": "",
+            "api_url": "https://sfapi-sbox.sf-express.com/std/service",
+            "is_active": true,
+            "is_default": true,
+            "sender_name": "鲜奶直达",
+            "sender_phone": "13800138000",
+            "sender_province": "广东省",
+            "sender_city": "深圳市",
+            "sender_district": "南山区",
+            "sender_address": "科技园南路88号鲜奶配送中心",
+            "created_at": "2026-01-28T10:00:00Z",
+            "updated_at": "2026-01-28T10:00:00Z"
+        }
+    }
+]

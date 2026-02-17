@@ -23,7 +23,7 @@ class Coupon(models.Model):
     type = models.CharField('券类型', max_length=20, choices=TYPE_CHOICES)
     
     # 优惠值
-    discount_percent = models.IntegerField('折扣(%)', default=0)  # 折扣券用
+    discount_percent = models.DecimalField('折扣', max_digits=3, decimal_places=1, default=0)  # 折扣券用，如9.5折
     discount_amount = models.DecimalField('优惠金额', max_digits=10, decimal_places=2, default=0)  # 满减券用
     min_amount = models.DecimalField('最低消费', max_digits=10, decimal_places=2, default=0)
     max_discount = models.DecimalField('最大优惠', max_digits=10, decimal_places=2, default=0)
@@ -54,7 +54,13 @@ class Coupon(models.Model):
     
     status = models.CharField('状态', max_length=20, choices=STATUS_CHOICES, default='active')
     description = models.TextField('使用说明', blank=True, null=True)
-    
+
+    # 积分兑换
+    points_required = models.IntegerField('所需积分', default=0)  # 0表示不可兑换
+    is_exchangeable = models.BooleanField('可积分兑换', default=False)
+    exchange_limit = models.IntegerField('兑换限量', default=0)  # 0表示不限
+    exchanged_count = models.IntegerField('已兑换数量', default=0)
+
     created_at = models.DateTimeField('创建时间', auto_now_add=True)
     updated_at = models.DateTimeField('更新时间', auto_now=True)
 

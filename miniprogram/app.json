@@ -1,6 +1,7 @@
 {
     "pages": [
         "pages/index/index",
+        "pages/search/search",
         "pages/category/category",
         "pages/cart/cart",
         "pages/user/user",
@@ -17,7 +18,21 @@
         "pages/review/review",
         "pages/aftersale/aftersale",
         "pages/refund/refund",
-        "pages/login/login"
+        "pages/login/login",
+        "pages/register/register",
+        "pages/forgot-password/forgot-password",
+        "pages/favorites/favorites",
+        "pages/user-edit/user-edit",
+        "pages/change-password/change-password",
+        "pages/publish/publish",
+        "pages/settings/settings",
+        "pages/feedback/feedback",
+        "pages/feedback-list/feedback-list",
+        "pages/feedback-detail/feedback-detail",
+        "pages/my-reviews/my-reviews",
+        "pages/express-trace/express-trace",
+        "pages/points/points",
+        "pages/vip/vip"
     ],
     "window": {
         "navigationBarBackgroundColor": "#10b981",
@@ -43,12 +58,6 @@
                 "text": "商品",
                 "iconPath": "assets/icons/category.png",
                 "selectedIconPath": "assets/icons/category-active.png"
-            },
-            {
-                "pagePath": "pages/member/member",
-                "text": "会员",
-                "iconPath": "assets/icons/member.png",
-                "selectedIconPath": "assets/icons/member-active.png"
             },
             {
                 "pagePath": "pages/cart/cart",

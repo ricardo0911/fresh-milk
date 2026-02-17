@@ -18,16 +18,16 @@
       <view class="user-info-row">
         <view class="avatar-container">
           <image class="avatar" src="{{userInfo.avatar || 'https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0'}}" mode="aspectFill"></image>
-          <view class="vip-crown" wx:if="{{userInfo}}">👑</view>
+          <view class="vip-crown" wx:if="{{isMemberValid}}">👑</view>
         </view>
         <view class="info-content">
           <view class="name-box">
-            <text class="nickname">{{userInfo.username || userInfo.phone || '点击登录/注册'}}</text>
+            <text class="nickname">{{userInfo.nickname || userInfo.username || userInfo.phone || '点击登录/注册'}}</text>
             <view class="member-tag {{memberLevel}}" wx:if="{{userInfo}}">
               <text class="tag-text">{{memberLevelName}}</text>
             </view>
           </view>
-          <text class="subtitle" wx:if="{{userInfo}}">尊享全场{{discountRate}}优惠</text>
+          <text class="subtitle" wx:if="{{userInfo.id || userInfo.phone || userInfo.username || userInfo.nickname}}">欢迎来到鲜奶直达</text>
           <text class="subtitle" wx:else>登录开启尊享鲜奶之旅</text>
         </view>
         <view class="arrow-icon">
@@ -37,20 +37,16 @@
 
       <!-- 会员权益数据 (金刚区) -->
       <view class="member-stats">
-        <view class="stat-item">
+        <view class="stat-item" bindtap="goToPoints">
           <text class="stat-num">{{points || 0}}</text>
           <text class="stat-lbl">积分</text>
         </view>
         <view class="stat-divider"></view>
-        <view class="stat-item">
+        <view class="stat-item" bindtap="goToCoupon">
           <text class="stat-num">{{couponCount || 0}}</text>
           <text class="stat-lbl">优惠券</text>
         </view>
-        <view class="stat-divider"></view>
-        <view class="stat-item">
-          <text class="stat-num">{{balance || '0.00'}}</text>
-          <text class="stat-lbl">余额</text>
-        </view>
+
       </view>
     </view>
   </view>
@@ -71,21 +67,21 @@
         <view class="grid-item" bindtap="goToOrders" data-status="pending">
           <view class="icon-box">
             <text class="grid-icon">💳</text>
-            <view class="badge" wx:if="{{pendingCount > 0}}">{{pendingCount}}</view>
+            <!-- <view class="badge" wx:if="{{pendingCount > 0}}">{{pendingCount}}</view> -->
           </view>
           <text class="grid-text">待付款</text>
         </view>
         <view class="grid-item" bindtap="goToOrders" data-status="paid">
           <view class="icon-box">
             <text class="grid-icon">📦</text>
-            <view class="badge" wx:if="{{paidCount > 0}}">{{paidCount}}</view>
+            <!-- <view class="badge" wx:if="{{paidCount > 0}}">{{paidCount}}</view> -->
           </view>
           <text class="grid-text">待发货</text>
         </view>
         <view class="grid-item" bindtap="goToOrders" data-status="shipped">
           <view class="icon-box">
             <text class="grid-icon">🚚</text>
-            <view class="badge" wx:if="{{shippedCount > 0}}">{{shippedCount}}</view>
+            <!-- <view class="badge" wx:if="{{shippedCount > 0}}">{{shippedCount}}</view> -->
           </view>
           <text class="grid-text">待收货</text>
         </view>
@@ -102,6 +98,18 @@
           <text class="grid-text">售后/退款</text>
         </view>
       </view>
+    </view>
+
+    <!-- 会员入口卡片 -->
+    <view class="vip-card" wx:if="{{userInfo}}" bindtap="goToVip">
+      <view class="vip-left">
+        <view class="vip-icon">👑</view>
+        <view class="vip-info">
+          <text class="vip-title">{{isMemberValid ? memberLevelName : '开通会员'}}</text>
+          <text class="vip-desc">{{isMemberValid ? '有效期至' + memberExpireDate : '享专属折扣，最高85折'}}</text>
+        </view>
+      </view>
+      <view class="vip-btn">{{isMemberValid ? '续费' : '立即开通'}}</view>
     </view>
 
     <!-- 常用功能 (广告位/入口) -->
@@ -126,10 +134,10 @@
           </view>
           <text class="service-arrow">></text>
         </view>
-        <view class="service-item" bindtap="goToFavorites">
+        <view class="service-item" bindtap="goToMyReviews">
           <view class="service-left">
-            <text class="service-icon">❤️</text>
-            <text class="service-name">我的收藏</text>
+            <text class="service-icon">⭐</text>
+            <text class="service-name">我的评价</text>
           </view>
           <text class="service-arrow">></text>
         </view>

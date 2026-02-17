@@ -1,0 +1,117 @@
+/* pages/register/register.wxss - 注册页样式 */
+.page-register {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #10b981 0%, #e8f5e9 50%, #f5f5f5 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 头部 */
+.register-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 40rpx 60rpx;
+}
+
+.register-title {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+}
+
+.register-desc {
+  font-size: 28rpx;
+  color: rgba(255,255,255,0.9);
+  margin-top: 12rpx;
+}
+
+/* 表单 */
+.register-form {
+  margin: 0 40rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 48rpx 40rpx;
+  box-shadow: 0 12rpx 40rpx rgba(0,0,0,0.1);
+}
+
+.form-group {
+  display: flex;
+  align-items: center;
+  border-bottom: 1rpx solid #f0f0f0;
+  padding: 24rpx 0;
+  margin-bottom: 16rpx;
+}
+
+.form-icon {
+  font-size: 40rpx;
+  margin-right: 20rpx;
+  width: 48rpx;
+  text-align: center;
+}
+
+.form-input {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333;
+}
+
+.form-input::placeholder {
+  color: #bbb;
+}
+
+.register-btn {
+  margin-top: 40rpx;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 600;
+  padding: 28rpx;
+  border-radius: 48rpx;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(16, 185, 129, 0.3);
+}
+
+.register-btn[disabled] {
+  background: #ccc;
+  box-shadow: none;
+}
+
+.register-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 32rpx;
+  gap: 8rpx;
+}
+
+.option-text {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.option-link {
+  font-size: 26rpx;
+  color: #10b981;
+}
+
+/* 底部 */
+.register-footer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40rpx;
+  padding-bottom: calc(60rpx + env(safe-area-inset-bottom));
+}
+
+.register-agreement {
+  text-align: center;
+  font-size: 22rpx;
+  color: #999;
+}
+
+.register-agreement .link {
+  color: #10b981;
+}

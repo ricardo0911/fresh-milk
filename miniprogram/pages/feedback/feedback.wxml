@@ -1,0 +1,56 @@
+<!-- pages/feedback/feedback.wxml -->
+<view class="page-feedback">
+    <!-- 反馈类型 -->
+    <view class="section-card">
+        <view class="section-title">反馈类型</view>
+        <view class="type-list">
+            <view class="type-item {{feedbackType === 'product' ? 'active' : ''}}"
+                  bindtap="selectType" data-type="product">
+                <text>商品问题</text>
+            </view>
+            <view class="type-item {{feedbackType === 'delivery' ? 'active' : ''}}"
+                  bindtap="selectType" data-type="delivery">
+                <text>配送问题</text>
+            </view>
+            <view class="type-item {{feedbackType === 'service' ? 'active' : ''}}"
+                  bindtap="selectType" data-type="service">
+                <text>服务态度</text>
+            </view>
+            <view class="type-item {{feedbackType === 'suggestion' ? 'active' : ''}}"
+                  bindtap="selectType" data-type="suggestion">
+                <text>功能建议</text>
+            </view>
+            <view class="type-item {{feedbackType === 'other' ? 'active' : ''}}"
+                  bindtap="selectType" data-type="other">
+                <text>其他</text>
+            </view>
+        </view>
+    </view>
+
+    <!-- 反馈内容 -->
+    <view class="section-card">
+        <view class="section-title">反馈内容</view>
+        <textarea class="feedback-input"
+                  placeholder="请详细描述您遇到的问题或建议，我们会认真处理..."
+                  maxlength="500"
+                  bindinput="onContentInput"
+                  value="{{content}}"></textarea>
+        <view class="word-count">{{content.length}}/500</view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="section-card">
+        <view class="section-title">联系方式（选填）</view>
+        <input class="contact-input"
+               placeholder="请留下您的手机号，方便我们联系您"
+               type="number"
+               maxlength="11"
+               bindinput="onContactInput"
+               value="{{contact}}"/>
+    </view>
+
+    <!-- 提交按钮 -->
+    <view class="submit-area">
+        <button class="submit-btn" bindtap="submitFeedback">提交反馈</button>
+    </view>
+</view>
